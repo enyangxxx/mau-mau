@@ -11,7 +11,6 @@ import java.util.List;
  */
 public class MauMauSpiel implements IMauMau{
 	
-	private Regelwerk regelwerk;
 	private Spieler spieler;
 	private Spieler computer;
 	private int runde;
@@ -97,12 +96,6 @@ public class MauMauSpiel implements IMauMau{
 		// TODO Auto-generated method stub
 		
 	}
-	/* (non-Javadoc)
-	 * @see de.htw.berlin.maumau.IMauMau#regelnPruefen(de.htw.berlin.maumau.Spieler, de.htw.berlin.maumau.Karte, de.htw.berlin.maumau.Regelwerk)
-	 */
-	public boolean regelnPruefen(Spieler spieler, Karte letzteKarte, Regelwerk regelwerk) {
-		
-		return false;
-	}
+
 
 }

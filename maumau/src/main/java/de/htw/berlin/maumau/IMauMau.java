@@ -55,9 +55,9 @@ public interface IMauMau {
 	 * @param regelwerk
 	 * @return true, wenn regelkonform.
 	 */
-	public boolean regelnPruefen(Spieler spieler, Karte letzteKarte, Regelwerk regelwerk);
-	
-	public void neuenSpielzugStarten(Spieler spieler, Spieler computer);
+	public boolean regelnPruefen(Spieler spieler, Karte letzteKarte);
+		
+	//für jede Regel eine einzelne Methode...
 	
 	
 
