@@ -101,6 +101,7 @@ public class MauMauSpiel implements IMauMau{
 	 * @see de.htw.berlin.maumau.IMauMau#regelnPruefen(de.htw.berlin.maumau.Spieler, de.htw.berlin.maumau.Karte, de.htw.berlin.maumau.Regelwerk)
 	 */
 	public boolean regelnPruefen(Spieler spieler, Karte letzteKarte, Regelwerk regelwerk) {
+		
 		return false;
 	}
 
