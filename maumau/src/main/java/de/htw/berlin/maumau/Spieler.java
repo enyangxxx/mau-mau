@@ -16,7 +16,16 @@ public class Spieler {
 	private List<Karte> hand;
 	private boolean hatMauGerufen;
 	private boolean istDran;
+	private Karte naechsteKarte;// Die nächste Karte, die gelegt werden soll
 	
+	public Karte getNaechsteKarte() {
+		return naechsteKarte;
+	}
+
+	public void setNaechsteKarte(Karte naechsteKarte) {
+		this.naechsteKarte = naechsteKarte;
+	}
+
 	public Spieler(String name, int s_id) {
 		this.name = name;
 		this.s_id = s_id;
