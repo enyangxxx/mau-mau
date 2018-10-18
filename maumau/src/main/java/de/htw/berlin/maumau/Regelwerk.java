@@ -8,5 +8,18 @@ package de.htw.berlin.maumau;
  *
  */
 public class Regelwerk {
+	
+	private Karte letzteKarte;
+	
+	public void regel1(Karte letzteKarte) {
+		
+	}
+	public void regel2(Karte letzteKarte) {
+		
+	}
+	public void regel3(Karte letzteKarte) {
+	
+	}
+	
 
 }
