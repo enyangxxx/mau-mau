@@ -5,6 +5,9 @@ package de.htw.berlin.maumau;
 
 import java.util.List;
 
+import de.htw.berlin.maumau.enumeration.Kartentyp;
+import de.htw.berlin.maumau.enumeration.SonderregelTyp;
+
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  *
@@ -49,16 +52,53 @@ public interface IMauMau {
 	public void kartenAusteilen(Spieler spieler, Spieler computer, List<Karte> kartenstapel);
 	
 	/**
-	 * Ein {@link Spieler} kann nur dann eine {@link Karte} legen, wenn sie dem {@link Regelwerk} entspricht.
-	 * @param spieler
+	 * Anhand der letzten {@link Karte} wird geprüft, ob die neue Karte gelegt werden kann.
 	 * @param letzteKarte
-	 * @param regelwerk
-	 * @return true, wenn regelkonform.
+	 * @param neueKarte
+	 * @return true, wenn legbar.
 	 */
-	public boolean regelnPruefen(Spieler spieler, Karte letzteKarte);
-		
-	//für jede Regel eine einzelne Methode...
+	public boolean istLegbar(Karte letzteKarte, Karte neueKarte);
 	
+	/**
+	 * Es wird überprüft, ob die letzte {@link Karte} eine Sonderregel einleitet.
+	 * @param letzteKarte
+	 * @return die entsprechende Sonderregel oder "Keine", falls keine Sonderregel zutrifft.
+	 */
+	public SonderregelTyp sonderregelErmitteln(Karte letzteKarte);
 	
+	/**
+	 * Anhand des Typs der letzten {@link Karte} wird geprüft, ob die neue Karte gelegt werden kann.
+	 * @param neueKarte
+	 * @param wunschtyp
+	 * @return true, wenn legbar.
+	 */
+	public boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp);
+	
+	/**
+	 * Setzt die Sonderregel Aussetzen um und beendet den Zug für den Spieler und leitet den Zug für den neuen Spieler ein.
+	 * @param spieler
+	 * @param computer
+	 */
+	public void sonderregelAussetzen(Spieler spieler, Spieler computer);
+	
+	/**
+	 * Setzt die Sonderregel Karten ziehen um. Entweder werden Karten gezogen, oder es kann gekontert werden.
+	 * @param neueKarte
+	 */
+	public void sonderregelKartenZiehen();
+	
+	/**
+	 * Legt den Kartentyp für die Sonderregel Typ wünschen fest.
+	 * @return den gewünschten Kartentyp.
+	 */
+	public Kartentyp sonderregelTypWuenschen();
+	
+	/**
+	 * Ein {@link Spieler} Zieht eine bestimmte Anzahl von {@link Karte} vom Kartenstapel.
+	 * @param spieler
+	 * @param kartenstapel
+	 * @param anzahl
+	 */
+	public void karteZiehen(Spieler spieler, List<Karte> kartenstapel, int anzahl);	
 
 }

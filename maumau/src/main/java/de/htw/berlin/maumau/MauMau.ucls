@@ -3,7 +3,7 @@
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
   <class id="1" language="java" name="de.htw.berlin.maumau.Karte" project="mau-mau" 
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/Karte.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="185" y="177"/>    
+    <position height="191" width="176" x="494" y="70"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -12,7 +12,7 @@
   </class>  
   <class id="2" language="java" name="de.htw.berlin.maumau.MauMauSpiel" project="mau-mau" 
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/MauMauSpiel.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="567" y="537"/>    
+    <position height="-1" width="-1" x="210" y="347"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -21,7 +21,7 @@
   </class>  
   <class id="3" language="java" name="de.htw.berlin.maumau.Spieler" project="mau-mau" 
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/Spieler.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="184" y="532"/>    
+    <position height="-1" width="-1" x="587" y="536"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,7 +30,7 @@
   </class>  
   <enumeration id="4" language="java" name="de.htw.berlin.maumau.enumeration.Kartentyp" project="mau-mau" 
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/enumeration/Kartentyp.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="488" y="86"/>    
+    <position height="155" width="167" x="798" y="35"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -39,115 +39,91 @@
   </enumeration>  
   <enumeration id="5" language="java" name="de.htw.berlin.maumau.enumeration.Kartenwert" project="mau-mau" 
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/enumeration/Kartenwert.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="728" y="189"/>    
+    <position height="-1" width="-1" x="887" y="356"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <interface id="6" language="java" name="de.htw.berlin.maumau.IMauMau" project="mau-mau" 
+  <enumeration id="6" language="java" name="de.htw.berlin.maumau.enumeration.SonderregelTyp" project="mau-mau" 
+    file="/mau-mau/src/main/java/de/htw/berlin/maumau/enumeration/SonderregelTyp.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1133" y="116"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <interface id="7" language="java" name="de.htw.berlin.maumau.IMauMau" project="mau-mau" 
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/IMauMau.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="978" y="173"/>    
+    <position height="-1" width="-1" x="1203" y="404"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </interface>  
-  <class id="7" language="java" name="de.htw.berlin.maumau.Regelwerk" project="mau-mau" 
-    file="/mau-mau/src/main/java/de/htw/berlin/maumau/Regelwerk.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="967" y="523"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </class>  
   <association id="8">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="9" name="wert">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="10" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="11">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="12" name="letzteKarte">        
-        <position height="19" width="66" x="234" y="273"/>      
-      </attribute>      
-      <multiplicity id="13" minimum="0" maximum="1">        
-        <position height="17" width="26" x="305" y="274"/>      
-      </multiplicity>    
+    <bendpoint x="518" y="298"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="9" name="neueKarte"/>      
+      <multiplicity id="10" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="14">    
+  <association id="11">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="15" name="typ">        
-        <position height="0" width="0" x="-43" y="-49"/>      
-      </attribute>      
-      <multiplicity id="16" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-43" y="-49"/>      
-      </multiplicity>    
+      <attribute id="12" name="typ"/>      
+      <multiplicity id="13" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="17">    
+  <association id="14">    
+    <bendpoint x="670" y="292"/>    
     <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="18" name="hand">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="19" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
+      <attribute id="15" name="hand"/>      
+      <multiplicity id="16" minimum="0" maximum="2147483647"/>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <association id="17">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="18" name="wert"/>      
+      <multiplicity id="19" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <association id="20">    
-    <bendpoint x="382" y="598"/>    
+    <bendpoint x="428" y="322"/>    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="21" name="computer">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="22" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
+      <attribute id="21" name="computer"/>      
+      <multiplicity id="22" minimum="0" maximum="1"/>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="23">    
-    <bendpoint x="408" y="480"/>    
+    <bendpoint x="395" y="164"/>    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="24" name="spieler">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="25" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
+      <attribute id="24" name="letzteKarte"/>      
+      <multiplicity id="25" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="26">    
+    <bendpoint x="397" y="561"/>    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="27" name="regelwerk">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="28" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
+      <attribute id="27" name="spieler"/>      
+      <multiplicity id="28" minimum="0" maximum="1"/>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
