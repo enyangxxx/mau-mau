@@ -3,6 +3,9 @@
  */
 package de.htw.berlin.maumau;
 
+import java.util.List;
+
+import de.htw.berlin.maumau.enumeration.Kartentyp;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
@@ -14,6 +17,8 @@ public class MauMauSpiel{
 	private Spieler computer;
 	private int runde;
 	private Karte letzteKarte;
+	private List<Karte> kartenstapel;
+	private Kartentyp wunschtyp;
 	
 	public Spieler getSpieler() {
 		return spieler;
