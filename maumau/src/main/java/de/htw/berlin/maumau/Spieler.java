@@ -17,6 +17,7 @@ public class Spieler {
 	private boolean hatMauGerufen;
 	private boolean istDran;
 	private Karte neueKarte;// Die nächste Karte, die gelegt werden soll
+	private int punktestand;
 	
 	public Karte getNaechsteKarte() {
 		return neueKarte;
