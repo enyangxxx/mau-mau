@@ -45,6 +45,22 @@ public class MauMauSpiel{
 		this.letzteKarte = letzteKarte;
 	}
 
+	public List<Karte> getKartenstapel() {
+		return kartenstapel;
+	}
+
+	public void setKartenstapel(List<Karte> kartenstapel) {
+		this.kartenstapel = kartenstapel;
+	}
+
+	public Kartentyp getWunschtyp() {
+		return wunschtyp;
+	}
+
+	public void setWunschtyp(Kartentyp wunschtyp) {
+		this.wunschtyp = wunschtyp;
+	}
+
 
 
 }
