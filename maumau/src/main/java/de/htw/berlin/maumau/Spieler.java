@@ -67,4 +67,12 @@ public class Spieler {
 		this.hatMauGerufen = hatMauGerufen;
 	}
 
+	public int getPunktestand() {
+		return punktestand;
+	}
+
+	public void setPunktestand(int punktestand) {
+		this.punktestand = punktestand;
+	}
+
 }
