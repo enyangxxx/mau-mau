@@ -16,6 +16,7 @@ public class Spieler {
 	private List<Karte> hand;
 	private boolean hatMauGerufen;
 	private boolean istDran;
+	private boolean istComputer;
 	private Karte neueKarte;// Die nächste Karte, die gelegt werden soll
 	private int punktestand;
 	
@@ -73,6 +74,14 @@ public class Spieler {
 
 	public void setPunktestand(int punktestand) {
 		this.punktestand = punktestand;
+	}
+
+	public boolean isIstComputer() {
+		return istComputer;
+	}
+
+	public void setIstComputer(boolean istComputer) {
+		this.istComputer = istComputer;
 	}
 
 }

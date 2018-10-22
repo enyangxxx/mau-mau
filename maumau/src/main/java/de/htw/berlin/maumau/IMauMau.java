@@ -16,10 +16,19 @@ public interface IMauMau {
 	
 	/**
 	 * Ein {@link Spieler} zieht eine Karte von dem Kartenstapel und fügt diese seiner Hand hinzu.
+	 * Wenn der Kartenstapel leer ist, wird er neu erstellt.
 	 * @param spieler
 	 * @param kartenstapel
 	 */
 	public void karteZiehen(Spieler spieler, List<Karte> kartenstapel);
+	
+	/**
+	 * Ein {@link Spieler} zieht eine bestimmte Anzahl von {@link Karte} vom Kartenstapel.
+	 * @param spieler
+	 * @param kartenstapel
+	 * @param anzahl
+	 */
+	public void karteZiehen(Spieler spieler, List<Karte> kartenstapel, int anzahl);
 	
 	/**
 	 * Mischt den Kartenstapel, sodass die Reihenfolge zufällig ist.
@@ -36,15 +45,45 @@ public interface IMauMau {
 	/**
 	 * Ein {@link Spieler} legt eine Karte. Falls es sich um einen Buben handelt, darf er einen Wunschtyp festlegen.
 	 * @param spieler
+	 * @param ablagestapel
 	 */
-	public void karteLegen(Spieler spieler);
+	public void karteLegen(Spieler spieler, List<Karte> ablagestapel);
 
 	/**
-	 * Ein {@link Spieler} beendet seinen Spielzug und der Spielzug des nächsten {@link Spieler} wird eingeleitet.
-	 * @param spieler
-	 * @param computer
+	 * Mischt die Karten des Ablagestapels in den Kartenstapel.
+	 * @param ablagestapel
+	 * @param kartenstapel
 	 */
-	public void spielerWechseln(Spieler spieler, Spieler computer);
+	public void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel);
+	
+	/**
+	 * Ein {@link Spieler} beendet seinen Spielzug und der Spielzug des nächsten {@link Spieler} wird eingeleitet.
+	 * @param aktuellerSpieler
+	 * @param neuerSpieler
+	 */
+	public void spielerWechseln(Spieler aktuellerSpieler, Spieler neuerSpieler);
+	
+	/**
+	 * Ermittelt die letzte Karte auf dem Ablagestapel und gibt diese zurück.
+	 * @param ablagestapel
+	 * @return die letzte Karte
+	 */
+	public Karte letzteKarteErmitteln(List<Karte> ablagestapel);
+	
+	/**
+	 * Fügt einen {@link Spieler} zur Spielerliste hinzu.
+	 * @param spieler
+	 * @param spielerliste
+	 */
+	public void addSpielerZurListe(Spieler spieler, List<Spieler> spielerliste);
+	
+	/**
+	 * Gibt den {@link Spieler} aus der Spielerliste zurück, zu dem die ID gehört.
+	 * @param id
+	 * @param spielerliste
+	 * @return spieler
+	 */
+	public Spieler getSpielerById(int id, List<Spieler> spielerliste);
 	
 	/**
 	 * Ein {@link Spieler} ruft Mau Mau und die Variable hatMauGerufen wird auf true gesetzt.
@@ -57,8 +96,9 @@ public interface IMauMau {
 	 * Wenn ja, muss er keinen Strafzug machen und die Variable hatMauGerufen wird wieder auf false gesetzt.
 	 * Wenn nein, muss er zwei Karten ziehen.
 	 * @param spieler
+	 * @param kartenstapel
 	 */
-	public void maumauPruefen(Spieler spieler);
+	public void maumauPruefen(Spieler spieler, List<Karte> kartenstapel);
 	
 	/**
 	 * Der Wert der Hand des {@link Spieler}, der verloren hat, wird berechnet.
@@ -68,15 +108,15 @@ public interface IMauMau {
 	public int minuspunkteBerechnen(Spieler spieler);
 	
 	/**
-	 * Beide {@link Spieler} bekommen je 5 {@link Karte} aus dem Kartenstapel und es wird eine Anfangskarte aufgedeckt.
-	 * @param spieler
-	 * @param computer
+	 * Alle {@link Spieler} bekommen je 5 {@link Karte} aus dem Kartenstapel und es wird eine Anfangskarte aufgedeckt.
+	 * @param spielerliste
 	 * @param kartenstapel
+	 * @param ablagestapel
 	 */
-	public void kartenAusteilen(Spieler spieler, Spieler computer, List<Karte> kartenstapel);
+	public void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel);
 	
 	/**
-	 * Anhand der Farbe und des Werts letzten {@link Karte} wird geprüft, ob die neue Karte gelegt werden kann.
+	 * Anhand der Farbe und des Werts der letzten {@link Karte} wird geprüft, ob die neue Karte gelegt werden kann.
 	 * @param letzteKarte
 	 * @param neueKarte
 	 * @return true, wenn legbar.
@@ -101,43 +141,35 @@ public interface IMauMau {
 	/**
 	 * Setzt die Sonderregel Aussetzen um und falls er nicht mit einem Ass kontern kann,
 	 * wird der Zug für den {@link Spieler} beendet und der Zug des nächsten {@link Spieler} eingeleitet.
-	 * @param spieler
-	 * @param computer
+	 * @param aktuellerSpieler
+	 * @param neuerSpieler
 	 */
-	public void sonderregelAussetzen(Spieler spieler, Spieler computer);
+	public void sonderregelAussetzen(Spieler aktuellerSpieler, Spieler neuerSpieler);
 	
 	/**
 	 * Setzt die Sonderregel Karten ziehen um. Entweder werden Karten gezogen, oder es kann gekontert werden.
-	 * @param neueKarte
+	 * @param anzahl
+	 * @param hand
+	 * @param kartenstapel
 	 */
-	public void sonderregelKartenZiehen();
+	public void sonderregelKartenZiehen(int anzahl, List<Karte> hand, List<Karte> kartenstapel);
 	
 	/**
 	 * Legt den {@link Kartentyp} für die Sonderregel Typ wünschen fest.
-	 * @return den gewünschten Kartentyp.
+	 * @param wunschtyp - der gewünschte Kartentyp.
 	 */
-	public Kartentyp sonderregelTypWuenschen();
-	
-	/**
-	 * Ein {@link Spieler} Zieht eine bestimmte Anzahl von {@link Karte} vom Kartenstapel.
-	 * @param spieler
-	 * @param kartenstapel
-	 * @param anzahl
-	 */
-	public void karteZiehen(Spieler spieler, List<Karte> kartenstapel, int anzahl);
+	public void sonderregelWunschtypSetzen(Kartentyp wunschtyp);
 	
 	/**
 	 * Der Punktestand der {@link Spieler} wird zurückgesetzt und ein neues Spiel wird eingeleitet.
-	 * @param spieler
-	 * @param computer
+	 * @param spielerliste
 	 */
-	public void neuesSpielStarten(Spieler spieler, Spieler computer);
+	public void neuesSpielStarten(List<Spieler> spielerliste);
 	
 	/**
 	 * Eine neue Runde wird eingeleitet.
-	 * @param spieler
-	 * @param computer
+	 * @param spiel
 	 */
-	public void neueRundeStarten(Spieler spieler, Spieler computer);
+	public void neueRundeStarten(MauMauSpiel spiel);
 
 }

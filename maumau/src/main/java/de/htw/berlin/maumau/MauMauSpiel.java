@@ -13,36 +13,29 @@ import de.htw.berlin.maumau.enumeration.Kartentyp;
  */
 public class MauMauSpiel{
 	
-	private Spieler spieler;
-	private Spieler computer;
+	private List<Spieler> spielerliste;
 	private int runde;
-	private Karte letzteKarte;
+	private List<Karte> ablagestapel;
 	private List<Karte> kartenstapel;
 	private Kartentyp wunschtyp;
+	private int anzahlSonderregelKartenZiehen;
 	
-	public Spieler getSpieler() {
-		return spieler;
+	public MauMauSpiel(List<Spieler> spielerliste){
+		this.runde = 1;
+		this.spielerliste = spielerliste;
 	}
-	public void setSpieler(Spieler spieler) {
-		this.spieler = spieler;
-	}
-	public Spieler getComputer() {
-		return computer;
-	}
-	public void setComputer(Spieler computer) {
-		this.computer = computer;
-	}
+	
 	public int getRunde() {
 		return runde;
 	}
 	public void setRunde(int runde) {
 		this.runde = runde;
 	}
-	public Karte getLetzteKarte() {
-		return letzteKarte;
+	public List<Karte> getAblagestapel() {
+		return ablagestapel;
 	}
-	public void setLetzteKarte(Karte letzteKarte) {
-		this.letzteKarte = letzteKarte;
+	public void setAblagestapel(List<Karte> ablagestapel) {
+		this.ablagestapel = ablagestapel;
 	}
 
 	public List<Karte> getKartenstapel() {
@@ -60,7 +53,14 @@ public class MauMauSpiel{
 	public void setWunschtyp(Kartentyp wunschtyp) {
 		this.wunschtyp = wunschtyp;
 	}
-
-
+	
+	public List<Spieler> getSpielerListe() {
+		return spielerliste;
+	}
+	
+	public void setSpielerListe(List<Spieler> spielerliste) {
+		this.spielerliste = spielerliste;
+	}
+	
 
 }
