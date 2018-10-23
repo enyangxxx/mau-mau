@@ -24,6 +24,7 @@ public interface IMauMau {
 	
 	/**
 	 * Ein {@link Spieler} zieht eine bestimmte Anzahl von {@link Karte} vom Kartenstapel.
+	 * Wenn der Kartenstapel leer ist, wird er neu erstellt.
 	 * @param spieler
 	 * @param kartenstapel
 	 * @param anzahl
@@ -31,7 +32,7 @@ public interface IMauMau {
 	public void karteZiehen(Spieler spieler, List<Karte> kartenstapel, int anzahl);
 	
 	/**
-	 * Mischt den Kartenstapel, sodass die Reihenfolge zufällig ist.
+	 * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.
 	 * @param kartenstapel
 	 */
 	public void kartenMischen(List<Karte> kartenstapel);
@@ -43,7 +44,7 @@ public interface IMauMau {
 	public List<Karte> kartenstapelGenerieren();
 	
 	/**
-	 * Ein {@link Spieler} legt eine Karte. Falls es sich um einen Buben handelt, darf er einen Wunschtyp festlegen.
+	 * Ein {@link Spieler} legt eine {@link Karte}. Falls es sich um einen Buben handelt, darf er einen Wunschtyp festlegen.
 	 * @param spieler
 	 * @param ablagestapel
 	 */
@@ -64,7 +65,7 @@ public interface IMauMau {
 	public void spielerWechseln(Spieler aktuellerSpieler, Spieler neuerSpieler);
 	
 	/**
-	 * Ermittelt die letzte Karte auf dem Ablagestapel und gibt diese zurück.
+	 * Ermittelt die letzte {@link Karte} auf dem Ablagestapel und gibt diese zurück.
 	 * @param ablagestapel
 	 * @return die letzte Karte
 	 */
@@ -92,7 +93,7 @@ public interface IMauMau {
 	public void maumauRufen(Spieler spieler);
 	
 	/**
-	 * Wenn der {@link Spieler} nur noch eine Karte auf der Hand hat, wird geprüft, ob er Mau gesagt hat.
+	 * Wenn der {@link Spieler} nur noch eine {@link Karte} auf der Hand hat, wird geprüft, ob er Mau gesagt hat.
 	 * Wenn ja, muss er keinen Strafzug machen und die Variable hatMauGerufen wird wieder auf false gesetzt.
 	 * Wenn nein, muss er zwei Karten ziehen.
 	 * @param spieler
@@ -116,7 +117,7 @@ public interface IMauMau {
 	public void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel);
 	
 	/**
-	 * Anhand der Farbe und des Werts der letzten {@link Karte} wird geprüft, ob die neue Karte gelegt werden kann.
+	 * Anhand der Farbe und des Werts der letzten {@link Karte} wird geprüft, ob die neue {@link Karte} gelegt werden kann.
 	 * @param letzteKarte
 	 * @param neueKarte
 	 * @return true, wenn legbar.
@@ -139,7 +140,7 @@ public interface IMauMau {
 	public boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp);
 	
 	/**
-	 * Setzt die Sonderregel Aussetzen um und falls er nicht mit einem Ass kontern kann,
+	 * Setzt die Sonderregel Aussetzen um und falls der {@link Spieler} nicht mit einem Ass kontern kann,
 	 * wird der Zug für den {@link Spieler} beendet und der Zug des nächsten {@link Spieler} eingeleitet.
 	 * @param aktuellerSpieler
 	 * @param neuerSpieler

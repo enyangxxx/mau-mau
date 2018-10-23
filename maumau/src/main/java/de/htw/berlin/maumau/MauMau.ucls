@@ -3,7 +3,7 @@
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
   <interface id="1" language="java" name="de.htw.berlin.maumau.IMauMau" project="mau-mau" 
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/IMauMau.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="384" width="252" x="66" y="-12"/>    
+    <position height="-1" width="-1" x="219" y="330"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -12,7 +12,7 @@
   </interface>  
   <class id="2" language="java" name="de.htw.berlin.maumau.Karte" project="mau-mau" 
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/Karte.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="501" y="141"/>    
+    <position height="-1" width="-1" x="632" y="66"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -21,7 +21,7 @@
   </class>  
   <class id="3" language="java" name="de.htw.berlin.maumau.MauMauSpiel" project="mau-mau" 
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/MauMauSpiel.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="501" y="595"/>    
+    <position height="-1" width="-1" x="880" y="686"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,7 +30,7 @@
   </class>  
   <class id="4" language="java" name="de.htw.berlin.maumau.Spieler" project="mau-mau" 
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/Spieler.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="179" y="595"/>    
+    <position height="-1" width="-1" x="530" y="701"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -48,7 +48,7 @@
   </enumeration>  
   <enumeration id="6" language="java" name="de.htw.berlin.maumau.enumeration.Kartenwert" project="mau-mau" 
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/enumeration/Kartenwert.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="222" width="156" x="923" y="-54"/>    
+    <position height="-1" width="-1" x="1171" y="57"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -58,7 +58,7 @@
   <enumeration id="7" language="java" name="de.htw.berlin.maumau.enumeration.SonderregelTyp" project="mau-mau" 
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/enumeration/SonderregelTyp.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="150" width="156" x="987" y="510"/>    
+    <position height="-1" width="-1" x="1190" y="620"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -66,39 +66,42 @@
     </display>  
   </enumeration>  
   <association id="8">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="9" name="kartenstapel">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="10" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="11">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="12" name="wert">        
-        <position height="0" width="0" x="0" y="0"/>      
+      <attribute id="9" name="wert">        
+        <position height="0" width="0" x="170" y="0"/>      
       </attribute>      
-      <multiplicity id="13" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
+      <multiplicity id="10" minimum="0" maximum="1">        
+        <position height="0" width="0" x="170" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="14">    
+  <association id="11">    
+    <bendpoint x="514" y="378"/>    
+    <bendpoint x="504" y="188"/>    
     <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="15" name="hand">        
-        <position height="0" width="0" x="0" y="0"/>      
+      <attribute id="12" name="hand">        
+        <position height="0" width="0" x="131" y="-75"/>      
       </attribute>      
-      <multiplicity id="16" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
+      <multiplicity id="13" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="131" y="-75"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="14">    
+    <bendpoint x="990" y="145"/>    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="15" name="typ">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="16" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="17">    
@@ -114,39 +117,43 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="20">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="21" name="ablagestapel">        
-        <position height="0" width="0" x="0" y="0"/>      
+    <bendpoint x="444" y="455"/>    
+    <bendpoint x="441" y="65"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="21" name="neueKarte">        
+        <position height="0" width="0" x="131" y="-75"/>      
       </attribute>      
       <multiplicity id="22" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
+        <position height="0" width="0" x="131" y="-75"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="23">    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="24" name="neueKarte">        
-        <position height="0" width="0" x="0" y="0"/>      
+    <bendpoint x="897" y="277"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="24" name="ablagestapel">        
+        <position height="0" width="0" x="131" y="-75"/>      
       </attribute>      
       <multiplicity id="25" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
+        <position height="0" width="0" x="131" y="-75"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="26">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="27" name="typ">        
-        <position height="0" width="0" x="0" y="0"/>      
+    <bendpoint x="697" y="417"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="27" name="kartenstapel">        
+        <position height="0" width="0" x="131" y="-75"/>      
       </attribute>      
-      <multiplicity id="28" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
+      <multiplicity id="28" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="131" y="-75"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
