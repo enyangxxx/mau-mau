@@ -28,9 +28,10 @@ public class Spieler {
 		this.neueKarte = naechsteKarte;
 	}
 
-	public Spieler(String name, int s_id) {
+	public Spieler(String name, int s_id, boolean istComputer) {
 		this.name = name;
 		this.s_id = s_id;
+		this.istComputer = istComputer;
 	}
 	
 	public String getName() {
