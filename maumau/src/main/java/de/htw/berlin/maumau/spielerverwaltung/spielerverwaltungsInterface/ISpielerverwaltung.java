@@ -1,6 +1,6 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface;
 
-import de.htw.berlin.maumau.Spieler;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.Spieler;
 
 import java.util.List;
 

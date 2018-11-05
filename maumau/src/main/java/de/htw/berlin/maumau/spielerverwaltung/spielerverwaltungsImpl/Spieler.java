@@ -1,7 +1,9 @@
 /**
  * 
  */
-package de.htw.berlin.maumau;
+package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl;
+
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.Karte;
 
 import java.util.List;
 

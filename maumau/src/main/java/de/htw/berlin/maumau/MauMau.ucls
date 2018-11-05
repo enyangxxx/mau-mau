@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.2.2" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
-  <class id="1" language="java" name="de.htw.berlin.maumau.Karte" project="mau-mau" 
+  <class id="1" language="java" name="de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.Karte" project="mau-mau"
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/Karte.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="726" y="46"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
@@ -10,7 +10,7 @@
       <operations public="false" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="de.htw.berlin.maumau.Spieler" project="mau-mau" 
+  <class id="2" language="java" name="de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.Spieler" project="mau-mau"
     file="/mau-mau/src/main/java/de/htw/berlin/maumau/Spieler.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="447" y="474"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

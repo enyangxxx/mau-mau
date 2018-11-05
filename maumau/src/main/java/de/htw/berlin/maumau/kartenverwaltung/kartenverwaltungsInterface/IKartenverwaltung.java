@@ -1,7 +1,7 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface;
 
-import de.htw.berlin.maumau.Karte;
-import de.htw.berlin.maumau.Spieler;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.Karte;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.Spieler;
 
 import java.util.List;
 
