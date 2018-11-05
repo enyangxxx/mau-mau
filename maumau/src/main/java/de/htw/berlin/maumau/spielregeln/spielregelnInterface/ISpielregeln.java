@@ -1,8 +1,8 @@
 package de.htw.berlin.maumau.spielregeln.spielregelnInterface;
 
-import de.htw.berlin.maumau.Karte;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.Karte;
 import de.htw.berlin.maumau.MauMauSpiel;
-import de.htw.berlin.maumau.Spieler;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.Spieler;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.SonderregelTyp;
 
