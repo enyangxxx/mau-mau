@@ -1,8 +1,8 @@
-package de.htwberlin.mau_mau.spielerverwaltung;
+package de.htwberlin.mau_mau.spielverwaltung;
 
 import org.junit.Before;
 
-public class SpielerverwaltungsTest {
+public class SpielverwaltungsTest {
     @Before
     public void setUp() throws Exception {
     }
