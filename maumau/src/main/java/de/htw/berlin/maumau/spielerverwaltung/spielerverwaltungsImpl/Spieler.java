@@ -5,6 +5,7 @@ package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl;
 
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.Karte;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public class Spieler {
 	
 	private String name;
 	private int s_id;
-	private List<Karte> hand;
+	private List<Karte> hand = new ArrayList<Karte>();
 	private boolean hatMauGerufen;
 	private boolean istDran;
 	private boolean istComputer;

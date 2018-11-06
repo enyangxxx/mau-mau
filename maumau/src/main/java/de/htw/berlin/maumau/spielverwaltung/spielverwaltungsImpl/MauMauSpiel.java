@@ -4,6 +4,7 @@ import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.Spieler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ public class MauMauSpiel {
     private List<Spieler> spielerliste;
     private int runde;
     private List<Karte> ablagestapel;
-    private List<Karte> kartenstapel;
+    private List<Karte> kartenstapel = new ArrayList<Karte>();
     private Kartentyp wunschtyp;
     private int anzahlSonderregelKartenZiehen;
 
