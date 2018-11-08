@@ -4,21 +4,20 @@ import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.*;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.*;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpiel;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.*;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.Karte;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.Spieler;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class SpielverwaltungsTest {
 
