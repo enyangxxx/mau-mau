@@ -18,6 +18,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * @author Enyang Wang, Steve Engel, Theo Radig
+ */
 public class SpielverwaltungsTest {
 
     private Log log = LogFactory.getLog(SpielverwaltungsTest.class);

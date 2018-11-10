@@ -14,6 +14,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * @author Enyang Wang, Steve Engel, Theo Radig
+ */
 public class SpielregelnTest {
 
     private ISpielregeln spielregeln;
