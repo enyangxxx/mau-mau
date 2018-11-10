@@ -5,7 +5,7 @@ package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface;
 
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.Spieler;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 
 import java.util.List;
 
@@ -21,6 +21,7 @@ public class Karte{
 	public Karte(){
 
 	}
+
 	
 	public Karte(Kartentyp typ, Kartenwert wert) {
 		this.typ = typ;
@@ -42,4 +43,5 @@ public class Karte{
 	public void setWert(Kartenwert wert) {
 		this.wert = wert;
 	}
+
 }

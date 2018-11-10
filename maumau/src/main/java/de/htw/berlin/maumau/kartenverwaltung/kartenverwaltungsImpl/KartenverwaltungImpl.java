@@ -1,8 +1,9 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl;
 
+
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.Spieler;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
     public void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) {
 
     }
+
 
 
 }
