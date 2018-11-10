@@ -2,7 +2,6 @@ package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface;
 
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.Spieler;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpiel;
 
 import java.util.List;
 
@@ -67,7 +66,7 @@ public interface ISpielverwaltung {
      * @param spieler - der Spieler
      * @param kartenstapel - der Kartenstapel
      */
-    void maumauPruefen(Spieler spieler, List<Karte> kartenstapel);
+    boolean maumauPruefen(Spieler spieler, List<Karte> kartenstapel);
 
     /**
      * Ein {@link Spieler} ruft Mau Mau und die Variable hatMauGerufen wird auf true gesetzt.

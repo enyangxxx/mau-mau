@@ -39,7 +39,6 @@ public class SpielverwaltungsTest {
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
-
     @Before
     public void setUp(){
     }
@@ -49,7 +48,9 @@ public class SpielverwaltungsTest {
         spielerliste = new ArrayList<Spieler>();
         spielerliste.add(ingo);
         spielerliste.add(enyang);
-        assertEquals("Die erste Runde des neuen Spiels muss 1 sein",1,spielverwaltung.neuesSpielStarten(spielerliste).getRunde());
+        MauMauSpiel neuesSpiel = spielverwaltung.neuesSpielStarten(spielerliste);
+        assertEquals("Die erste Runde des neuen Spiels muss 1 sein",1,neuesSpiel.getRunde());
+        assertNotNull("Das neue Spiel muss erstellt worden sein.",neuesSpiel);
     }
 
     @Test
@@ -72,7 +73,7 @@ public class SpielverwaltungsTest {
         int alteRunde = spiel.getRunde();
         spielverwaltung.neueRundeStarten(spiel);
         int neueRunde = spiel.getRunde();
-        Assert.assertEquals("Neue Runde muss um 1 größer sein als die alte Runde",alteRunde + 1,neueRunde);
+        assertEquals("Neue Runde muss um 1 größer sein als die alte Runde",alteRunde + 1,neueRunde);
     }
 
     @Test
@@ -88,8 +89,8 @@ public class SpielverwaltungsTest {
         int neueAnzahlKartenInHand = spieler.getHand().size();
         int neueKartenstapelMenge = stapel.size();
 
-        assertEquals("Die Hand muss um 1 Karte erweitert sein", neueAnzahlKartenInHand, alteAnzahlKartenInHand + 1);
-        assertEquals("Der Kartenstapel muss um 1 Karte verringert sein", neueKartenstapelMenge, alteKartenstapelMenge - 1);
+        assertEquals("Die Hand muss um 1 Karte erweitert sein", alteAnzahlKartenInHand + 1,neueAnzahlKartenInHand);
+        assertEquals("Der Kartenstapel muss um 1 Karte verringert sein", alteKartenstapelMenge - 1, neueKartenstapelMenge);
     }
 
     @Test
@@ -112,8 +113,8 @@ public class SpielverwaltungsTest {
         int neueAnzahlKartenInHand = spieler.getHand().size();
         int neueKartenstapelMenge = stapel.size();
 
-        assertEquals("Die Hand muss um 2 Karten erweitert sein", neueAnzahlKartenInHand, alteAnzahlKartenInHand + 2);
-        assertEquals("Der Kartenstapel muss um 2 Karten verringert sein", neueKartenstapelMenge, alteKartenstapelMenge - 2);
+        assertEquals("Die Hand muss um 2 Karten erweitert sein", alteAnzahlKartenInHand + 2, neueAnzahlKartenInHand);
+        assertEquals("Der Kartenstapel muss um 2 Karten verringert sein", alteKartenstapelMenge - 2, neueKartenstapelMenge);
 
     }
 
@@ -125,41 +126,41 @@ public class SpielverwaltungsTest {
     }
 
     @Test
-    void testKartelegenBeiNormalerKarte(){
+    void testKarteLegen(){
         spielerliste.add(ingo);
-
         Spieler spieler = spielerliste.get(0);
+
         spieler.setHand(hand);
         int alteAnzahlKartenInHand = spieler.getHand().size();
-        int alteKartenstapelMenge = stapel.size();
+        int alteAblagestapelMenge = stapel.size();
 
         spielverwaltung.karteLegen(spieler.getHand().get(1), spieler.getHand(), stapel);
 
         int neueAnzahlKartenInHand = spieler.getHand().size();
-        int neueKartenstapelMenge = stapel.size();
+        int neueAblagestapelMenge = stapel.size();
 
         assertEquals("Die Hand muss um 1 Karte verringert sein", neueAnzahlKartenInHand, alteAnzahlKartenInHand - 1);
-        assertEquals("Der Kartenstapel muss um 1 Karte erweitert sein", neueKartenstapelMenge, alteKartenstapelMenge + 1);
+        assertEquals("Der Ablagestapel muss um 1 Karte erweitert sein", neueAblagestapelMenge, alteAblagestapelMenge + 1);
 
     }
 
     @Test
-    void testKartelegenBeiBube(){
+    void testBubeLegen(){
         spielerliste.add(ingo);
 
         Spieler spieler = spielerliste.get(0);
         spieler.setHand(hand);
         int alteAnzahlKartenInHand = spieler.getHand().size();
-        int alteKartenstapelMenge = stapel.size();
+        int alteAblagestapelMenge = stapel.size();
 
         spielverwaltung.karteLegen(spieler.getHand().get(0), spieler.getHand(), stapel);
 
         int neueAnzahlKartenInHand = spieler.getHand().size();
-        int neueKartenstapelMenge = stapel.size();
+        int neueAblagestapelMenge = stapel.size();
 
         assertNotNull("Der Wunschtyp darf nicht null sein", spielService.getWunschtyp());
         assertEquals("Die Hand muss um 1 Karte verringert sein", neueAnzahlKartenInHand, alteAnzahlKartenInHand - 1);
-        assertEquals("Der Kartenstapel muss um 1 Karte erweitert sein", neueKartenstapelMenge, alteKartenstapelMenge + 1);
+        assertEquals("Der Kartenstapel muss um 1 Karte erweitert sein", neueAblagestapelMenge, alteAblagestapelMenge + 1);
 
     }
 
