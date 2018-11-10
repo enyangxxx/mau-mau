@@ -8,9 +8,9 @@ import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 
 public class SpielverwaltungsTest {
 
+    private Log log = LogFactory.getLog(SpielverwaltungsTest.class);
     private ISpielverwaltung spielverwaltung;
     private static final Spieler ingo = new Spieler("Ingo", 1, false);
     private static final Spieler enyang = new Spieler("Enyang", 2, false);
@@ -44,6 +45,7 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität, ein neues Spiel zu starten, indem eine Spielerliste mit 2 Spielern übergeben wird.
+     * Das erwartete Ergebnis ist ein neues Spiel mit der Runde 1
      */
     @Test
     void testNeuesSpielStartenMitSpielerliste() {
@@ -57,6 +59,7 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität, ein neues Spiel zu starten, indem eine leere Spielerliste übergeben wird.
+     * Das erwartete Ergebnis ist KeineSpielerException
      */
     @Test
     void testNeuesSpielStartenMitSpielerlisteOhneSpieler() {
@@ -67,6 +70,7 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität, ein neues Spiel zu starten, indem keine Spielerliste übergeben wird.
+     * Das erwartete Ergebnis ist der Spieler KeineSpielerException
      */
     @Test
     void testNeuesSpielStartenOhneSpielerliste() {
@@ -76,6 +80,7 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität, eine neue Runde im Spiel zu starten, angefangen mit der 1. Runde.
+     * Das erwartete Ergebnis ist alteRunde + 1 == neueRunde
      */
     @Test
     void testNeueRundeStarten() {
@@ -89,6 +94,7 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität, eine neue Karte zu ziehen.
+     * Das erwartete Ergebnis ist alteAnzahlKartenInHand + 1 && alteKartenstapelMenge - 1
      */
     @Test
     void testKarteZiehen() {
@@ -109,6 +115,7 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität, eine neue Karte ohne Angabe eines Spielers zu ziehen.
+     * Das erwartete Ergebnis ist alteAnzahlKartenInHand + 1 && alteKartenstapelMenge - 1
      */
     @Test
     void testKarteZiehenOhneSpieler() {
@@ -119,6 +126,7 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität, zwei Karten zu ziehen.
+     * Das erwartete Ergebnis ist alteAnzahlKartenInHand + 2 && alteKartenstapelMenge - 2
      */
     @Test
     void testZweiKartenZiehen() {
@@ -140,6 +148,7 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität, zwei neuen Karten ohne Angabe eines Spielers zu ziehen.
+     * Das erwartete Ergebnis ist KeineSpielerException
      */
     @Test
     void testZweiKartenZiehenOhneSpieler() {
@@ -150,6 +159,7 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität, eine Karte zu legen.
+     * Das erwartete Ergebnis ist alteAnzahlKartenInHand - 1 && alteAblagestapelMenge + 1
      */
     @Test
     void testKarteLegen() {
@@ -165,13 +175,14 @@ public class SpielverwaltungsTest {
         int neueAnzahlKartenInHand = spieler.getHand().size();
         int neueAblagestapelMenge = stapel.size();
 
-        assertEquals("Die Hand muss um 1 Karte verringert sein", neueAnzahlKartenInHand, alteAnzahlKartenInHand - 1);
-        assertEquals("Der Ablagestapel muss um 1 Karte erweitert sein", neueAblagestapelMenge, alteAblagestapelMenge + 1);
+        assertEquals("Die Hand muss um 1 Karte verringert sein", alteAnzahlKartenInHand - 1,neueAnzahlKartenInHand);
+        assertEquals("Der Ablagestapel muss um 1 Karte erweitert sein", alteAblagestapelMenge + 1, neueAblagestapelMenge);
 
     }
 
     /**
      * Teste die Funktionalität, eine Karte zu legen, wenn vorher ein Wunschtyp durch Bube festgelegt wurde.
+     * Das erwartete Ergebnis ist ein gesetzter Wunschtyp && alteAnzahlKartenInHand - 1 && alteAblagestapelMenge + 1
      */
     @Test
     void testBubeLegen() {
@@ -188,13 +199,14 @@ public class SpielverwaltungsTest {
         int neueAblagestapelMenge = stapel.size();
 
         assertNotNull("Der Wunschtyp darf nicht null sein", spielService.getWunschtyp());
-        assertEquals("Die Hand muss um 1 Karte verringert sein", neueAnzahlKartenInHand, alteAnzahlKartenInHand - 1);
-        assertEquals("Der Kartenstapel muss um 1 Karte erweitert sein", neueAblagestapelMenge, alteAblagestapelMenge + 1);
+        assertEquals("Die Hand muss um 1 Karte verringert sein", alteAnzahlKartenInHand - 1, neueAnzahlKartenInHand);
+        assertEquals("Der Ablagestapel muss um 1 Karte erweitert sein", alteAblagestapelMenge + 1, neueAblagestapelMenge);
 
     }
 
     /**
      * Teste die Funktionalität, die letzte Karte des Ablagestapels zu ermitteln.
+     * Das erwartete Ergebnis ist die Karte PIK/BUBE
      */
     @Test
     void testLetzteKarteVomAblagestapelErmitteln() {
@@ -204,6 +216,7 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität, die letzte Karte im leeren Ablagestapel zu ermitteln.
+     * Das erwartete Ergebnis ist KeineKarteException
      */
     @Test
     void testLetzteKarteInLeererListeErmitteln() {
@@ -213,6 +226,7 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität zu prüfen, ob ein Spieler MauMau gerufen hat und ob er zur Strafe 2 Karten gezogen hat.
+     * Das erwartete Ergebnis ist ein unveränderter Kartenstapel, bedeutet dass Spieler keine Karten zur Strafe gezogen hat
      */
     @Test
     void testMauMauPruefenWennTrue() {
@@ -226,6 +240,7 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität zu prüfen, ob ein Spieler MauMau gerufen hat und ob er zur Strafe 2 Karten gezogen hat.
+     * Das erwartete Ergebnis ist alteMengeInHand + 2 && alteKartenstapelMenge - 2
      */
     @Test
     void testMauMauPruefenWennFalse() {
@@ -245,6 +260,7 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität, MauMau zu rufen.
+     * Das erwartete Ergebnis ist dass Ingo MauMau gerufen hat
      */
     @Test
     void testMauMauRufen() {
@@ -256,11 +272,11 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität, Minuspunkte anhand der Karten in seiner Hand zu ermitteln.
+     * Das erwartete Ergebnis ist 19
      */
     @Test
     void testMinuspunkteBerechnen() {
         assertEquals("", 19, spielverwaltung.minuspunkteBerechnen(hand));
     }
-
 
 }

@@ -1,17 +1,10 @@
-/**
- * 
- */
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface;
 
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
-
-import java.util.List;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
- *
  */
 public class Karte{
 	
@@ -22,7 +15,6 @@ public class Karte{
 
 	}
 
-	
 	public Karte(Kartentyp typ, Kartenwert wert) {
 		this.typ = typ;
 		this.wert = wert;

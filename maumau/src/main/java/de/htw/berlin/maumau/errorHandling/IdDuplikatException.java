@@ -3,11 +3,11 @@ package de.htw.berlin.maumau.errorHandling;
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
-public class KeineSpielerException extends Exception{
+public class IdDuplikatException extends Exception{
 
-    public static final String errorMessage = "Kein Spieler wurde für die Aktion selektiert";
+    public static final String errorMessage = "Die ID ist bereits vergeben";
 
-    public KeineSpielerException(String message){
+    public IdDuplikatException(String message){
         super(message);
     }
 

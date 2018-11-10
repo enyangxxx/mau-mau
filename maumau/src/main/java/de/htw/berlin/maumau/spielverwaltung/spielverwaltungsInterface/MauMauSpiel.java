@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
-
 public class MauMauSpiel {
 
     private List<Spieler> spielerliste;

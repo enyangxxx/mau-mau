@@ -5,6 +5,9 @@ import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spiele
 
 import java.util.List;
 
+/**
+ * @author Enyang Wang, Steve Engel, Theo Radig
+ */
 public interface ISpielverwaltung {
 
     /**

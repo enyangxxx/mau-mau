@@ -1,9 +1,12 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface;
 
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.Spieler;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 
 import java.util.List;
 
+/**
+ * @author Enyang Wang, Steve Engel, Theo Radig
+ */
 public interface IKartenverwaltung {
 
     /**
