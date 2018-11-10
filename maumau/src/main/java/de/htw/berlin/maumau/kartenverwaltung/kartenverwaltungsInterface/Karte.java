@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl;
+package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface;
 
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
