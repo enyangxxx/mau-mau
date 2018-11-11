@@ -8,9 +8,9 @@ import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
  */
 public class SpielverwaltungsTest {
 
-    private Log log = LogFactory.getLog(SpielverwaltungsTest.class);
+    //private Log log = LogFactory.getLog(SpielverwaltungsTest.class);
     private ISpielverwaltung spielverwaltung;
     private static final Spieler ingo = new Spieler("Ingo", 1, false);
     private static final Spieler enyang = new Spieler("Enyang", 2, false);
@@ -37,13 +37,13 @@ public class SpielverwaltungsTest {
         add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
     }};
     private List<Spieler> spielerliste;
-    private MauMauSpiel spielService;
 
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
     @Before
     public void setUp() {
+        spielerliste = new ArrayList<Spieler>();
     }
 
     /**
@@ -52,7 +52,6 @@ public class SpielverwaltungsTest {
      */
     @Test
     void testNeuesSpielStartenMitSpielerliste() {
-        spielerliste = new ArrayList<Spieler>();
         spielerliste.add(ingo);
         spielerliste.add(enyang);
         MauMauSpiel neuesSpiel = spielverwaltung.neuesSpielStarten(spielerliste);
@@ -66,17 +65,6 @@ public class SpielverwaltungsTest {
      */
     @Test
     void testNeuesSpielStartenMitSpielerlisteOhneSpieler() {
-        exceptionRule.expect(KeineSpielerException.class);
-        spielerliste = new ArrayList<Spieler>();
-        spielverwaltung.neuesSpielStarten(spielerliste);
-    }
-
-    /**
-     * Teste die Funktionalität, ein neues Spiel zu starten, indem keine Spielerliste übergeben wird.
-     * Das erwartete Ergebnis ist der Spieler KeineSpielerException
-     */
-    @Test
-    void testNeuesSpielStartenOhneSpielerliste() {
         exceptionRule.expect(KeineSpielerException.class);
         spielverwaltung.neuesSpielStarten(spielerliste);
     }
@@ -190,6 +178,7 @@ public class SpielverwaltungsTest {
     @Test
     void testBubeLegen() {
         spielerliste.add(ingo);
+        MauMauSpiel maumauSpiel = new MauMauSpiel(spielerliste);
 
         Spieler spieler = spielerliste.get(0);
         spieler.setHand(hand);
@@ -201,7 +190,7 @@ public class SpielverwaltungsTest {
         int neueAnzahlKartenInHand = spieler.getHand().size();
         int neueAblagestapelMenge = stapel.size();
 
-        assertNotNull("Der Wunschtyp darf nicht null sein", spielService.getWunschtyp());
+        assertNotNull("Der Wunschtyp darf nicht null sein", maumauSpiel.getWunschtyp());
         assertEquals("Die Hand muss um 1 Karte verringert sein", alteAnzahlKartenInHand - 1, neueAnzahlKartenInHand);
         assertEquals("Der Ablagestapel muss um 1 Karte erweitert sein", alteAblagestapelMenge + 1, neueAblagestapelMenge);
 
