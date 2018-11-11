@@ -2,6 +2,7 @@ package de.htwberlin.mau_mau.kartenverwaltung;
 
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
+import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.KartenverwaltungImpl;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
@@ -20,7 +21,7 @@ import static org.junit.Assert.*;
 public class KartenverwaltungsTest {
 
     //private static final Log log = LogFactory.getLog(KartenverwaltungsTest.class);
-    private IKartenverwaltung karte;
+    private IKartenverwaltung kartenverwaltung;
     private List<Karte> testKartenstapel = new ArrayList<Karte>() {{
         add(new Karte(Kartentyp.HERZ, Kartenwert.SIEBEN));
         add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
@@ -62,7 +63,7 @@ public class KartenverwaltungsTest {
 
     @Before
     public void setUp() {
-        karte = new KartenverwaltungImpl();
+        kartenverwaltung = new KartenverwaltungImpl();
     }
 
     /**
@@ -72,7 +73,7 @@ public class KartenverwaltungsTest {
     @Test
     public void testKartenstapelGenerierenisNotNull() {
 
-        List<Karte> kartenstapel = karte.kartenstapelGenerieren();
+        List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
         assertNotNull("Kartenstapel darf nicht null sein", kartenstapel);
     }
 
@@ -83,7 +84,7 @@ public class KartenverwaltungsTest {
     @Test
     public void testKartenstapelGenerierenIsNotEmpty() {
 
-        List<Karte> kartenstapel = karte.kartenstapelGenerieren();
+        List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
         assertFalse("Kartenstapel darf nicht empty sein", kartenstapel.isEmpty());
     }
 
@@ -94,7 +95,7 @@ public class KartenverwaltungsTest {
     @Test
     public void testKartenstapelGenerierenRichtigeAnzahlVonKarten() {
 
-        List<Karte> kartenstapel = karte.kartenstapelGenerieren();
+        List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
         assertEquals("Der Kartenstapel muss aus 32 Karten bestehen", 32, kartenstapel.size());
     }
 
@@ -104,7 +105,7 @@ public class KartenverwaltungsTest {
      */
     @Test
     public void testKartenstapelGenerierenErzeugtKeineDuplikate() {
-        List<Karte> kartenstapel = karte.kartenstapelGenerieren();
+        List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
 
         //Vergleiche die Karten des Korrekten Kartenstapels mit dem generierten
         boolean kartenstapelIstGleich = true;
@@ -124,13 +125,13 @@ public class KartenverwaltungsTest {
      */
     @Test
     public void testKartenMischen() {
-        List<Karte> kartenstapel = karte.kartenstapelGenerieren();
-        karte.kartenMischen(kartenstapel);
+        List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
+        kartenverwaltung.kartenMischen(kartenstapel);
         boolean istKartenstapelGemischt = false;
         int i = 0;
 
         while (i < kartenstapel.size()) {
-            if(istKartenstapelGemischt){
+            if (istKartenstapelGemischt) {
                 break;
             }
             if (testKartenstapel.get(i).getTyp() != kartenstapel.get(i).getTyp()
@@ -144,6 +145,16 @@ public class KartenverwaltungsTest {
     }
 
     /**
+     * Testet die Funktionalität von kartenMischen, wenn der Kartenstapel leer ist.
+     * Das erwartete Ergebnis ist eine KeineKarteException
+     */
+    @Test (expected = KeineKarteException.class)
+    void testKartenMischenStapelEmpty(){
+        List<Karte> kartenstapel = new ArrayList<Karte>();
+        kartenverwaltung.kartenMischen(kartenstapel);
+    }
+
+    /**
      * Testet, ob die Methode KartenAusteilen jedem Spieler aus der Spielerliste 5 Karten austeilt,
      * ob der Kartenstapel um 11 Karten reduziert wurde und ob der Ablagestapel 1 Karte enthält.
      * Das erwartete Ergebnis ist dass jeder Spieler jeweils 5 Karten, der Ablagestapel 1 Karte,
@@ -151,19 +162,19 @@ public class KartenverwaltungsTest {
      */
     @Test
     public void testKartenAusteilen() {
-        List<Karte> kartenstapel = karte.kartenstapelGenerieren();
+        List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
         List<Karte> ablagestapel = new ArrayList<Karte>();
         List<Spieler> spielerList = new ArrayList<Spieler>() {{
             add(new Spieler("theo", 1, false));
             add(new Spieler("ingo", 2, false));
         }};
 
-        karte.kartenAusteilen(spielerList, kartenstapel, ablagestapel);
+        kartenverwaltung.kartenAusteilen(spielerList, kartenstapel, ablagestapel);
 
-        assertEquals("Der Spieler 1 muss 5 Karten haben",5, spielerList.get(0).getHand().size());
-        assertEquals("Der Spieler 2 muss 5 Karten haben",5, spielerList.get(1).getHand().size());
-        assertEquals("Der Kartenstapel muss 21 Karten haben",21, kartenstapel.size());
-        assertEquals("Der Ablagestapel muss 1 Karte haben",1, ablagestapel.size());
+        assertEquals("Der Spieler 1 muss 5 Karten haben", 5, spielerList.get(0).getHand().size());
+        assertEquals("Der Spieler 2 muss 5 Karten haben", 5, spielerList.get(1).getHand().size());
+        assertEquals("Der Kartenstapel muss 21 Karten haben", 21, kartenstapel.size());
+        assertEquals("Der Ablagestapel muss 1 Karte haben", 1, ablagestapel.size());
     }
 
     /**
@@ -174,12 +185,12 @@ public class KartenverwaltungsTest {
      */
     @Test
     public void testAblagestapelWiederverwenden() {
-        List<Karte> kartenstapel = karte.kartenstapelGenerieren();
+        List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
         List<Karte> ablagestapel = new ArrayList<Karte>();
         int erwarteteAnzahl = kartenstapel.size() + ablagestapel.size();
-        karte.ablagestapelWiederverwenden(ablagestapel, kartenstapel);
+        kartenverwaltung.ablagestapelWiederverwenden(ablagestapel, kartenstapel);
 
-        assertEquals("Der neue Kartenstapel muss " + erwarteteAnzahl + " Karten haben",erwarteteAnzahl, kartenstapel.size());
+        assertEquals("Der neue Kartenstapel muss " + erwarteteAnzahl + " Karten haben", erwarteteAnzahl, kartenstapel.size());
     }
 
 }

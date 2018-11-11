@@ -19,9 +19,28 @@ public class MauMauSpiel {
     private Kartentyp wunschtyp;
     private int anzahlSonderregelKartenZiehen;
 
+
     public MauMauSpiel(List<Spieler> spielerliste) {
         this.runde = 1;
+        this.anzahlSonderregelKartenZiehen = 2;
         this.spielerliste = spielerliste;
+    }
+
+
+    public List<Spieler> getSpielerliste() {
+        return spielerliste;
+    }
+
+    public void setSpielerliste(List<Spieler> spielerliste) {
+        this.spielerliste = spielerliste;
+    }
+
+    public int getAnzahlSonderregelKartenZiehen() {
+        return anzahlSonderregelKartenZiehen;
+    }
+
+    public void setAnzahlSonderregelKartenZiehen(int anzahlSonderregelKartenZiehen) {
+        this.anzahlSonderregelKartenZiehen = anzahlSonderregelKartenZiehen;
     }
 
     public int getRunde() {
