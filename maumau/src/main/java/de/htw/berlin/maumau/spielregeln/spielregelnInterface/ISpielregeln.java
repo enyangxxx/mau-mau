@@ -3,11 +3,14 @@ package de.htw.berlin.maumau.spielregeln.spielregelnInterface;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.SonderregelTyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.Spieler;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 
 import java.util.List;
 
+/**
+ * @author Enyang Wang, Steve Engel, Theo Radig
+ */
 public interface ISpielregeln {
 
     /**
