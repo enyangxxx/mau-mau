@@ -169,7 +169,8 @@ public class KartenverwaltungsTest {
     /**
      * Testet, ob die Methode Ablagestapel Wiederverwenden den Ablagestapel und den Kartenstapel zu einem
      * neuen Kartenstapel zusammenfügt.
-     * Das erwartete Ergebnis ist dass jeder Spieler jeweils 5 Karten, der Ablagestapel 1 Karte,
+     * Das erwartete Ergebnis ist dass der neue Kartenstapel so viele Karten hat wie die Kartenmenge
+     * des Ablagenstapels und des alten Kartenstapels
      */
     @Test
     public void testAblagestapelWiederverwenden() {
