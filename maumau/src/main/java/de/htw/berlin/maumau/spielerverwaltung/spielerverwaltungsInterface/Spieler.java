@@ -16,7 +16,7 @@ public class Spieler {
     private boolean hatMauGerufen;
     private boolean istDran;
     private boolean istComputer;
-    private Karte neueKarte;// Die nächste Karte, die gelegt werden soll
+    private Karte neueKarte;
     private int punktestand;
 
     public Spieler(String name, int s_id, boolean istComputer) {

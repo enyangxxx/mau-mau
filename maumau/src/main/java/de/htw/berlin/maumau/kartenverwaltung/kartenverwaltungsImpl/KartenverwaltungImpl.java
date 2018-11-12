@@ -60,5 +60,4 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
     }
 
 
-
 }

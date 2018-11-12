@@ -148,8 +148,8 @@ public class KartenverwaltungsTest {
      * Testet die Funktionalität von kartenMischen, wenn der Kartenstapel leer ist.
      * Das erwartete Ergebnis ist eine KeineKarteException
      */
-    @Test (expected = KeineKarteException.class)
-    void testKartenMischenStapelEmpty(){
+    @Test(expected = KeineKarteException.class)
+    void testKartenMischenStapelEmpty() {
         List<Karte> kartenstapel = new ArrayList<Karte>();
         kartenverwaltung.kartenMischen(kartenstapel);
     }

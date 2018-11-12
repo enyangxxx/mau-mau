@@ -6,6 +6,7 @@ import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.SpielverwaltungImpl;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.apache.commons.logging.Log;
@@ -44,6 +45,7 @@ public class SpielverwaltungsTest {
 
     @Before
     public void setUp() {
+        spielverwaltung = new SpielverwaltungImpl();
     }
 
     /**
@@ -178,7 +180,7 @@ public class SpielverwaltungsTest {
         int neueAnzahlKartenInHand = spieler.getHand().size();
         int neueAblagestapelMenge = stapel.size();
 
-        assertEquals("Die Hand muss um 1 Karte verringert sein", alteAnzahlKartenInHand - 1,neueAnzahlKartenInHand);
+        assertEquals("Die Hand muss um 1 Karte verringert sein", alteAnzahlKartenInHand - 1, neueAnzahlKartenInHand);
         assertEquals("Der Ablagestapel muss um 1 Karte erweitert sein", alteAblagestapelMenge + 1, neueAblagestapelMenge);
 
     }

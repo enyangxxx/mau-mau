@@ -3,16 +3,16 @@ package de.htw.berlin.maumau.errorHandling;
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
-public class KeinWunschtypException extends Exception{
+public class KeinWunschtypException extends Exception {
 
-    public static final String errorMessage = "Keine Wunschtyp wurde festgelegt.";
+    private static final String errorMessage = "Keine Wunschtyp wurde festgelegt.";
 
-    public KeinWunschtypException(String message){
+    public KeinWunschtypException(String message) {
         super(message);
     }
 
     @Override
-    public String getMessage(){
+    public String getMessage() {
         return errorMessage;
     }
 }

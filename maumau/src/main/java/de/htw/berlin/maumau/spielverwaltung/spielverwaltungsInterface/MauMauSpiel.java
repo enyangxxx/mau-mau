@@ -18,6 +18,7 @@ public class MauMauSpiel {
     private List<Karte> kartenstapel = new ArrayList<Karte>();
     private Kartentyp wunschtyp;
     private int anzahlSonderregelKartenZiehen;
+    private int spielID;
 
 
     public MauMauSpiel(List<Spieler> spielerliste) {
@@ -26,6 +27,13 @@ public class MauMauSpiel {
         this.spielerliste = spielerliste;
     }
 
+    public int getSpielID() {
+        return spielID;
+    }
+
+    public void setSpielID(int spielID) {
+        this.spielID = spielID;
+    }
 
     public List<Spieler> getSpielerliste() {
         return spielerliste;

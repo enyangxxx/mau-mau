@@ -3,16 +3,16 @@ package de.htw.berlin.maumau.errorHandling;
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
-public class KeineKarteException extends Exception{
+public class KeineKarteException extends Exception {
 
-    public static final String errorMessage = "Keine Karte wurde für die Aktion selektiert";
+    private static final String errorMessage = "Keine Karte wurde für die Aktion selektiert";
 
-    public KeineKarteException(String message){
+    public KeineKarteException(String message) {
         super(message);
     }
 
     @Override
-    public String getMessage(){
+    public String getMessage() {
         return errorMessage;
     }
 }

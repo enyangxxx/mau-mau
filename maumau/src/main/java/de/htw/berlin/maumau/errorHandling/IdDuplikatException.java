@@ -3,16 +3,16 @@ package de.htw.berlin.maumau.errorHandling;
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
-public class IdDuplikatException extends Exception{
+public class IdDuplikatException extends Exception {
 
-    public static final String errorMessage = "Die ID ist bereits vergeben";
+    private static final String errorMessage = "Die ID ist bereits vergeben";
 
-    public IdDuplikatException(String message){
+    public IdDuplikatException(String message) {
         super(message);
     }
 
     @Override
-    public String getMessage(){
+    public String getMessage() {
         return errorMessage;
     }
 }

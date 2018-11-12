@@ -29,7 +29,7 @@ public interface ISpielverwaltung {
      * Ein {@link Spieler} zieht eine Karte von dem Kartenstapel und fügt diese seiner Hand hinzu.
      * Wenn der Kartenstapel leer ist, wird er neu erstellt.
      *
-     * @param spieler - der Spieler
+     * @param spieler      - der Spieler
      * @param kartenstapel - der Kartenstapel
      */
     void karteZiehen(Spieler spieler, List<Karte> kartenstapel);
@@ -38,9 +38,9 @@ public interface ISpielverwaltung {
      * Ein {@link Spieler} zieht eine bestimmte Anzahl von {@link Karte} vom Kartenstapel.
      * Wenn der Kartenstapel leer ist, wird er neu erstellt.
      *
-     * @param spieler - der Spieler
+     * @param spieler      - der Spieler
      * @param kartenstapel - der Kartenstapel
-     * @param anzahl - Anzahl der zu ziehenden Karten
+     * @param anzahl       - Anzahl der zu ziehenden Karten
      */
     void karteZiehen(Spieler spieler, List<Karte> kartenstapel, int anzahl);
 
@@ -66,7 +66,7 @@ public interface ISpielverwaltung {
      * Wenn ja, muss er keinen Strafzug machen und die Variable hatMauGerufen wird wieder auf false gesetzt.
      * Wenn nein, muss er zwei Karten ziehen.
      *
-     * @param spieler - der Spieler
+     * @param spieler      - der Spieler
      * @param kartenstapel - der Kartenstapel
      */
     boolean maumauPruefen(Spieler spieler, List<Karte> kartenstapel);
