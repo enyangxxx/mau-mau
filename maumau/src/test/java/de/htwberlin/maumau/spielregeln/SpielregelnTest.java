@@ -6,6 +6,7 @@ import de.htw.berlin.maumau.enumeration.SonderregelTyp;
 import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import de.htw.berlin.maumau.spielregeln.spielregelnImpl.SpielregelnImpl;
 import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.junit.Before;
@@ -31,9 +32,7 @@ public class SpielregelnTest {
         add(theo);
     }};
 
-    private MauMauSpiel spiel = new MauMauSpiel(spielerliste);
-
-
+    private MauMauSpiel spiel;
     private List<Karte> testkartenstapel = new ArrayList<Karte>() {{
         add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
         add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
@@ -45,6 +44,8 @@ public class SpielregelnTest {
 
     @Before
     public void setUp() {
+        spielregeln = new SpielregelnImpl();
+        spiel = new MauMauSpiel(spielerliste);
     }
 
     /**
