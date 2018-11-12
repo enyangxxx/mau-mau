@@ -1,4 +1,4 @@
-package de.htwberlin.mau_mau.spielerverwaltung;
+package de.htwberlin.maumau.spielerverwaltung;
 
 import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
