@@ -2,6 +2,7 @@ package de.htwberlin.maumau.spielerverwaltung;
 
 import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import org.junit.Before;
@@ -24,6 +25,7 @@ public class SpielerverwaltungsTest {
 
     @Before
     public void setUp(){
+        spielerverwaltung = new SpielerverwaltungImpl();
         spielerliste = new ArrayList<Spieler>();
     }
 

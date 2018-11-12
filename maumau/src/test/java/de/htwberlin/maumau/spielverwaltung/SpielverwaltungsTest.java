@@ -6,6 +6,7 @@ import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.SpielverwaltungImpl;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.junit.Before;
@@ -43,6 +44,7 @@ public class SpielverwaltungsTest {
 
     @Before
     public void setUp() {
+        spielverwaltung = new SpielverwaltungImpl();
         spielerliste = new ArrayList<Spieler>();
     }
 
