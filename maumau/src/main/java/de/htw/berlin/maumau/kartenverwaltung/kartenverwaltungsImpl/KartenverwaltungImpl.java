@@ -43,7 +43,6 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
         }catch (Exception e){
             throw new KeineKarteException("Keine Karte Exception");
         }
-        Collections.shuffle(kartenstapel);
     }
 
     /**
