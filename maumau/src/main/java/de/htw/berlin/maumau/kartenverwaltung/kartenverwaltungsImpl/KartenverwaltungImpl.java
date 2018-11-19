@@ -37,7 +37,12 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      *
      * @param kartenstapel - der aktuelle Kartenstapel
      */
-    public void kartenMischen(List<Karte> kartenstapel) {
+    public void kartenMischen(List<Karte> kartenstapel) throws KeineKarteException{
+        try{
+            Collections.shuffle(kartenstapel);
+        }catch (Exception e){
+            throw new KeineKarteException("Keine Karte Exception");
+        }
         Collections.shuffle(kartenstapel);
     }
 

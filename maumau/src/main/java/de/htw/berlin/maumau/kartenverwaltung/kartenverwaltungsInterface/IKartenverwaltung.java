@@ -1,5 +1,6 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface;
 
+import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface IKartenverwaltung {
      * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.
      * @param kartenstapel - der aktuelle Kartenstapel
      */
-    void kartenMischen(List<Karte> kartenstapel);
+    void kartenMischen(List<Karte> kartenstapel) throws KeineKarteException;
 
     /**
      * Alle {@link Spieler} bekommen je 5 {@link Karte} aus dem Kartenstapel und es wird eine Anfangskarte aufgedeckt.

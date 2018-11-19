@@ -7,7 +7,7 @@ import de.htw.berlin.maumau.enumeration.Kartenwert;
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
 public class Karte{
-	
+
 	private Kartentyp typ;
 	private Kartenwert wert;
 
