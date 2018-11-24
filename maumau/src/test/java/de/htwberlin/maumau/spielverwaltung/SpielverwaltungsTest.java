@@ -44,7 +44,7 @@ public class SpielverwaltungsTest {
     @Before
     public void setUp() {
         spielverwaltung = new SpielverwaltungImpl();
-        spielerliste = new ArrayList<>();
+        spielerliste = new ArrayList<Spieler>();
     }
 
     /**
@@ -215,7 +215,7 @@ public class SpielverwaltungsTest {
     @Test
     public void testLetzteKarteInLeererListeErmitteln() throws KeineKarteException{
         exceptionRule.expect(KeineKarteException.class);
-        spielverwaltung.letzteKarteErmitteln(new ArrayList<>());
+        spielverwaltung.letzteKarteErmitteln(new ArrayList<Karte>());
     }
 
     /**

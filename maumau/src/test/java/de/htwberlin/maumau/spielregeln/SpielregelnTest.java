@@ -53,7 +53,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist false.
      */
     @Test
-    void testIstLegbarHerzNeunAufPikAcht() {
+    public void testIstLegbarHerzNeunAufPikAcht() {
 
         Karte alteKarte = new Karte(Kartentyp.PIK, Kartenwert.ACHT);
         Karte neueKarte = new Karte(Kartentyp.HERZ, Kartenwert.NEUN);
@@ -67,7 +67,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist true.
      */
     @Test
-    void testIstLegbarHerzNeunAufPikNeun() {
+    public void testIstLegbarHerzNeunAufPikNeun() {
 
         Karte alteKarte = new Karte(Kartentyp.PIK, Kartenwert.NEUN);
         Karte neueKarte = new Karte(Kartentyp.HERZ, Kartenwert.NEUN);
@@ -81,7 +81,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist true.
      */
     @Test
-    void testIstLegbarHerzNeunAufHerzAcht() {
+    public void testIstLegbarHerzNeunAufHerzAcht() {
 
         Karte alteKarte = new Karte(Kartentyp.HERZ, Kartenwert.ACHT);
         Karte neueKarte = new Karte(Kartentyp.HERZ, Kartenwert.NEUN);
@@ -95,7 +95,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist false.
      */
     @Test
-    void testIstLegbarKreuzZehnBeiWunschtypKaro() {
+    public void testIstLegbarKreuzZehnBeiWunschtypKaro() throws KeinWunschtypException {
 
         Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN);
         Kartentyp wunschtyp = Kartentyp.KARO;
@@ -109,7 +109,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist true.
      */
     @Test
-    void testIstLegbarKreuzZehnBeiWunschtypKreuz() {
+    public void testIstLegbarKreuzZehnBeiWunschtypKreuz() throws KeinWunschtypException {
 
         Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN);
         Kartentyp wunschtyp = Kartentyp.KREUZ;
@@ -123,7 +123,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist eine KeinWunschtypException
      */
     @Test (expected = KeinWunschtypException.class)
-    void testIstLegbarHerzAchtBeiWunschtypNull() {
+    public void testIstLegbarHerzAchtBeiWunschtypNull() throws KeinWunschtypException {
         Karte neueKarte = new Karte(Kartentyp.HERZ, Kartenwert.ACHT);
         Kartentyp wunschtyp = null;
         spielregeln.istLegbar(neueKarte, wunschtyp);
@@ -135,7 +135,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist, dass keine Sonderregeln auftreten (SonderregelTyp.KEINE)
      */
     @Test
-    void testSonderregelErmittelnKeineSonderregel() {
+    public void testSonderregelErmittelnKeineSonderregel() {
         Karte letzteKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN);
 
         assertEquals("Für Karo Ass soll der Sonderregeltyp Keine ermittelt werden.", SonderregelTyp.KEINE, spielregeln.sonderregelErmitteln(letzteKarte));
@@ -146,7 +146,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist der Sonderregeltyp ASS
      */
     @Test
-    void testSonderregelErmittelnAss() {
+    public void testSonderregelErmittelnAss() {
         Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.ASS);
 
         assertEquals("Für Karo Ass soll der Sonderregeltyp Ass ermittelt werden.", SonderregelTyp.ASS, spielregeln.sonderregelErmitteln(letzteKarte));
@@ -157,7 +157,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist Sonderregeltyp BUBE
      */
     @Test
-    void testSonderregelErmittelnBube() {
+    public void testSonderregelErmittelnBube() {
         Karte letzteKarte = new Karte(Kartentyp.HERZ, Kartenwert.BUBE);
 
         assertEquals("Für Herz Bube soll der Sonderregeltyp Bube ermittelt werden.", SonderregelTyp.BUBE, spielregeln.sonderregelErmitteln(letzteKarte));
@@ -168,7 +168,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist Sonderregeltyp SIEBEN
      */
     @Test
-    void testSonderregelErmittelnSieben() {
+    public void testSonderregelErmittelnSieben() {
         Karte letzteKarte = new Karte(Kartentyp.PIK, Kartenwert.SIEBEN);
 
         assertEquals("Für Pik Sieben soll der Sonderregeltyp Sieben ermittelt werden.", SonderregelTyp.SIEBEN, spielregeln.sonderregelErmitteln(letzteKarte));
@@ -179,7 +179,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist, dass Enyang durchs Aussetzen dieselbe Menge der Handkarten hat und Theo wieder dran ist.
      */
     @Test
-    void testSonderregelAussetzen() {
+    public void testSonderregelAussetzen() {
         List<Karte> hand = new ArrayList<Karte>() {{
             add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
             add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
@@ -190,7 +190,7 @@ public class SpielregelnTest {
         enyang.setIstDran(true);
         theo.setIstDran(false);
 
-        spielregeln.sonderregelAussetzen(enyang, theo);
+        spielregeln.sonderregelAussetzen(enyang, theo, spiel);
 
         assertEquals("Enyangs Hand muss gleich bleiben, da er nicht mit einem Ass kontern kann.", 3, enyang.getHand().size());
         assertTrue("Theo muss jetzt dran sein.", theo.istDran());
@@ -202,7 +202,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist, dass Enyang nicht Aussetzen muss, sondern ein Ass legen kann.
      */
     @Test
-    void testSonderregelAussetzenKontern() {
+    public void testSonderregelAussetzenKontern() {
         List<Karte> hand = new ArrayList<Karte>() {{
             add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
             add(new Karte(Kartentyp.KREUZ, Kartenwert.ASS));
@@ -213,7 +213,8 @@ public class SpielregelnTest {
         enyang.setIstDran(true);
         theo.setIstDran(false);
 
-        spielregeln.sonderregelAussetzen(enyang, theo);
+        spiel.setAblagestapel(new ArrayList<Karte>());
+        spielregeln.sonderregelAussetzen(enyang, theo, spiel);
 
         assertEquals("Enyangs Hand muss um eine Karte reduziert sein, da er mit einem Ass kontern kann.", 2, enyang.getHand().size());
         assertTrue("Theo muss jetzt dran sein.", theo.istDran());
@@ -224,7 +225,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist, dass Enyang zwei Karten vom Kartenstapel zu seiner Hand hinzufügen muss.
      */
     @Test
-    void testSonderregelZweiKartenZiehen() {
+    public void testSonderregelZweiKartenZiehen() {
         List<Karte> hand = new ArrayList<Karte>() {{
             add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
             add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
@@ -235,8 +236,8 @@ public class SpielregelnTest {
 
         int alteAnzahlHand = enyang.getHand().size();
         int alteAnzahlKartenstapel = testkartenstapel.size();
-
-        spielregeln.sonderregelKartenZiehen(2, enyang.getHand(), testkartenstapel);
+        spiel.setKartenstapel(testkartenstapel);
+        spielregeln.sonderregelKartenZiehen(enyang,theo,spiel);
 
         assertEquals("Enyangs Hand muss zwei Karten mehr enthalten.", alteAnzahlHand + 2, enyang.getHand().size());
         assertEquals("Der Kartenstapel soll zwei Karten weniger enthalten.", alteAnzahlKartenstapel - 2, testkartenstapel.size());
@@ -248,7 +249,7 @@ public class SpielregelnTest {
      * der zu ziehenden Karten um zwei erhöht wird.
      */
     @Test
-    void testSonderregelZweiKartenZiehenKontern() {
+    public void testSonderregelZweiKartenZiehenKontern() {
         List<Karte> hand = new ArrayList<Karte>() {{
             add(new Karte(Kartentyp.HERZ, Kartenwert.SIEBEN));
             add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
@@ -257,8 +258,9 @@ public class SpielregelnTest {
 
         enyang.setHand(hand);
         int alteAnzahlHand = enyang.getHand().size();
+        spiel.setAblagestapel(testkartenstapel);
 
-        spielregeln.sonderregelKartenZiehen(spiel.getAnzahlSonderregelKartenZiehen(), enyang.getHand(), testkartenstapel);
+        spielregeln.sonderregelKartenZiehen(enyang,theo, spiel);
 
         assertEquals("Die Anzahl der zu ziehenden Karten muss um 2 erhöht sein.", 4, spiel.getAnzahlSonderregelKartenZiehen());
         assertFalse("Enyang darf nun nicht mehr am Zug sein.", enyang.istDran());
