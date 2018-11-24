@@ -61,10 +61,12 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         List<Karte> hand = spieler.getHand();
         int alteMenge = kartenstapel.size();
         //Wenn Kartenstapel leer, nutze kartenstapelGenerieren
-        for (Iterator<Karte> iterator = kartenstapel.iterator(); alteMenge - kartenstapel.size() < anzahl;) {
-            hand.add(iterator.next());
-            iterator.remove();
-            log.info(KARTE_ZIEHEN_MESSAGE);
+        for (Iterator<Karte> iterator = kartenstapel.iterator(); alteMenge - kartenstapel.size() < anzahl;){
+            if(iterator.hasNext()){
+                hand.add(iterator.next());
+                iterator.remove();
+                log.info(KARTE_ZIEHEN_MESSAGE);
+            }
         }
         spieler.setHand(hand);
     }

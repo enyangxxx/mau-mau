@@ -2,6 +2,7 @@ package de.htw.berlin.maumau.spielregeln.spielregelnInterface;
 
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.SonderregelTyp;
+import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
@@ -19,7 +20,7 @@ public interface ISpielregeln {
      * @param wunschtyp - der Wunschtyp
      * @return true, wenn legbar.
      */
-    boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp);
+    boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp) throws KeinWunschtypException;
 
     /**
      * Anhand der Farbe und des Werts der letzten {@link Karte} wird geprüft, ob die neue {@link Karte} gelegt werden kann.
@@ -43,7 +44,7 @@ public interface ISpielregeln {
      * @param aktuellerSpieler - der aktuelle Spieler
      * @param neuerSpieler - der neue Spieler
      */
-    void sonderregelAussetzen(Spieler aktuellerSpieler, Spieler neuerSpieler);
+    void sonderregelAussetzen(Spieler aktuellerSpieler, Spieler neuerSpieler, MauMauSpiel spiel);
 
     /**
      * Setzt die Sonderregel Karten ziehen um. Entweder werden Karten gezogen, oder es kann gekontert werden.
@@ -53,6 +54,6 @@ public interface ISpielregeln {
      * @param hand - die aktuelle Hand
      * @param kartenstapel - der aktuelle Kartenstapel
      */
-    void sonderregelKartenZiehen(int anzahl, List<Karte> hand, List<Karte> kartenstapel);
+    void sonderregelKartenZiehen(Spieler aktuellerSpieler, Spieler neuerSpieler, MauMauSpiel spiel);
 
 }
