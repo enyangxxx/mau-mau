@@ -1,10 +1,15 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl;
 
 
+import de.htw.berlin.maumau.enumeration.Kartentyp;
+import de.htw.berlin.maumau.enumeration.Kartenwert;
+import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,15 +23,13 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      * @return generierter Kartenstapel
      */
     public List<Karte> kartenstapelGenerieren() {
-        /*
 		ArrayList<Karte> kartenstapel = new ArrayList<Karte>();
         for(int i = 0; i < Kartentyp.values().length; i++){
             for(int a = 0; a < Kartenwert.values().length; a++){
                 kartenstapel.add(new Karte(Kartentyp.values()[i], Kartenwert.values()[a]));
             }
         }
-        */
-        return null;
+        return kartenstapel;
     }
 
     /**
@@ -34,8 +37,12 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      *
      * @param kartenstapel - der aktuelle Kartenstapel
      */
-    public void kartenMischen(List<Karte> kartenstapel) {
-
+    public void kartenMischen(List<Karte> kartenstapel) throws KeineKarteException{
+        try{
+            Collections.shuffle(kartenstapel);
+        }catch (Exception e){
+            throw new KeineKarteException("Keine Karte Exception");
+        }
     }
 
     /**
@@ -46,7 +53,16 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      * @param ablagestapel - der aktuelle Ablagestapel
      */
     public void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel) {
-
+        for (Spieler spieler: spielerliste){
+            List<Karte> hand = new ArrayList<Karte>();
+            for(int i = 0;i < 5; i++){
+                hand.add(kartenstapel.get(i));
+                kartenstapel.remove(kartenstapel.get(i));
+            }
+            spieler.setHand(hand);
+        }
+        ablagestapel.add(kartenstapel.get(kartenstapel.size()-1));
+        kartenstapel.remove(kartenstapel.get(kartenstapel.size()-1));
     }
 
     /**
@@ -56,7 +72,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      * @param kartenstapel - der aktuelle Kartenstapel
      */
     public void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) {
-
+        kartenstapel.addAll(ablagestapel);
     }
 
 

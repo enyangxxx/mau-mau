@@ -124,7 +124,7 @@ public class KartenverwaltungsTest {
      * Das erwartete Ergebnis ist ein gemischter Kartenstapel
      */
     @Test
-    public void testKartenMischen() {
+    public void testKartenMischen() throws KeineKarteException{
         List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
         kartenverwaltung.kartenMischen(kartenstapel);
         boolean istKartenstapelGemischt = false;
@@ -149,8 +149,8 @@ public class KartenverwaltungsTest {
      * Das erwartete Ergebnis ist eine KeineKarteException
      */
     @Test (expected = KeineKarteException.class)
-    void testKartenMischenStapelEmpty(){
-        List<Karte> kartenstapel = new ArrayList<Karte>();
+    public void testKartenMischenStapelNull()throws KeineKarteException{
+        List<Karte> kartenstapel = null;
         kartenverwaltung.kartenMischen(kartenstapel);
     }
 
