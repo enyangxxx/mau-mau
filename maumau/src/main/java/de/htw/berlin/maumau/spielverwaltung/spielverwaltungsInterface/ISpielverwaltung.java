@@ -1,5 +1,8 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface;
 
+import de.htw.berlin.maumau.enumeration.Kartentyp;
+import de.htw.berlin.maumau.errorHandling.KeineKarteException;
+import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 
@@ -16,7 +19,7 @@ public interface ISpielverwaltung {
      * @param spielerliste - Die Liste der teilnehmenden Spieler
      * @return das MauMau Spiel
      */
-    MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste);
+    MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeineSpielerException;
 
     /**
      * Eine neue Runde wird eingeleitet.
@@ -47,6 +50,17 @@ public interface ISpielverwaltung {
     /**
      * Ein {@link Spieler} legt eine {@link Karte}. Falls es sich um einen Buben handelt, darf er einen Wunschtyp festlegen.
      *
+     * @param spiel          - das MauMauSpiel
+     * @param gewaehlteKarte - die vom Spieler ausgesuchte Karte
+     * @param hand           - die aktuelle Hand des Spielers
+     * @param ablagestapel   - der aktuelle Ablagestapel des Spiels
+     * @param wunschtyp      - Bei BUBE der Wunschtyp
+     */
+    void karteLegen(MauMauSpiel spiel, Karte gewaehlteKarte, List<Karte> hand, List<Karte> ablagestapel, Kartentyp wunschtyp);
+
+    /**
+     * Ein {@link Spieler} legt eine {@link Karte}. Falls es sich um einen Buben handelt, darf er einen Wunschtyp festlegen.
+     *
      * @param gewaehlteKarte - die vom Spieler ausgesuchte Karte
      * @param hand           - die aktuelle Hand des Spielers
      * @param ablagestapel   - der aktuelle Ablagestapel des Spiels
@@ -59,7 +73,7 @@ public interface ISpielverwaltung {
      * @param ablagestapel - der Ablagestapel
      * @return die letzte Karte - die neuste Karte vom Ablagestapel
      */
-    Karte letzteKarteErmitteln(List<Karte> ablagestapel);
+    Karte letzteKarteErmitteln(List<Karte> ablagestapel) throws KeineKarteException;
 
     /**
      * Wenn der {@link Spieler} nur noch eine {@link Karte} auf der Hand hat, wird geprüft, ob er Mau gesagt hat.
@@ -69,7 +83,7 @@ public interface ISpielverwaltung {
      * @param spieler - der Spieler
      * @param kartenstapel - der Kartenstapel
      */
-    boolean maumauPruefen(Spieler spieler, List<Karte> kartenstapel);
+    void maumauPruefen(Spieler spieler, List<Karte> kartenstapel);
 
     /**
      * Ein {@link Spieler} ruft Mau Mau und die Variable hatMauGerufen wird auf true gesetzt.

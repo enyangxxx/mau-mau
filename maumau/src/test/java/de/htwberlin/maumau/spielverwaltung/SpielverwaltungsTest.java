@@ -24,7 +24,6 @@ import static org.junit.Assert.*;
  */
 public class SpielverwaltungsTest {
 
-    //private Log log = LogFactory.getLog(SpielverwaltungsTest.class);
     private ISpielverwaltung spielverwaltung;
     private static final Spieler ingo = new Spieler("Ingo", 1, false);
     private static final Spieler enyang = new Spieler("Enyang", 2, false);
@@ -45,7 +44,7 @@ public class SpielverwaltungsTest {
     @Before
     public void setUp() {
         spielverwaltung = new SpielverwaltungImpl();
-        spielerliste = new ArrayList<Spieler>();
+        spielerliste = new ArrayList<>();
     }
 
     /**
@@ -53,7 +52,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist ein neues Spiel mit der Runde 1
      */
     @Test
-    void testNeuesSpielStartenMitSpielerliste() {
+    public void testNeuesSpielStartenMitSpielerliste() throws KeineSpielerException{
         spielerliste.add(ingo);
         spielerliste.add(enyang);
         MauMauSpiel neuesSpiel = spielverwaltung.neuesSpielStarten(spielerliste);
@@ -66,7 +65,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist KeineSpielerException
      */
     @Test
-    void testNeuesSpielStartenMitSpielerlisteOhneSpieler() {
+    public void testNeuesSpielStartenMitSpielerlisteOhneSpieler() throws KeineSpielerException{
         exceptionRule.expect(KeineSpielerException.class);
         spielverwaltung.neuesSpielStarten(spielerliste);
     }
@@ -76,7 +75,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist alteRunde + 1 == neueRunde
      */
     @Test
-    void testNeueRundeStarten() {
+    public void testNeueRundeStarten() {
         spielerliste.add(ingo);
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
         int alteRunde = spiel.getRunde();
@@ -90,7 +89,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist alteAnzahlKartenInHand + 1 && alteKartenstapelMenge - 1
      */
     @Test
-    void testKarteZiehen() {
+    public void testKarteZiehen() {
         spielerliste.add(ingo);
         Spieler spieler = spielerliste.get(0);
 
@@ -107,22 +106,11 @@ public class SpielverwaltungsTest {
     }
 
     /**
-     * Teste die Funktionalität, eine neue Karte ohne Angabe eines Spielers zu ziehen.
-     * Das erwartete Ergebnis ist alteAnzahlKartenInHand + 1 && alteKartenstapelMenge - 1
-     */
-    @Test
-    void testKarteZiehenOhneSpieler() {
-        exceptionRule.expect(KeineSpielerException.class);
-        spielerliste.add(ingo);
-        spielverwaltung.karteZiehen(null, stapel);
-    }
-
-    /**
      * Teste die Funktionalität, zwei Karten zu ziehen.
      * Das erwartete Ergebnis ist alteAnzahlKartenInHand + 2 && alteKartenstapelMenge - 2
      */
     @Test
-    void testZweiKartenZiehen() {
+    public void testZweiKartenZiehen() {
         spielerliste.add(ingo);
         Spieler spieler = spielerliste.get(0);
 
@@ -140,14 +128,25 @@ public class SpielverwaltungsTest {
     }
 
     /**
-     * Teste die Funktionalität, zwei neuen Karten ohne Angabe eines Spielers zu ziehen.
-     * Das erwartete Ergebnis ist KeineSpielerException
+     * Teste die Funktionalität, zwei Karten zu ziehen.
+     * Das erwartete Ergebnis ist alteAnzahlKartenInHand + 2 && alteKartenstapelMenge - 2
      */
     @Test
-    void testZweiKartenZiehenOhneSpieler() {
-        exceptionRule.expect(KeineSpielerException.class);
+    public void testDreiKartenZiehen() {
         spielerliste.add(ingo);
-        spielverwaltung.karteZiehen(null, stapel, 2);
+        Spieler spieler = spielerliste.get(0);
+
+        int alteAnzahlKartenInHand = spieler.getHand().size();
+        int alteKartenstapelMenge = stapel.size();
+
+        spielverwaltung.karteZiehen(spieler, stapel, 3);
+
+        int neueAnzahlKartenInHand = spieler.getHand().size();
+        int neueKartenstapelMenge = stapel.size();
+
+        assertEquals("Die Hand muss um 3 Karten erweitert sein", alteAnzahlKartenInHand + 3, neueAnzahlKartenInHand);
+        assertEquals("Der Kartenstapel muss um 3 Karten verringert sein", alteKartenstapelMenge - 3, neueKartenstapelMenge);
+
     }
 
     /**
@@ -155,7 +154,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist alteAnzahlKartenInHand - 1 && alteAblagestapelMenge + 1
      */
     @Test
-    void testKarteLegen() {
+    public void testKarteLegen() {
         spielerliste.add(ingo);
         Spieler spieler = spielerliste.get(0);
 
@@ -178,7 +177,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist ein gesetzter Wunschtyp && alteAnzahlKartenInHand - 1 && alteAblagestapelMenge + 1
      */
     @Test
-    void testBubeLegen() {
+    public void testBubeLegen() {
         spielerliste.add(ingo);
         MauMauSpiel maumauSpiel = new MauMauSpiel(spielerliste);
 
@@ -187,12 +186,13 @@ public class SpielverwaltungsTest {
         int alteAnzahlKartenInHand = spieler.getHand().size();
         int alteAblagestapelMenge = stapel.size();
 
-        spielverwaltung.karteLegen(spieler.getHand().get(0), spieler.getHand(), stapel);
+        spielverwaltung.karteLegen(maumauSpiel, spieler.getHand().get(0), spieler.getHand(),stapel, Kartentyp.HERZ);
 
         int neueAnzahlKartenInHand = spieler.getHand().size();
         int neueAblagestapelMenge = stapel.size();
 
         assertNotNull("Der Wunschtyp darf nicht null sein", maumauSpiel.getWunschtyp());
+        assertEquals("Der Wunschtyp muss HERZ sein",Kartentyp.HERZ,maumauSpiel.getWunschtyp());
         assertEquals("Die Hand muss um 1 Karte verringert sein", alteAnzahlKartenInHand - 1, neueAnzahlKartenInHand);
         assertEquals("Der Ablagestapel muss um 1 Karte erweitert sein", alteAblagestapelMenge + 1, neueAblagestapelMenge);
 
@@ -203,7 +203,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist die Karte PIK/BUBE
      */
     @Test
-    void testLetzteKarteVomAblagestapelErmitteln() {
+    public void testLetzteKarteVomAblagestapelErmitteln() throws KeineKarteException {
         Karte letzteKarte = spielverwaltung.letzteKarteErmitteln(stapel);
         assertEquals("Die letzte Karte soll PIK/BUBE sein", letzteKarte, stapel.get(stapel.size() - 1));
     }
@@ -213,9 +213,9 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist KeineKarteException
      */
     @Test
-    void testLetzteKarteInLeererListeErmitteln() {
+    public void testLetzteKarteInLeererListeErmitteln() throws KeineKarteException{
         exceptionRule.expect(KeineKarteException.class);
-        spielverwaltung.letzteKarteErmitteln(new ArrayList<Karte>());
+        spielverwaltung.letzteKarteErmitteln(new ArrayList<>());
     }
 
     /**
@@ -223,7 +223,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist ein unveränderter Kartenstapel, bedeutet dass Spieler keine Karten zur Strafe gezogen hat
      */
     @Test
-    void testMauMauPruefenWennTrue() {
+    public void testMauMauPruefenWennTrue() {
         ingo.setHatMauGerufen(true);
         int alteKartenstapelMenge = stapel.size();
         spielverwaltung.maumauPruefen(ingo, stapel);
@@ -237,7 +237,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist alteMengeInHand + 2 && alteKartenstapelMenge - 2
      */
     @Test
-    void testMauMauPruefenWennFalse() {
+    public void testMauMauPruefenWennFalse() {
         ingo.setHatMauGerufen(false);
 
         int alteKartenstapelMenge = stapel.size();
@@ -257,7 +257,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist dass Ingo MauMau gerufen hat
      */
     @Test
-    void testMauMauRufen() {
+    public void testMauMauRufen() {
         ingo.setHatMauGerufen(false);
         spielverwaltung.maumauRufen(ingo);
 
@@ -266,11 +266,11 @@ public class SpielverwaltungsTest {
 
     /**
      * Teste die Funktionalität, Minuspunkte anhand der Karten in seiner Hand zu ermitteln.
-     * Das erwartete Ergebnis ist 19
+     * Das erwartete Ergebnis ist 11
      */
     @Test
-    void testMinuspunkteBerechnen() {
-        assertEquals("", 19, spielverwaltung.minuspunkteBerechnen(hand));
+    public void testMinuspunkteBerechnen() {
+        assertEquals("", 11, spielverwaltung.minuspunkteBerechnen(hand));
     }
 
 }
