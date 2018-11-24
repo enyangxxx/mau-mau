@@ -3,7 +3,7 @@ package de.htw.berlin.maumau.errorHandling;
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
-public class KeineSpielerException extends Exception{
+public class KeineSpielerException extends Throwable{
 
     public static final String errorMessage = "Kein Spieler wurde für die Aktion selektiert";
 
