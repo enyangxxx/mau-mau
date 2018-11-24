@@ -1,5 +1,8 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface;
 
+import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
+import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
+
 import java.util.List;
 
 /**
@@ -23,7 +26,7 @@ public interface ISpielerverwaltung {
      * @param spieler      - der neue Spieler
      * @param spielerliste - aktuelle Spielerliste
      */
-    void addSpielerZurListe(Spieler spieler, List<Spieler> spielerliste);
+    void addSpielerZurListe(Spieler spieler, List<Spieler> spielerliste) throws IdDuplikatException;
 
     /**
      * Ein {@link Spieler} beendet seinen Spielzug und der Spielzug des nächsten {@link Spieler} wird eingeleitet.
@@ -40,6 +43,6 @@ public interface ISpielerverwaltung {
      * @param spielerliste - aktuelle Spielerliste
      * @return spieler - der Spieler mit der ID
      */
-    Spieler getSpielerById(int id, List<Spieler> spielerliste);
+    Spieler getSpielerById(int id, List<Spieler> spielerliste) throws KeineSpielerException;
 
 }

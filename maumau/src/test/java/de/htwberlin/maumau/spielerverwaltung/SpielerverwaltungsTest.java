@@ -34,28 +34,31 @@ public class SpielerverwaltungsTest {
      * Das erwartete Ergebnis ist not null.
      */
     @Test
-    void testSpielerGenerierenIsNotNull(){
+    public void testSpielerGenerierenIsNotNull(){
         Spieler otto = spielerverwaltung.spielerGenerieren( "Otto",  21,  true);
         assertNotNull("Der generierte Spieler darf nicht Null sein.", otto);
     }
+
 
     /**
      * Testet, ob ein Spieler mit einer ID generiert werden kann, die bereits zu einem anderen Spieler gehört.
      * Das erwartete Ergebnis ist eine IdDuplikatException.
      */
     @Test (expected = IdDuplikatException.class)
-    void testSpielerGenerierenIdBereitsVergeben(){
+    public void testAddSpielerZurListeIdBereitsVergeben() throws IdDuplikatException{
         Spieler otto = spielerverwaltung.spielerGenerieren( "Otto",  4,  true);
-        spielerliste.add(otto);
-        spielerverwaltung.spielerGenerieren( "Hans",  4,  false);
+        spielerverwaltung.addSpielerZurListe(otto, spielerliste);
+        Spieler hans = spielerverwaltung.spielerGenerieren( "Hans",  4,  false);
+        spielerverwaltung.addSpielerZurListe(hans, spielerliste);
     }
+
 
     /**
      * Testet, ob ein neuer Spieler zur Spielerliste hinzugefügt werden kann.
      * Das erwartete Ergebnis ist alteAnzahlSpielerInListe + 1 == neueAnzahlSpielerInListe
      */
     @Test
-    void testAddSpielerZurListe(){
+    public void testAddSpielerZurListe() throws IdDuplikatException{
         int alteAnzahlSpielerInListe = spielerliste.size();
         spielerverwaltung.addSpielerZurListe(caner, spielerliste);
 
@@ -65,26 +68,11 @@ public class SpielerverwaltungsTest {
 
 
     /**
-     * Testet, ob derselbe Spieler nicht zur Liste hinzugefügt werden kann, wenn er bereits darin steht.
-     * Das erwartete Ergebnis ist alteAnzahlSpielerInListe == neueAnzahlSpielerInListe
-     */
-    @Test
-    void testAddSpielerZurListeSpielerDoppelt(){
-        spielerverwaltung.addSpielerZurListe(caner, spielerliste);
-        int alteAnzahlSpielerInListe = spielerliste.size();
-
-        spielerverwaltung.addSpielerZurListe(caner, spielerliste);
-        int neueAnzahlSpielerInListe = spielerliste.size();
-        assertEquals("Die Spielerliste darf denselben Spieler nicht doppelt enthalten.", alteAnzahlSpielerInListe,neueAnzahlSpielerInListe);
-    }
-
-
-    /**
      * Testet, ob gewechselt werden kann, welcher Spieler gerade am Zug ist.
      * Das erwartete Ergebnis ist Enyang ist dran, Caner ist nicht dran
      */
     @Test
-    void testSpielerWechseln(){
+    public void testSpielerWechseln(){
         caner.setIstDran(true);
         assertTrue("Caner muss dran sein.", caner.istDran());
 
@@ -98,7 +86,7 @@ public class SpielerverwaltungsTest {
      * Das erwartete Ergebnis ist Caner ist immer noch dran
      */
     @Test
-    void testSpielerWechselnGleicherSpieler(){
+    public void testSpielerWechselnGleicherSpieler(){
         caner.setIstDran(true);
         assertTrue("Caner muss dran sein.", caner.istDran());
 
@@ -111,7 +99,7 @@ public class SpielerverwaltungsTest {
      * Das erwartete Ergebnis ist der Spieler Caner
      */
     @Test
-    void testGetSpielerById(){
+    public void testGetSpielerById() throws KeineSpielerException, IdDuplikatException {
         spielerverwaltung.addSpielerZurListe(caner, spielerliste);
         assertEquals("Der Spieler Caner mit der ID 9 muss zurückgegeben werden.", caner,  spielerverwaltung.getSpielerById(9, spielerliste));
     }
@@ -122,7 +110,7 @@ public class SpielerverwaltungsTest {
      * Das erwartete Ergebnis ist KeineSpielerException.
      */
     @Test(expected = KeineSpielerException.class)
-    void testgetSpielerByIdIdNichtVergeben(){
+    public void testgetSpielerByIdIdNichtVergeben() throws KeineSpielerException, IdDuplikatException {
         spielerverwaltung.addSpielerZurListe(enyang, spielerliste);
         spielerverwaltung.getSpielerById(9, spielerliste);
     }
