@@ -23,7 +23,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
     private Log log = LogFactory.getLog(SpielverwaltungImpl.class);
     private static final String KARTENSTAPEL_GENERIERT_MESSAGE = "Kartenstapel wurde generiert!";
     private static final String KARTEN_GEMISCHT_MESSAGE = "Kartenstapel wurde gemischt!";
-    private static final String SPIELER_HAND_GESETZT = "Die Hand vom Spieler wurde gesetzt!";
+    private static final String SPIELER_HAND_GESETZT = "Die Hand wurde gesetzt für Spieler: ";
     private static final String KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE = "Karte auf Ablagestapel gelegt!";
     private static final String ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE = "Ablagestapel wurde in Kartenstapel gemischt!";
 
@@ -72,7 +72,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
                 hand.add(kartenstapel.get(i));
                 kartenstapel.remove(kartenstapel.get(i));
             }
-            log.info(SPIELER_HAND_GESETZT);
+            log.info(SPIELER_HAND_GESETZT + spieler.getName());
             spieler.setHand(hand);
         }
         log.info(KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE);
