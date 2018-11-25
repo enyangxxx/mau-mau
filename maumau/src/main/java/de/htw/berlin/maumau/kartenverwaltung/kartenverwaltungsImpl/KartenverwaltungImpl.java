@@ -7,6 +7,9 @@ import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.SpielverwaltungImpl;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +19,14 @@ import java.util.List;
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
 public class KartenverwaltungImpl implements IKartenverwaltung {
+
+    private Log log = LogFactory.getLog(SpielverwaltungImpl.class);
+    private static final String KARTENSTAPEL_GENERIERT_MESSAGE = "Kartenstapel wurde generiert!";
+    private static final String KARTEN_GEMISCHT_MESSAGE = "Kartenstapel wurde gemischt!";
+    private static final String SPIELER_HAND_GESETZT = "Die Hand vom Spieler wurde gesetzt!";
+    private static final String KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE = "Karte auf Ablagestapel gelegt!";
+    private static final String ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE = "Ablagestapel wurde in Kartenstapel gemischt!";
+
 
     /**
      * Generiert einen Kartenstapel mit 32 Karten, wobei jede Karte einmal vorkommt.
@@ -29,6 +40,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
                 kartenstapel.add(new Karte(Kartentyp.values()[i], Kartenwert.values()[a]));
             }
         }
+        log.info(KARTENSTAPEL_GENERIERT_MESSAGE);
         return kartenstapel;
     }
 
@@ -39,6 +51,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      */
     public void kartenMischen(List<Karte> kartenstapel) throws KeineKarteException{
         try{
+            log.info(KARTEN_GEMISCHT_MESSAGE);
             Collections.shuffle(kartenstapel);
         }catch (Exception e){
             throw new KeineKarteException("Keine Karte Exception");
@@ -59,8 +72,10 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
                 hand.add(kartenstapel.get(i));
                 kartenstapel.remove(kartenstapel.get(i));
             }
+            log.info(SPIELER_HAND_GESETZT);
             spieler.setHand(hand);
         }
+        log.info(KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE);
         ablagestapel.add(kartenstapel.get(kartenstapel.size()-1));
         kartenstapel.remove(kartenstapel.get(kartenstapel.size()-1));
     }
@@ -72,6 +87,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      * @param kartenstapel - der aktuelle Kartenstapel
      */
     public void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) {
+        log.info(ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE);
         kartenstapel.addAll(ablagestapel);
     }
 
