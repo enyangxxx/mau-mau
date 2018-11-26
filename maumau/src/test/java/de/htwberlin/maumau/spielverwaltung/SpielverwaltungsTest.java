@@ -1,5 +1,6 @@
 package de.htwberlin.maumau.spielverwaltung;
 
+import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.KeineKarteException;
@@ -13,6 +14,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,8 @@ import static org.junit.Assert.*;
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
+
+
 public class SpielverwaltungsTest {
 
     private ISpielverwaltung spielverwaltung;
@@ -38,13 +44,17 @@ public class SpielverwaltungsTest {
     }};
     private List<Spieler> spielerliste;
 
+
+
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
     @Before
     public void setUp() {
-        spielverwaltung = new SpielverwaltungImpl();
+        //spielverwaltung = new SpielverwaltungImpl();
+        spielverwaltung = (ISpielverwaltung) ConfigServiceImpl.context.getBean("spielverwaltungimpl");
         spielerliste = new ArrayList<Spieler>();
+
     }
 
     /**
@@ -96,7 +106,7 @@ public class SpielverwaltungsTest {
         int alteAnzahlKartenInHand = spieler.getHand().size();
         int alteKartenstapelMenge = stapel.size();
 
-        spielverwaltung.karteZiehen(spieler, stapel);
+        spielverwaltung.karteZiehen(spieler, stapel, stapel);
 
         int neueAnzahlKartenInHand = spieler.getHand().size();
         int neueKartenstapelMenge = stapel.size();
@@ -117,7 +127,7 @@ public class SpielverwaltungsTest {
         int alteAnzahlKartenInHand = spieler.getHand().size();
         int alteKartenstapelMenge = stapel.size();
 
-        spielverwaltung.karteZiehen(spieler, stapel, 2);
+        spielverwaltung.karteZiehen(spieler, stapel, 2, stapel);
 
         int neueAnzahlKartenInHand = spieler.getHand().size();
         int neueKartenstapelMenge = stapel.size();
@@ -139,7 +149,7 @@ public class SpielverwaltungsTest {
         int alteAnzahlKartenInHand = spieler.getHand().size();
         int alteKartenstapelMenge = stapel.size();
 
-        spielverwaltung.karteZiehen(spieler, stapel, 3);
+        spielverwaltung.karteZiehen(spieler, stapel, 3, stapel);
 
         int neueAnzahlKartenInHand = spieler.getHand().size();
         int neueKartenstapelMenge = stapel.size();
@@ -147,6 +157,26 @@ public class SpielverwaltungsTest {
         assertEquals("Die Hand muss um 3 Karten erweitert sein", alteAnzahlKartenInHand + 3, neueAnzahlKartenInHand);
         assertEquals("Der Kartenstapel muss um 3 Karten verringert sein", alteKartenstapelMenge - 3, neueKartenstapelMenge);
 
+    }
+
+    /**
+     * Javadog
+     */
+    @Test
+    public void testKarteZiehenLeererStapel(){
+        List<Karte> kartenstapel = new ArrayList<Karte>();
+        spielerliste.add(ingo);
+        Spieler spieler = spielerliste.get(0);
+
+        int alteAnzahlKartenInHand = spieler.getHand().size();
+        int alteAblagestapelMenge = stapel.size();
+
+        spielverwaltung.karteZiehen(spieler, kartenstapel, stapel);
+
+        assertFalse("Der Kartenstapel darf nicht leer sein.", kartenstapel.isEmpty());
+        assertEquals("Der Kartenstapel muss 2 Karten enthalten.", alteAblagestapelMenge-1, kartenstapel.size());
+        assertEquals("Die Hand muss um 1 Karte erweitert sein.", alteAnzahlKartenInHand + 1, spieler.getHand().size());
+        assertTrue("Der Ablagestapel muss leer sein.", stapel.isEmpty());
     }
 
     /**
@@ -226,7 +256,7 @@ public class SpielverwaltungsTest {
     public void testMauMauPruefenWennTrue() {
         ingo.setHatMauGerufen(true);
         int alteKartenstapelMenge = stapel.size();
-        spielverwaltung.maumauPruefen(ingo, stapel);
+        spielverwaltung.maumauPruefen(ingo, stapel, stapel);
         int neueKartenstapelMenge = stapel.size();
 
         assertEquals("Der Kartenstapel soll sich nicht verrringert haben, wenn MauMau gerufen wurde", alteKartenstapelMenge, neueKartenstapelMenge);
@@ -243,7 +273,7 @@ public class SpielverwaltungsTest {
         int alteKartenstapelMenge = stapel.size();
         int alteMengeInHand = ingo.getHand().size();
 
-        spielverwaltung.maumauPruefen(ingo, stapel);
+        spielverwaltung.maumauPruefen(ingo, stapel, stapel);
 
         int neueKartenstapelMenge = stapel.size();
         int neueMengeInHand = ingo.getHand().size();

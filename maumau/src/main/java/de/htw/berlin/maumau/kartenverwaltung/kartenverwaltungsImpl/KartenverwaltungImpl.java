@@ -7,6 +7,8 @@ import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +18,12 @@ import java.util.List;
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
 public class KartenverwaltungImpl implements IKartenverwaltung {
+
+    private Log log = LogFactory.getLog(KartenverwaltungImpl.class);
+
+    public KartenverwaltungImpl(){
+        log.info("KartenverwaltungImpl Konstruktor called");
+    }
 
     /**
      * Generiert einen Kartenstapel mit 32 Karten, wobei jede Karte einmal vorkommt.
@@ -73,6 +81,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      */
     public void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) {
         kartenstapel.addAll(ablagestapel);
+        ablagestapel.removeAll(ablagestapel);
     }
 
 

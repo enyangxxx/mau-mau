@@ -9,3 +9,4 @@ IntelliJ Shortcuts Mac
 IntelliJ Shortcuts Windows
 - ctrl + n = classsearch
 - ctrl + alt + o = organize imports
+- ctrl + alt + l = auto-format

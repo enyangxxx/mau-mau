@@ -1,5 +1,6 @@
 package de.htwberlin.maumau.spielregeln;
 
+import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
 import de.htw.berlin.maumau.enumeration.SonderregelTyp;
@@ -44,7 +45,8 @@ public class SpielregelnTest {
 
     @Before
     public void setUp() {
-        spielregeln = new SpielregelnImpl();
+        //spielregeln = new SpielregelnImpl();
+        spielregeln = (ISpielregeln) ConfigServiceImpl.context.getBean("spielregelnimpl");
         spiel = new MauMauSpiel(spielerliste);
     }
 
@@ -122,7 +124,7 @@ public class SpielregelnTest {
      * Testet die Funktionalität von istLegbar, wenn kein Wunschtyp gesetzt wurde.
      * Das erwartete Ergebnis ist eine KeinWunschtypException
      */
-    @Test (expected = KeinWunschtypException.class)
+    @Test(expected = KeinWunschtypException.class)
     public void testIstLegbarHerzAchtBeiWunschtypNull() throws KeinWunschtypException {
         Karte neueKarte = new Karte(Kartentyp.HERZ, Kartenwert.ACHT);
         Kartentyp wunschtyp = null;
@@ -237,7 +239,7 @@ public class SpielregelnTest {
         int alteAnzahlHand = enyang.getHand().size();
         int alteAnzahlKartenstapel = testkartenstapel.size();
         spiel.setKartenstapel(testkartenstapel);
-        spielregeln.sonderregelKartenZiehen(enyang,theo,spiel);
+        spielregeln.sonderregelKartenZiehen(enyang, theo, spiel);
 
         assertEquals("Enyangs Hand muss zwei Karten mehr enthalten.", alteAnzahlHand + 2, enyang.getHand().size());
         assertEquals("Der Kartenstapel soll zwei Karten weniger enthalten.", alteAnzahlKartenstapel - 2, testkartenstapel.size());
@@ -260,7 +262,7 @@ public class SpielregelnTest {
         int alteAnzahlHand = enyang.getHand().size();
         spiel.setAblagestapel(testkartenstapel);
 
-        spielregeln.sonderregelKartenZiehen(enyang,theo, spiel);
+        spielregeln.sonderregelKartenZiehen(enyang, theo, spiel);
 
         assertEquals("Die Anzahl der zu ziehenden Karten muss um 2 erhöht sein.", 4, spiel.getAnzahlSonderregelKartenZiehen());
         assertFalse("Enyang darf nun nicht mehr am Zug sein.", enyang.istDran());

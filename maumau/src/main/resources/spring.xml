@@ -1,0 +1,26 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+    <bean id="spielerverwaltungimpl"
+          class="de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl">
+    </bean>
+
+    <bean id="kartenverwaltungimpl"
+          class="de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.KartenverwaltungImpl">
+    </bean>
+
+    <bean id="spielverwaltungimpl"
+          class="de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.SpielverwaltungImpl">
+        <constructor-arg ref="kartenverwaltungimpl"/>
+    </bean>
+
+    <bean id="spielregelnimpl" class="de.htw.berlin.maumau.spielregeln.spielregelnImpl.SpielregelnImpl">
+        <constructor-arg ref="spielerverwaltungimpl"/>
+        <constructor-arg ref="spielverwaltungimpl"/>
+    </bean>
+
+
+</beans>
