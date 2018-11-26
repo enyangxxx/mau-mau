@@ -1,15 +1,20 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
+import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +38,15 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     private static final String MINUSPUNKTE_MESSAGE = "Der Spieler hat so viele Minuspunkte erhalten: ";
     private static final String ABLAGESTAPEL_LEER_MESSAGE = "Ablagestapel ist leer";
 
+    IKartenverwaltung kartenverwaltung;
+    //= (IKartenverwaltung) ConfigServiceImpl.context.getBean("kartenverwaltungimpl");
+
+    public SpielverwaltungImpl(final IKartenverwaltung kartenverwaltungimpl){
+        log.info("SpielverwaltungsImpl Konstruktor called");
+        this.kartenverwaltung = kartenverwaltungimpl;
+    }
+
+
     public MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeineSpielerException{
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
         log.info(NEUES_SPIEL_MESSAGE);
@@ -48,20 +62,31 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         log.info(NEUE_RUNDE_MESSAGE);
     }
 
-    public void karteZiehen(Spieler spieler, List<Karte> kartenstapel) {
+    public void karteZiehen(Spieler spieler, List<Karte> kartenstapel, List<Karte> ablagestapel) {
         List<Karte> hand = spieler.getHand();
         //Wenn Kartenstapel leer, nutze kartenstapelGenerieren
+
+        if(kartenstapel.isEmpty()){
+            kartenverwaltung.ablagestapelWiederverwenden(ablagestapel, kartenstapel);
+        }
+
         hand.add(kartenstapel.get(0));
         spieler.setHand(hand);
         kartenstapel.remove(0);
         log.info(KARTE_ZIEHEN_MESSAGE);
     }
 
-    public void karteZiehen(Spieler spieler, List<Karte> kartenstapel, int anzahl) {
+    public void karteZiehen(Spieler spieler, List<Karte> kartenstapel, int anzahl, List<Karte> ablagestapel) {
         List<Karte> hand = spieler.getHand();
         int alteMenge = kartenstapel.size();
         //Wenn Kartenstapel leer, nutze kartenstapelGenerieren
+
+
+
         for (Iterator<Karte> iterator = kartenstapel.iterator(); alteMenge - kartenstapel.size() < anzahl;){
+            if(!iterator.hasNext()){
+                kartenverwaltung.ablagestapelWiederverwenden(ablagestapel, kartenstapel);
+            }
             if(iterator.hasNext()){
                 hand.add(iterator.next());
                 iterator.remove();
@@ -106,13 +131,13 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         return ablagestapel.get(ablagestapel.size() - 1);
     }
 
-    public void maumauPruefen(Spieler spieler, List<Karte> kartenstapel) {
+    public void maumauPruefen(Spieler spieler, List<Karte> kartenstapel, List<Karte> ablagestapel) {
         if(spieler.hatMauGerufen()){
             spieler.setHatMauGerufen(false);
             log.info(MAU_GERUFEN_MESSAGE);
         }else{
             log.info(MAU_NICHT_GERUFEN_MESSAGE);
-            karteZiehen(spieler,kartenstapel,2);
+            karteZiehen(spieler,kartenstapel,2, ablagestapel);
         }
     }
 

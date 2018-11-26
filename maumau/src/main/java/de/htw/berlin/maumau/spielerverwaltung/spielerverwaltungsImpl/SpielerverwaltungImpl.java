@@ -4,6 +4,8 @@ import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 
@@ -11,6 +13,13 @@ import java.util.List;
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
 public class SpielerverwaltungImpl implements ISpielerverwaltung {
+
+    private Log log = LogFactory.getLog(SpielerverwaltungImpl.class);
+
+
+    public SpielerverwaltungImpl(){
+        log.info("SpielerverwaltungsImpl Konstruktor called");
+    }
 
     public Spieler spielerGenerieren(String name, int id, boolean istComputer) {
         Spieler spieler = new Spieler(name, id, istComputer);

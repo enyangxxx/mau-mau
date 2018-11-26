@@ -7,7 +7,6 @@ import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.SpielverwaltungImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -20,14 +19,18 @@ import java.util.List;
  */
 public class KartenverwaltungImpl implements IKartenverwaltung {
 
-    private Log log = LogFactory.getLog(SpielverwaltungImpl.class);
+    private Log log = LogFactory.getLog(KartenverwaltungImpl.class);
+    
     private static final String KARTENSTAPEL_GENERIERT_MESSAGE = "Kartenstapel wurde generiert!";
     private static final String KARTEN_GEMISCHT_MESSAGE = "Kartenstapel wurde gemischt!";
     private static final String SPIELER_HAND_GESETZT = "Die Hand wurde gesetzt für Spieler: ";
     private static final String KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE = "Karte auf Ablagestapel gelegt!";
     private static final String ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE = "Ablagestapel wurde in Kartenstapel gemischt!";
 
-
+    public KartenverwaltungImpl(){
+        log.info("KartenverwaltungImpl Konstruktor called");
+    }
+  
     /**
      * Generiert einen Kartenstapel mit 32 Karten, wobei jede Karte einmal vorkommt.
      *
@@ -89,6 +92,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
     public void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) {
         log.info(ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE);
         kartenstapel.addAll(ablagestapel);
+        ablagestapel.removeAll(ablagestapel);
     }
 
 

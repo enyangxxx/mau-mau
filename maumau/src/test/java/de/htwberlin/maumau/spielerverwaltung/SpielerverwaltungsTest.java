@@ -7,6 +7,7 @@ import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpiel
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import org.junit.Before;
 import org.junit.Test;
+import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class SpielerverwaltungsTest {
 
     @Before
     public void setUp(){
-        spielerverwaltung = new SpielerverwaltungImpl();
+        spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
         spielerliste = new ArrayList<Spieler>();
     }
 

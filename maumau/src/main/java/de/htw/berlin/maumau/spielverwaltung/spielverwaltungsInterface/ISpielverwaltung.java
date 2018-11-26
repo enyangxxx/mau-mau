@@ -35,7 +35,7 @@ public interface ISpielverwaltung {
      * @param spieler - der Spieler
      * @param kartenstapel - der Kartenstapel
      */
-    void karteZiehen(Spieler spieler, List<Karte> kartenstapel);
+    void karteZiehen(Spieler spieler, List<Karte> kartenstapel, List<Karte> ablagestapel);
 
     /**
      * Ein {@link Spieler} zieht eine bestimmte Anzahl von {@link Karte} vom Kartenstapel.
@@ -45,7 +45,7 @@ public interface ISpielverwaltung {
      * @param kartenstapel - der Kartenstapel
      * @param anzahl - Anzahl der zu ziehenden Karten
      */
-    void karteZiehen(Spieler spieler, List<Karte> kartenstapel, int anzahl);
+    void karteZiehen(Spieler spieler, List<Karte> kartenstapel, int anzahl, List<Karte> ablagestapel);
 
     /**
      * Ein {@link Spieler} legt eine {@link Karte}. Falls es sich um einen Buben handelt, darf er einen Wunschtyp festlegen.
@@ -83,7 +83,7 @@ public interface ISpielverwaltung {
      * @param spieler - der Spieler
      * @param kartenstapel - der Kartenstapel
      */
-    void maumauPruefen(Spieler spieler, List<Karte> kartenstapel);
+    void maumauPruefen(Spieler spieler, List<Karte> kartenstapel, List<Karte> ablagestapel);
 
     /**
      * Ein {@link Spieler} ruft Mau Mau und die Variable hatMauGerufen wird auf true gesetzt.

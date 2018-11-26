@@ -1,27 +1,41 @@
 package de.htw.berlin.maumau.spielregeln.spielregelnImpl;
 
+import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
 import de.htw.berlin.maumau.enumeration.SonderregelTyp;
 import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.SpielverwaltungImpl;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
-
-import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
 public class SpielregelnImpl implements ISpielregeln {
 
-    private ISpielverwaltung spielverwaltung = new SpielverwaltungImpl();
-    private ISpielerverwaltung spielerverwaltung = new SpielerverwaltungImpl();
+    //ISpielverwaltung spielverwaltung = (ISpielverwaltung) ConfigServiceImpl.context.getBean("spielverwaltungimpl");
+    //ISpielerverwaltung spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
+    ISpielverwaltung spielverwaltung;
+    ISpielerverwaltung spielerverwaltung;
+    private Log log = LogFactory.getLog(SpielregelnImpl.class);
+
+
+    // private ISpielverwaltung testSpielverwaltung;
+
+
+    public SpielregelnImpl(final ISpielerverwaltung spielerverwaltungimpl, final ISpielverwaltung spielverwaltungimpl){
+        log.info("SpielregelnImpl Konstruktor called");
+        this.spielerverwaltung = spielerverwaltungimpl;
+        this.spielverwaltung = spielverwaltungimpl;
+    }
 
     public boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp) throws KeinWunschtypException {
         if(wunschtyp == null){
@@ -74,7 +88,7 @@ public class SpielregelnImpl implements ISpielregeln {
             }
         }
         if(!kannKontern){
-            spielverwaltung.karteZiehen(aktuellerSpieler, spiel.getKartenstapel(), spiel.getAnzahlSonderregelKartenZiehen());
+            spielverwaltung.karteZiehen(aktuellerSpieler, spiel.getKartenstapel(), spiel.getAnzahlSonderregelKartenZiehen(), spiel.getAblagestapel());
         }
         spielerverwaltung.spielerWechseln(aktuellerSpieler, neuerSpieler);
     }

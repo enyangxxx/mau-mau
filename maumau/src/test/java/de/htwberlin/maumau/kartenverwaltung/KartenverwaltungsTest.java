@@ -1,5 +1,6 @@
 package de.htwberlin.maumau.kartenverwaltung;
 
+import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.KeineKarteException;
@@ -63,7 +64,7 @@ public class KartenverwaltungsTest {
 
     @Before
     public void setUp() {
-        kartenverwaltung = new KartenverwaltungImpl();
+        kartenverwaltung = (IKartenverwaltung) ConfigServiceImpl.context.getBean("kartenverwaltungimpl");
     }
 
     /**
