@@ -22,13 +22,6 @@ public interface IKartenverwaltung {
      */
     void kartenMischen(List<Karte> kartenstapel) throws KeineKarteException;
 
-    /**
-     * Alle {@link Spieler} bekommen je 5 {@link Karte} aus dem Kartenstapel und es wird eine Anfangskarte aufgedeckt.
-     * @param spielerliste - die aktuelle Spielerliste
-     * @param kartenstapel - der aktuelle Kartenstapel
-     * @param ablagestapel - der aktuelle Ablagestapel
-     */
-    void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel);
 
     /**
      * Mischt die Karten des Ablagestapels in den Kartenstapel.

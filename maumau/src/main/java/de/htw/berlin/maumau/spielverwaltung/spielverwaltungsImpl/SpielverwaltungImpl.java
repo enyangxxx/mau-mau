@@ -1,20 +1,18 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
-import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
+import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
 import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.Iterator;
 import java.util.List;
@@ -39,11 +37,13 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     private static final String ABLAGESTAPEL_LEER_MESSAGE = "Ablagestapel ist leer";
 
     IKartenverwaltung kartenverwaltung;
+    ISpielregeln spielregeln;
     //= (IKartenverwaltung) ConfigServiceImpl.context.getBean("kartenverwaltungimpl");
 
-    public SpielverwaltungImpl(final IKartenverwaltung kartenverwaltungimpl){
+    public SpielverwaltungImpl(final IKartenverwaltung kartenverwaltungimpl, final ISpielregeln spielregelnImpl){
         log.info("SpielverwaltungsImpl Konstruktor called");
         this.kartenverwaltung = kartenverwaltungimpl;
+        this.spielregeln = spielregelnImpl;
     }
 
 
@@ -81,8 +81,6 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         int alteMenge = kartenstapel.size();
         //Wenn Kartenstapel leer, nutze kartenstapelGenerieren
 
-
-
         for (Iterator<Karte> iterator = kartenstapel.iterator(); alteMenge - kartenstapel.size() < anzahl;){
             if(!iterator.hasNext()){
                 kartenverwaltung.ablagestapelWiederverwenden(ablagestapel, kartenstapel);
@@ -96,7 +94,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         spieler.setHand(hand);
     }
 
-    public void karteLegen(MauMauSpiel spiel, Karte gewaehlteKarte, List<Karte> hand, List<Karte> ablagestapel, Kartentyp wunschtyp) {
+    /*public void karteLegen(MauMauSpiel spiel, Karte gewaehlteKarte, List<Karte> hand, List<Karte> ablagestapel, Kartentyp wunschtyp) {
         for (Iterator<Karte> iterator = hand.iterator(); iterator.hasNext();) {
             Karte karte = iterator.next();
             if(karte.getWert().equals(gewaehlteKarte.getWert()) && karte.getTyp().equals(gewaehlteKarte.getTyp())) {
@@ -107,7 +105,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
             }
         }
         if (wunschtyp != null){
-            spiel.setWunschtyp(wunschtyp);
+            spiel.setAktuellerWunschtyp(wunschtyp);
             log.info(new StringBuilder(WUNSCHTYP_GESETZT_MESSAGE + wunschtyp.toString()));
         }
     }
@@ -122,6 +120,30 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
             }
         }
     }
+    */
+
+    public void karteLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) throws KeinWunschtypException {
+        Karte letzteKarte = spiel.getAblagestapel().get(spiel.getAblagestapel().size()-1);
+        Kartentyp aktuellerWunschtyp = spiel.getAktuellerWunschtyp();
+
+        if(spielregeln.sonderregelEingehalten(gewaehlteKarte, letzteKarte) ){
+            if(aktuellerWunschtyp!=null){
+                if(spielregeln.istLegbar(gewaehlteKarte, aktuellerWunschtyp)){
+                    hand.remove(gewaehlteKarte);
+                    spiel.getAblagestapel().add(gewaehlteKarte);
+                    log.info(KARTE_ABLEGEN_MESSAGE);
+                }
+            }
+            else{
+                if(spielregeln.istLegbar(letzteKarte, gewaehlteKarte)){
+                    hand.remove(gewaehlteKarte);
+                    spiel.getAblagestapel().add(gewaehlteKarte);
+                    log.info(KARTE_ABLEGEN_MESSAGE);
+                }
+            }
+        }
+    }
+
 
     public Karte letzteKarteErmitteln(List<Karte> ablagestapel) throws KeineKarteException {
         if(ablagestapel.isEmpty()) {

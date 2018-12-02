@@ -1,6 +1,7 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface;
 
 import de.htw.berlin.maumau.enumeration.Kartentyp;
+import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
 import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
@@ -50,22 +51,11 @@ public interface ISpielverwaltung {
     /**
      * Ein {@link Spieler} legt eine {@link Karte}. Falls es sich um einen Buben handelt, darf er einen Wunschtyp festlegen.
      *
-     * @param spiel          - das MauMauSpiel
      * @param gewaehlteKarte - die vom Spieler ausgesuchte Karte
      * @param hand           - die aktuelle Hand des Spielers
-     * @param ablagestapel   - der aktuelle Ablagestapel des Spiels
-     * @param wunschtyp      - Bei BUBE der Wunschtyp
      */
-    void karteLegen(MauMauSpiel spiel, Karte gewaehlteKarte, List<Karte> hand, List<Karte> ablagestapel, Kartentyp wunschtyp);
+    void karteLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) throws KeinWunschtypException;
 
-    /**
-     * Ein {@link Spieler} legt eine {@link Karte}. Falls es sich um einen Buben handelt, darf er einen Wunschtyp festlegen.
-     *
-     * @param gewaehlteKarte - die vom Spieler ausgesuchte Karte
-     * @param hand           - die aktuelle Hand des Spielers
-     * @param ablagestapel   - der aktuelle Ablagestapel des Spiels
-     */
-    void karteLegen(Karte gewaehlteKarte, List<Karte> hand, List<Karte> ablagestapel);
 
     /**
      * Ermittelt die letzte {@link Karte} auf dem Ablagestapel und gibt diese zurück.

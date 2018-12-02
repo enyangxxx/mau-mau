@@ -155,28 +155,6 @@ public class KartenverwaltungsTest {
         kartenverwaltung.kartenMischen(kartenstapel);
     }
 
-    /**
-     * Testet, ob die Methode KartenAusteilen jedem Spieler aus der Spielerliste 5 Karten austeilt,
-     * ob der Kartenstapel um 11 Karten reduziert wurde und ob der Ablagestapel 1 Karte enthält.
-     * Das erwartete Ergebnis ist dass jeder Spieler jeweils 5 Karten, der Ablagestapel 1 Karte,
-     * der Kartenstapel 21
-     */
-    @Test
-    public void testKartenAusteilen() {
-        List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
-        List<Karte> ablagestapel = new ArrayList<Karte>();
-        List<Spieler> spielerList = new ArrayList<Spieler>() {{
-            add(new Spieler("theo", 1, false));
-            add(new Spieler("ingo", 2, false));
-        }};
-
-        kartenverwaltung.kartenAusteilen(spielerList, kartenstapel, ablagestapel);
-
-        assertEquals("Der Spieler 1 muss 5 Karten haben", 5, spielerList.get(0).getHand().size());
-        assertEquals("Der Spieler 2 muss 5 Karten haben", 5, spielerList.get(1).getHand().size());
-        assertEquals("Der Kartenstapel muss 21 Karten haben", 21, kartenstapel.size());
-        assertEquals("Der Ablagestapel muss 1 Karte haben", 1, ablagestapel.size());
-    }
 
     /**
      * Testet, ob die Methode Ablagestapel Wiederverwenden den Ablagestapel und den Kartenstapel zu einem

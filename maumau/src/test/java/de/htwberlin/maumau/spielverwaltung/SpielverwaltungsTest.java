@@ -3,20 +3,17 @@ package de.htwberlin.maumau.spielverwaltung;
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
+import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
 import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.SpielverwaltungImpl;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +33,12 @@ public class SpielverwaltungsTest {
     private ArrayList<Karte> stapel = new ArrayList<Karte>() {{
         add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
         add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
-        add(new Karte(Kartentyp.PIK, Kartenwert.BUBE));
+        add(new Karte(Kartentyp.PIK, Kartenwert.SIEBEN));
     }};
     private ArrayList<Karte> hand = new ArrayList<Karte>() {{
         add(new Karte(Kartentyp.HERZ, Kartenwert.BUBE));
         add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
+        add(new Karte(Kartentyp.KREUZ, Kartenwert.SIEBEN));
     }};
     private List<Spieler> spielerliste;
 
@@ -184,49 +182,52 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist alteAnzahlKartenInHand - 1 && alteAblagestapelMenge + 1
      */
     @Test
-    public void testKarteLegen() {
+    public void testKarteNichtLegen() throws KeinWunschtypException {
+        MauMauSpiel maumauSpiel = new MauMauSpiel(spielerliste);
+        maumauSpiel.setAblagestapel(stapel);
+
         spielerliste.add(ingo);
         Spieler spieler = spielerliste.get(0);
 
         spieler.setHand(hand);
         int alteAnzahlKartenInHand = spieler.getHand().size();
-        int alteAblagestapelMenge = stapel.size();
+        int alteAblagestapelMenge = maumauSpiel.getAblagestapel().size();
 
-        spielverwaltung.karteLegen(spieler.getHand().get(1), spieler.getHand(), stapel);
+        spielverwaltung.karteLegen(spieler.getHand().get(1), spieler.getHand(), maumauSpiel);
 
         int neueAnzahlKartenInHand = spieler.getHand().size();
-        int neueAblagestapelMenge = stapel.size();
+        int neueAblagestapelMenge = maumauSpiel.getAblagestapel().size();
 
-        assertEquals("Die Hand muss um 1 Karte verringert sein", alteAnzahlKartenInHand - 1,neueAnzahlKartenInHand);
-        assertEquals("Der Ablagestapel muss um 1 Karte erweitert sein", alteAblagestapelMenge + 1, neueAblagestapelMenge);
+        assertEquals("Die Hand soll sich nicht verringern.", alteAnzahlKartenInHand,neueAnzahlKartenInHand);
+        assertEquals("Der Ablagestapel darf nicht verändert werden.", alteAblagestapelMenge, neueAblagestapelMenge);
 
     }
 
     /**
-     * Teste die Funktionalität, eine Karte zu legen, wenn vorher ein Wunschtyp durch Bube festgelegt wurde.
-     * Das erwartete Ergebnis ist ein gesetzter Wunschtyp && alteAnzahlKartenInHand - 1 && alteAblagestapelMenge + 1
+     * Teste die Funktionalität, eine Karte zu legen.
+     * Das erwartete Ergebnis ist alteAnzahlKartenInHand - 1 && alteAblagestapelMenge + 1
      */
     @Test
-    public void testBubeLegen() {
-        spielerliste.add(ingo);
+    public void testKarteLegen() throws KeinWunschtypException {
         MauMauSpiel maumauSpiel = new MauMauSpiel(spielerliste);
+        maumauSpiel.setAblagestapel(stapel);
 
+        spielerliste.add(ingo);
         Spieler spieler = spielerliste.get(0);
+
         spieler.setHand(hand);
         int alteAnzahlKartenInHand = spieler.getHand().size();
-        int alteAblagestapelMenge = stapel.size();
+        int alteAblagestapelMenge = maumauSpiel.getAblagestapel().size();
 
-        spielverwaltung.karteLegen(maumauSpiel, spieler.getHand().get(0), spieler.getHand(),stapel, Kartentyp.HERZ);
+        spielverwaltung.karteLegen(spieler.getHand().get(2), spieler.getHand(), maumauSpiel);
 
         int neueAnzahlKartenInHand = spieler.getHand().size();
-        int neueAblagestapelMenge = stapel.size();
+        int neueAblagestapelMenge = maumauSpiel.getAblagestapel().size();
 
-        assertNotNull("Der Wunschtyp darf nicht null sein", maumauSpiel.getWunschtyp());
-        assertEquals("Der Wunschtyp muss HERZ sein",Kartentyp.HERZ,maumauSpiel.getWunschtyp());
-        assertEquals("Die Hand muss um 1 Karte verringert sein", alteAnzahlKartenInHand - 1, neueAnzahlKartenInHand);
-        assertEquals("Der Ablagestapel muss um 1 Karte erweitert sein", alteAblagestapelMenge + 1, neueAblagestapelMenge);
-
+        assertEquals("Die Hand soll um 1 verringert werden.", alteAnzahlKartenInHand-1,neueAnzahlKartenInHand);
+        assertEquals("Der Ablagestapel muss um 1 erweitert werden.", alteAblagestapelMenge+1, neueAblagestapelMenge);
     }
+
 
     /**
      * Teste die Funktionalität, die letzte Karte des Ablagestapels zu ermitteln.
@@ -300,7 +301,7 @@ public class SpielverwaltungsTest {
      */
     @Test
     public void testMinuspunkteBerechnen() {
-        assertEquals("", 11, spielverwaltung.minuspunkteBerechnen(hand));
+        assertEquals("", 18, spielverwaltung.minuspunkteBerechnen(hand));
     }
 
 }
