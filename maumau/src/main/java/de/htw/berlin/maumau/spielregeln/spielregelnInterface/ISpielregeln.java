@@ -36,24 +36,7 @@ public interface ISpielregeln {
      * @param letzteKarte - die letzte Karte
      * @return die entsprechende Sonderregel oder "Keine", falls keine Sonderregel zutrifft.
      */
-    SonderregelTyp sonderregelErmitteln(Karte letzteKarte);
+    boolean sonderregelEingehalten(Karte neueKarte, Karte letzteKarte);
 
-    /**
-     * Setzt die Sonderregel Aussetzen um und falls der {@link Spieler} nicht mit einem Ass kontern kann,
-     * wird der Zug für den {@link Spieler} beendet und der Zug des nächsten {@link Spieler} eingeleitet.
-     * @param aktuellerSpieler - der aktuelle Spieler
-     * @param neuerSpieler - der neue Spieler
-     */
-    void sonderregelAussetzen(Spieler aktuellerSpieler, Spieler neuerSpieler, MauMauSpiel spiel);
-
-    /**
-     * Setzt die Sonderregel Karten ziehen um. Entweder werden Karten gezogen, oder es kann gekontert werden.
-     * Wenn die Anzahl der zu ziehenden Karten gezogen wurde, wird der Default-Wert von anzahlSonderregelKartenZiehen
-     * auf 2 gesetzt.
-     * @param anzahl - Anzahl der Karten, die gezogen werden sollen
-     * @param hand - die aktuelle Hand
-     * @param kartenstapel - der aktuelle Kartenstapel
-     */
-    void sonderregelKartenZiehen(Spieler aktuellerSpieler, Spieler neuerSpieler, MauMauSpiel spiel);
 
 }

@@ -131,16 +131,17 @@ public class SpielregelnTest {
         spielregeln.istLegbar(neueKarte, wunschtyp);
     }
 
+
     /**
-     * Testet, ob kein Sonderregeltyp ermittelt wird, wenn der Kartentyp der letzten Karte nicht
-     * Bube, Ass oder Sieben ist.
-     * Das erwartete Ergebnis ist, dass keine Sonderregeln auftreten (SonderregelTyp.KEINE)
+     * Testet, ob der Sonderregeltyp Ass ermittelt wird, wenn der Kartentyp der letzten Karte Ass ist.
+     * Das erwartete Ergebnis ist der Sonderregeltyp ASS
      */
     @Test
-    public void testSonderregelErmittelnKeineSonderregel() {
-        Karte letzteKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN);
+    public void testSonderregelnNichtEingehaltenAss() {
+        Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.ASS);
+        Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN);
 
-        assertEquals("Für Karo Ass soll der Sonderregeltyp Keine ermittelt werden.", SonderregelTyp.KEINE, spielregeln.sonderregelErmitteln(letzteKarte));
+        assertFalse("Sonderregel nicht eingehalten.", spielregeln.sonderregelEingehalten(neueKarte, letzteKarte));
     }
 
     /**
@@ -148,125 +149,47 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist der Sonderregeltyp ASS
      */
     @Test
-    public void testSonderregelErmittelnAss() {
+    public void testSonderregelnEingehaltenAss() {
         Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.ASS);
+        Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ASS);
 
-        assertEquals("Für Karo Ass soll der Sonderregeltyp Ass ermittelt werden.", SonderregelTyp.ASS, spielregeln.sonderregelErmitteln(letzteKarte));
+        assertTrue("Sonderregel eingehalten.", spielregeln.sonderregelEingehalten(neueKarte, letzteKarte));
     }
 
     /**
-     * Testet, ob der Sonderregeltyp Bube ermittelt wird, wenn der Kartentyp der letzten Karte Bube ist.
-     * Das erwartete Ergebnis ist Sonderregeltyp BUBE
+     * Testet, ob der Sonderregeltyp Ass ermittelt wird, wenn der Kartentyp der letzten Karte Ass ist.
+     * Das erwartete Ergebnis ist der Sonderregeltyp ASS
      */
     @Test
-    public void testSonderregelErmittelnBube() {
-        Karte letzteKarte = new Karte(Kartentyp.HERZ, Kartenwert.BUBE);
+    public void testSonderregelnNichtEingehaltenSieben() {
+        Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.SIEBEN);
+        Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN);
 
-        assertEquals("Für Herz Bube soll der Sonderregeltyp Bube ermittelt werden.", SonderregelTyp.BUBE, spielregeln.sonderregelErmitteln(letzteKarte));
+        assertFalse("Sonderregel nicht eingehalten.", spielregeln.sonderregelEingehalten(neueKarte, letzteKarte));
     }
 
     /**
-     * Testet, ob der Sonderregeltyp Sieben ermittelt wird, wenn der Kartentyp der letzten Karte Sieben ist.
-     * Das erwartete Ergebnis ist Sonderregeltyp SIEBEN
+     * Testet, ob der Sonderregeltyp Ass ermittelt wird, wenn der Kartentyp der letzten Karte Ass ist.
+     * Das erwartete Ergebnis ist der Sonderregeltyp ASS
      */
     @Test
-    public void testSonderregelErmittelnSieben() {
-        Karte letzteKarte = new Karte(Kartentyp.PIK, Kartenwert.SIEBEN);
+    public void testSonderregelnEingehaltenSieben() {
+        Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.SIEBEN);
+        Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.SIEBEN);
 
-        assertEquals("Für Pik Sieben soll der Sonderregeltyp Sieben ermittelt werden.", SonderregelTyp.SIEBEN, spielregeln.sonderregelErmitteln(letzteKarte));
+        assertTrue("Sonderregel nicht eingehalten.", spielregeln.sonderregelEingehalten(neueKarte, letzteKarte));
     }
 
     /**
-     * Testet, ob die Sonderregel Aussetzen durchgeführt wird, wenn der Computer nicht mit einem Ass kontern kann.
-     * Das erwartete Ergebnis ist, dass Enyang durchs Aussetzen dieselbe Menge der Handkarten hat und Theo wieder dran ist.
+     * Testet, ob der Sonderregeltyp Ass ermittelt wird, wenn der Kartentyp der letzten Karte Ass ist.
+     * Das erwartete Ergebnis ist der Sonderregeltyp ASS
      */
     @Test
-    public void testSonderregelAussetzen() {
-        List<Karte> hand = new ArrayList<Karte>() {{
-            add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
-            add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
-            add(new Karte(Kartentyp.PIK, Kartenwert.BUBE));
-        }};
+    public void testSonderregelnEingehaltenWederAssNochSieben() {
+        Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.ACHT);
+        Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.NEUN);
 
-        enyang.setHand(hand);
-        enyang.setIstDran(true);
-        theo.setIstDran(false);
-
-        spielregeln.sonderregelAussetzen(enyang, theo, spiel);
-
-        assertEquals("Enyangs Hand muss gleich bleiben, da er nicht mit einem Ass kontern kann.", 3, enyang.getHand().size());
-        assertTrue("Theo muss jetzt dran sein.", theo.istDran());
-    }
-
-
-    /**
-     * Testet, ob der Computer die Sonderregel Aussetzen kontern kann, wenn er selber ein Ass legen kann.
-     * Das erwartete Ergebnis ist, dass Enyang nicht Aussetzen muss, sondern ein Ass legen kann.
-     */
-    @Test
-    public void testSonderregelAussetzenKontern() {
-        List<Karte> hand = new ArrayList<Karte>() {{
-            add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
-            add(new Karte(Kartentyp.KREUZ, Kartenwert.ASS));
-            add(new Karte(Kartentyp.PIK, Kartenwert.BUBE));
-        }};
-
-        enyang.setHand(hand);
-        enyang.setIstDran(true);
-        theo.setIstDran(false);
-
-        spiel.setAblagestapel(new ArrayList<Karte>());
-        spielregeln.sonderregelAussetzen(enyang, theo, spiel);
-
-        assertEquals("Enyangs Hand muss um eine Karte reduziert sein, da er mit einem Ass kontern kann.", 2, enyang.getHand().size());
-        assertTrue("Theo muss jetzt dran sein.", theo.istDran());
-    }
-
-    /**
-     * Testet, ob die Sonderregel Karten ziehen durchgeführt wird, wenn der Computer nicht mit einer Sieben kontern kann.
-     * Das erwartete Ergebnis ist, dass Enyang zwei Karten vom Kartenstapel zu seiner Hand hinzufügen muss.
-     */
-    @Test
-    public void testSonderregelZweiKartenZiehen() {
-        List<Karte> hand = new ArrayList<Karte>() {{
-            add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
-            add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
-            add(new Karte(Kartentyp.PIK, Kartenwert.BUBE));
-        }};
-
-        enyang.setHand(hand);
-
-        int alteAnzahlHand = enyang.getHand().size();
-        int alteAnzahlKartenstapel = testkartenstapel.size();
-        spiel.setKartenstapel(testkartenstapel);
-        spielregeln.sonderregelKartenZiehen(enyang, theo, spiel);
-
-        assertEquals("Enyangs Hand muss zwei Karten mehr enthalten.", alteAnzahlHand + 2, enyang.getHand().size());
-        assertEquals("Der Kartenstapel soll zwei Karten weniger enthalten.", alteAnzahlKartenstapel - 2, testkartenstapel.size());
-    }
-
-    /**
-     * Testet, ob der Computer die Sonderregel Karten ziehen kontern kann, wenn er selber eine Sieben legen kann.
-     * Das erwartete Ergebnis ist, dass Enyang nicht ziehen muss, sondern eine Sieben legen kann und dass die Anzahl
-     * der zu ziehenden Karten um zwei erhöht wird.
-     */
-    @Test
-    public void testSonderregelZweiKartenZiehenKontern() {
-        List<Karte> hand = new ArrayList<Karte>() {{
-            add(new Karte(Kartentyp.HERZ, Kartenwert.SIEBEN));
-            add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
-            add(new Karte(Kartentyp.PIK, Kartenwert.BUBE));
-        }};
-
-        enyang.setHand(hand);
-        int alteAnzahlHand = enyang.getHand().size();
-        spiel.setAblagestapel(testkartenstapel);
-
-        spielregeln.sonderregelKartenZiehen(enyang, theo, spiel);
-
-        assertEquals("Die Anzahl der zu ziehenden Karten muss um 2 erhöht sein.", 4, spiel.getAnzahlSonderregelKartenZiehen());
-        assertFalse("Enyang darf nun nicht mehr am Zug sein.", enyang.istDran());
-        assertEquals("Enyang muss eine Karte weniger auf der Hand haben.", alteAnzahlHand - 1, enyang.getHand().size());
+        assertTrue("Sonderregel eingehalten.", spielregeln.sonderregelEingehalten(neueKarte, letzteKarte));
     }
 
 }

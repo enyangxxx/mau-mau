@@ -2,6 +2,7 @@ package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface;
 
 import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 
 import java.util.List;
 
@@ -45,4 +46,11 @@ public interface ISpielerverwaltung {
      */
     Spieler getSpielerById(int id, List<Spieler> spielerliste) throws KeineSpielerException;
 
+    /**
+     * Alle {@link Spieler} bekommen je 5 {@link Karte} aus dem Kartenstapel und es wird eine Anfangskarte aufgedeckt.
+     * @param spielerliste - die aktuelle Spielerliste
+     * @param kartenstapel - der aktuelle Kartenstapel
+     * @param ablagestapel - der aktuelle Ablagestapel
+     */
+    void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel);
 }

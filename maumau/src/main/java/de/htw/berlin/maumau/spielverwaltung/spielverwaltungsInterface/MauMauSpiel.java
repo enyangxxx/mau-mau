@@ -16,7 +16,7 @@ public class MauMauSpiel {
     private int runde;
     private List<Karte> ablagestapel;
     private List<Karte> kartenstapel = new ArrayList<Karte>();
-    private Kartentyp wunschtyp;
+    private Kartentyp aktuellerWunschtyp;
     private int anzahlSonderregelKartenZiehen;
     private int spielId;
 
@@ -74,12 +74,12 @@ public class MauMauSpiel {
         this.kartenstapel = kartenstapel;
     }
 
-    public Kartentyp getWunschtyp() {
-        return wunschtyp;
+    public Kartentyp getAktuellerWunschtyp() {
+        return aktuellerWunschtyp;
     }
 
-    public void setWunschtyp(Kartentyp wunschtyp) {
-        this.wunschtyp = wunschtyp;
+    public void setAktuellerWunschtyp(Kartentyp aktuellerWunschtyp) {
+        this.aktuellerWunschtyp = aktuellerWunschtyp;
     }
 
     public List<Spieler> getSpielerListe() {

@@ -23,8 +23,6 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
     
     private static final String KARTENSTAPEL_GENERIERT_MESSAGE = "Kartenstapel wurde generiert!";
     private static final String KARTEN_GEMISCHT_MESSAGE = "Kartenstapel wurde gemischt!";
-    private static final String SPIELER_HAND_GESETZT = "Die Hand wurde gesetzt für Spieler: ";
-    private static final String KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE = "Karte auf Ablagestapel gelegt!";
     private static final String ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE = "Ablagestapel wurde in Kartenstapel gemischt!";
 
     public KartenverwaltungImpl(){
@@ -61,27 +59,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
         }
     }
 
-    /**
-     * Alle {@link Spieler} bekommen je 5 {@link Karte} aus dem Kartenstapel und es wird eine Anfangskarte aufgedeckt.
-     *
-     * @param spielerliste - die aktuelle Spielerliste
-     * @param kartenstapel - der aktuelle Kartenstapel
-     * @param ablagestapel - der aktuelle Ablagestapel
-     */
-    public void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel) {
-        for (Spieler spieler: spielerliste){
-            List<Karte> hand = new ArrayList<Karte>();
-            for(int i = 0;i < 5; i++){
-                hand.add(kartenstapel.get(i));
-                kartenstapel.remove(kartenstapel.get(i));
-            }
-            log.info(SPIELER_HAND_GESETZT + spieler.getName());
-            spieler.setHand(hand);
-        }
-        log.info(KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE);
-        ablagestapel.add(kartenstapel.get(kartenstapel.size()-1));
-        kartenstapel.remove(kartenstapel.get(kartenstapel.size()-1));
-    }
+
 
     /**
      * Mischt die Karten des Ablagestapels in den Kartenstapel.
