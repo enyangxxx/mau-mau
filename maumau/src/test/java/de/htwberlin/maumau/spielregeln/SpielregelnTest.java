@@ -3,11 +3,9 @@ package de.htwberlin.maumau.spielregeln;
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.enumeration.SonderregelTyp;
 import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
-import de.htw.berlin.maumau.spielregeln.spielregelnImpl.SpielregelnImpl;
 import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.junit.Before;
@@ -141,7 +139,7 @@ public class SpielregelnTest {
         Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.ASS);
         Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN);
 
-        assertFalse("Sonderregel nicht eingehalten.", spielregeln.sonderregelEingehalten(neueKarte, letzteKarte));
+        assertFalse("Sonderregel nicht eingehalten.", spielregeln.sonderregelEingehaltenSieben(neueKarte, letzteKarte));
     }
 
     /**
@@ -153,7 +151,7 @@ public class SpielregelnTest {
         Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.ASS);
         Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ASS);
 
-        assertTrue("Sonderregel eingehalten.", spielregeln.sonderregelEingehalten(neueKarte, letzteKarte));
+        assertTrue("Sonderregel eingehalten.", spielregeln.sonderregelEingehaltenSieben(neueKarte, letzteKarte));
     }
 
     /**
@@ -165,7 +163,7 @@ public class SpielregelnTest {
         Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.SIEBEN);
         Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN);
 
-        assertFalse("Sonderregel nicht eingehalten.", spielregeln.sonderregelEingehalten(neueKarte, letzteKarte));
+        assertFalse("Sonderregel nicht eingehalten.", spielregeln.sonderregelEingehaltenSieben(neueKarte, letzteKarte));
     }
 
     /**
@@ -177,7 +175,7 @@ public class SpielregelnTest {
         Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.SIEBEN);
         Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.SIEBEN);
 
-        assertTrue("Sonderregel nicht eingehalten.", spielregeln.sonderregelEingehalten(neueKarte, letzteKarte));
+        assertTrue("Sonderregel nicht eingehalten.", spielregeln.sonderregelEingehaltenSieben(neueKarte, letzteKarte));
     }
 
     /**
@@ -189,7 +187,7 @@ public class SpielregelnTest {
         Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.ACHT);
         Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.NEUN);
 
-        assertTrue("Sonderregel eingehalten.", spielregeln.sonderregelEingehalten(neueKarte, letzteKarte));
+        assertTrue("Sonderregel eingehalten.", spielregeln.sonderregelEingehaltenSieben(neueKarte, letzteKarte));
     }
 
 }

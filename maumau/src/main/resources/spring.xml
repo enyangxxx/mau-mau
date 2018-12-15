@@ -16,6 +16,7 @@
           class="de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.SpielverwaltungImpl">
         <constructor-arg ref="kartenverwaltungimpl"/>
         <constructor-arg ref="spielregelnimpl"/>
+        <constructor-arg ref="spielerverwaltungimpl"/>
     </bean>
 
     <bean id="spielregelnimpl" class="de.htw.berlin.maumau.spielregeln.spielregelnImpl.SpielregelnImpl">
