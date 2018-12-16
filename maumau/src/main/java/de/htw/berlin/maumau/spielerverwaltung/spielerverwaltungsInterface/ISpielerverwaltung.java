@@ -3,6 +3,7 @@ package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface;
 import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public interface ISpielerverwaltung {
      * @param aktuellerSpieler - der aktuelle Spieler
      * @param neuerSpieler     - der nächste Spieler
      */
-    void spielerWechseln(Spieler aktuellerSpieler, Spieler neuerSpieler);
+    void spielerWechseln(MauMauSpiel spiel);
 
     /**
      * Gibt den {@link Spieler} aus der Spielerliste zurück, zu dem die ID gehört.

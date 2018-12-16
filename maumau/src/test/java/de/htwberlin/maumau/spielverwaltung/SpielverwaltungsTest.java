@@ -30,11 +30,18 @@ public class SpielverwaltungsTest {
     private ISpielverwaltung spielverwaltung;
     private static final Spieler ingo = new Spieler("Ingo", 1, false);
     private static final Spieler enyang = new Spieler("Enyang", 2, false);
-    private ArrayList<Karte> stapel = new ArrayList<Karte>() {{
+    private ArrayList<Karte> ablagestapel = new ArrayList<Karte>() {{
         add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
         add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
         add(new Karte(Kartentyp.PIK, Kartenwert.SIEBEN));
     }};
+
+    private ArrayList<Karte> kartenstapel = new ArrayList<Karte>() {{
+        add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
+        add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
+        add(new Karte(Kartentyp.PIK, Kartenwert.SIEBEN));
+    }};
+
     private ArrayList<Karte> hand = new ArrayList<Karte>() {{
         add(new Karte(Kartentyp.HERZ, Kartenwert.BUBE));
         add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
@@ -43,13 +50,11 @@ public class SpielverwaltungsTest {
     private List<Spieler> spielerliste;
 
 
-
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
     @Before
     public void setUp() {
-        //spielverwaltung = new SpielverwaltungImpl();
         spielverwaltung = (ISpielverwaltung) ConfigServiceImpl.context.getBean("spielverwaltungimpl");
         spielerliste = new ArrayList<Spieler>();
 
@@ -60,7 +65,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist ein neues Spiel mit der Runde 1
      */
     @Test
-    public void testNeuesSpielStartenMitSpielerliste() throws KeineSpielerException{
+    public void testNeuesSpielStartenMitSpielerliste() throws KeineSpielerException {
         spielerliste.add(ingo);
         spielerliste.add(enyang);
         MauMauSpiel neuesSpiel = spielverwaltung.neuesSpielStarten(spielerliste);
@@ -73,7 +78,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist KeineSpielerException
      */
     @Test
-    public void testNeuesSpielStartenMitSpielerlisteOhneSpieler() throws KeineSpielerException{
+    public void testNeuesSpielStartenMitSpielerlisteOhneSpieler() throws KeineSpielerException {
         exceptionRule.expect(KeineSpielerException.class);
         spielverwaltung.neuesSpielStarten(spielerliste);
     }
@@ -100,14 +105,18 @@ public class SpielverwaltungsTest {
     public void testKarteZiehen() {
         spielerliste.add(ingo);
         Spieler spieler = spielerliste.get(0);
+        MauMauSpiel spiel = new MauMauSpiel(spielerliste);
+        spiel.setAblagestapel(ablagestapel);
+        spiel.setKartenstapel(kartenstapel);
+
 
         int alteAnzahlKartenInHand = spieler.getHand().size();
-        int alteKartenstapelMenge = stapel.size();
+        int alteKartenstapelMenge = spiel.getKartenstapel().size();
 
-        spielverwaltung.karteZiehen(spieler, stapel, stapel);
+        spielverwaltung.karteZiehen(spieler, spiel);
 
         int neueAnzahlKartenInHand = spieler.getHand().size();
-        int neueKartenstapelMenge = stapel.size();
+        int neueKartenstapelMenge = spiel.getKartenstapel().size();
 
         assertEquals("Die Hand muss um 1 Karte erweitert sein", alteAnzahlKartenInHand + 1, neueAnzahlKartenInHand);
         assertEquals("Der Kartenstapel muss um 1 Karte verringert sein", alteKartenstapelMenge - 1, neueKartenstapelMenge);
@@ -121,14 +130,19 @@ public class SpielverwaltungsTest {
     public void testZweiKartenZiehen() {
         spielerliste.add(ingo);
         Spieler spieler = spielerliste.get(0);
+        MauMauSpiel spiel = new MauMauSpiel(spielerliste);
+        spiel.setAblagestapel(ablagestapel);
+        spiel.setKartenstapel(kartenstapel);
+
+        spiel.setAnzahlSonderregelKartenZiehen(2);
 
         int alteAnzahlKartenInHand = spieler.getHand().size();
-        int alteKartenstapelMenge = stapel.size();
+        int alteKartenstapelMenge = spiel.getKartenstapel().size();
 
-        spielverwaltung.karteZiehen(spieler, stapel, 2, stapel);
+        spielverwaltung.karteZiehenSonderregel(spieler, spiel);
 
         int neueAnzahlKartenInHand = spieler.getHand().size();
-        int neueKartenstapelMenge = stapel.size();
+        int neueKartenstapelMenge = spiel.getKartenstapel().size();
 
         assertEquals("Die Hand muss um 2 Karten erweitert sein", alteAnzahlKartenInHand + 2, neueAnzahlKartenInHand);
         assertEquals("Der Kartenstapel muss um 2 Karten verringert sein", alteKartenstapelMenge - 2, neueKartenstapelMenge);
@@ -142,15 +156,20 @@ public class SpielverwaltungsTest {
     @Test
     public void testDreiKartenZiehen() {
         spielerliste.add(ingo);
+        MauMauSpiel spiel = new MauMauSpiel(spielerliste);
+        spiel.setAblagestapel(ablagestapel);
+        spiel.setKartenstapel(kartenstapel);
+        spiel.setAnzahlSonderregelKartenZiehen(3);
+
         Spieler spieler = spielerliste.get(0);
 
         int alteAnzahlKartenInHand = spieler.getHand().size();
-        int alteKartenstapelMenge = stapel.size();
+        int alteKartenstapelMenge = spiel.getKartenstapel().size();
 
-        spielverwaltung.karteZiehen(spieler, stapel, 3, stapel);
+        spielverwaltung.karteZiehenSonderregel(spieler, spiel);
 
         int neueAnzahlKartenInHand = spieler.getHand().size();
-        int neueKartenstapelMenge = stapel.size();
+        int neueKartenstapelMenge = spiel.getKartenstapel().size();
 
         assertEquals("Die Hand muss um 3 Karten erweitert sein", alteAnzahlKartenInHand + 3, neueAnzahlKartenInHand);
         assertEquals("Der Kartenstapel muss um 3 Karten verringert sein", alteKartenstapelMenge - 3, neueKartenstapelMenge);
@@ -161,20 +180,23 @@ public class SpielverwaltungsTest {
      * Javadog
      */
     @Test
-    public void testKarteZiehenLeererStapel(){
+    public void testKarteZiehenLeererStapel() {
         List<Karte> kartenstapel = new ArrayList<Karte>();
         spielerliste.add(ingo);
+        MauMauSpiel spiel = new MauMauSpiel(spielerliste);
+        spiel.setAblagestapel(ablagestapel);
+        spiel.setKartenstapel(kartenstapel);
         Spieler spieler = spielerliste.get(0);
 
         int alteAnzahlKartenInHand = spieler.getHand().size();
-        int alteAblagestapelMenge = stapel.size();
+        int alteAblagestapelMenge = ablagestapel.size();
 
-        spielverwaltung.karteZiehen(spieler, kartenstapel, stapel);
+        spielverwaltung.karteZiehen(spieler, spiel);
 
         assertFalse("Der Kartenstapel darf nicht leer sein.", kartenstapel.isEmpty());
-        assertEquals("Der Kartenstapel muss 2 Karten enthalten.", alteAblagestapelMenge-1, kartenstapel.size());
+        assertEquals("Der Kartenstapel muss 2 Karten enthalten.", alteAblagestapelMenge - 1, kartenstapel.size());
         assertEquals("Die Hand muss um 1 Karte erweitert sein.", alteAnzahlKartenInHand + 1, spieler.getHand().size());
-        assertTrue("Der Ablagestapel muss leer sein.", stapel.isEmpty());
+        assertTrue("Der Ablagestapel muss leer sein.", ablagestapel.isEmpty());
     }
 
     /**
@@ -182,9 +204,9 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist alteAnzahlKartenInHand - 1 && alteAblagestapelMenge + 1
      */
     @Test
-    public void testKarteNichtLegen() throws KeinWunschtypException {
+    public void testKarteNichtLegen() throws KeinWunschtypException, KeineSpielerException {
         MauMauSpiel maumauSpiel = new MauMauSpiel(spielerliste);
-        maumauSpiel.setAblagestapel(stapel);
+        maumauSpiel.setAblagestapel(ablagestapel);
 
         spielerliste.add(ingo);
         Spieler spieler = spielerliste.get(0);
@@ -198,7 +220,7 @@ public class SpielverwaltungsTest {
         int neueAnzahlKartenInHand = spieler.getHand().size();
         int neueAblagestapelMenge = maumauSpiel.getAblagestapel().size();
 
-        assertEquals("Die Hand soll sich nicht verringern.", alteAnzahlKartenInHand,neueAnzahlKartenInHand);
+        assertEquals("Die Hand soll sich nicht verringern.", alteAnzahlKartenInHand, neueAnzahlKartenInHand);
         assertEquals("Der Ablagestapel darf nicht verändert werden.", alteAblagestapelMenge, neueAblagestapelMenge);
 
     }
@@ -208,9 +230,9 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist alteAnzahlKartenInHand - 1 && alteAblagestapelMenge + 1
      */
     @Test
-    public void testKarteLegen() throws KeinWunschtypException {
+    public void testKarteLegen() throws KeinWunschtypException, KeineSpielerException {
         MauMauSpiel maumauSpiel = new MauMauSpiel(spielerliste);
-        maumauSpiel.setAblagestapel(stapel);
+        maumauSpiel.setAblagestapel(ablagestapel);
 
         spielerliste.add(ingo);
         Spieler spieler = spielerliste.get(0);
@@ -224,8 +246,8 @@ public class SpielverwaltungsTest {
         int neueAnzahlKartenInHand = spieler.getHand().size();
         int neueAblagestapelMenge = maumauSpiel.getAblagestapel().size();
 
-        assertEquals("Die Hand soll um 1 verringert werden.", alteAnzahlKartenInHand-1,neueAnzahlKartenInHand);
-        assertEquals("Der Ablagestapel muss um 1 erweitert werden.", alteAblagestapelMenge+1, neueAblagestapelMenge);
+        assertEquals("Die Hand soll um 1 verringert werden.", alteAnzahlKartenInHand - 1, neueAnzahlKartenInHand);
+        assertEquals("Der Ablagestapel muss um 1 erweitert werden.", alteAblagestapelMenge + 1, neueAblagestapelMenge);
     }
 
 
@@ -235,8 +257,8 @@ public class SpielverwaltungsTest {
      */
     @Test
     public void testLetzteKarteVomAblagestapelErmitteln() throws KeineKarteException {
-        Karte letzteKarte = spielverwaltung.letzteKarteErmitteln(stapel);
-        assertEquals("Die letzte Karte soll PIK/BUBE sein", letzteKarte, stapel.get(stapel.size() - 1));
+        Karte letzteKarte = spielverwaltung.letzteKarteErmitteln(ablagestapel);
+        assertEquals("Die letzte Karte soll PIK/BUBE sein", letzteKarte, ablagestapel.get(ablagestapel.size() - 1));
     }
 
     /**
@@ -244,7 +266,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist KeineKarteException
      */
     @Test
-    public void testLetzteKarteInLeererListeErmitteln() throws KeineKarteException{
+    public void testLetzteKarteInLeererListeErmitteln() throws KeineKarteException {
         exceptionRule.expect(KeineKarteException.class);
         spielverwaltung.letzteKarteErmitteln(new ArrayList<Karte>());
     }
@@ -255,10 +277,11 @@ public class SpielverwaltungsTest {
      */
     @Test
     public void testMauMauPruefenWennTrue() {
+        MauMauSpiel spiel = new MauMauSpiel(spielerliste);
         ingo.setHatMauGerufen(true);
-        int alteKartenstapelMenge = stapel.size();
-        spielverwaltung.maumauPruefen(ingo, stapel, stapel);
-        int neueKartenstapelMenge = stapel.size();
+        int alteKartenstapelMenge = ablagestapel.size();
+        spielverwaltung.maumauPruefen(ingo, spiel);
+        int neueKartenstapelMenge = ablagestapel.size();
 
         assertEquals("Der Kartenstapel soll sich nicht verrringert haben, wenn MauMau gerufen wurde", alteKartenstapelMenge, neueKartenstapelMenge);
     }
@@ -269,14 +292,18 @@ public class SpielverwaltungsTest {
      */
     @Test
     public void testMauMauPruefenWennFalse() {
+        MauMauSpiel spiel = new MauMauSpiel(spielerliste);
+        spiel.setAblagestapel(ablagestapel);
+        spiel.setKartenstapel(kartenstapel);
+
         ingo.setHatMauGerufen(false);
 
-        int alteKartenstapelMenge = stapel.size();
+        int alteKartenstapelMenge = kartenstapel.size();
         int alteMengeInHand = ingo.getHand().size();
 
-        spielverwaltung.maumauPruefen(ingo, stapel, stapel);
+        spielverwaltung.maumauPruefen(ingo, spiel);
 
-        int neueKartenstapelMenge = stapel.size();
+        int neueKartenstapelMenge = kartenstapel.size();
         int neueMengeInHand = ingo.getHand().size();
 
         assertEquals("Die Hand soll sich um 2 Karten erweitert haben, wenn MauMau nicht gerufen wurde", alteMengeInHand + 2, neueMengeInHand);

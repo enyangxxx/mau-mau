@@ -14,17 +14,22 @@ public class MauMauSpiel {
 
     private List<Spieler> spielerliste;
     private int runde;
-    private List<Karte> ablagestapel;
+    private List<Karte> ablagestapel = new ArrayList<Karte>();
     private List<Karte> kartenstapel = new ArrayList<Karte>();
     private Kartentyp aktuellerWunschtyp;
+    private boolean sonderregelSiebenAktiv;
+    private boolean sonderregelAssAktiv;
     private int anzahlSonderregelKartenZiehen;
     private int spielId;
 
     public MauMauSpiel(List<Spieler> spielerliste) {
         this.runde = 1;
-        this.anzahlSonderregelKartenZiehen = 2;
+        this.anzahlSonderregelKartenZiehen = 0;
         this.spielerliste = spielerliste;
+        this.sonderregelSiebenAktiv = false;
+        this.sonderregelAssAktiv = false;
     }
+
 
     public int getSpielId() {
         return spielId;
@@ -90,7 +95,21 @@ public class MauMauSpiel {
         this.spielerliste = spielerliste;
     }
 
+    public boolean isSonderregelSiebenAktiv() {
+        return sonderregelSiebenAktiv;
+    }
 
+    public void setSonderregelSiebenAktiv(boolean sonderregelSiebenAktiv) {
+        this.sonderregelSiebenAktiv = sonderregelSiebenAktiv;
+    }
+
+    public boolean isSonderregelAssAktiv() {
+        return sonderregelAssAktiv;
+    }
+
+    public void setSonderregelAssAktiv(boolean sonderregelAssAktiv) {
+        this.sonderregelAssAktiv = sonderregelAssAktiv;
+    }
 }
 
 

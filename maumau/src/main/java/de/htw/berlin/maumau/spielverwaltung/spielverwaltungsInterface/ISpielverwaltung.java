@@ -33,20 +33,23 @@ public interface ISpielverwaltung {
      * Ein {@link Spieler} zieht eine Karte von dem Kartenstapel und fügt diese seiner Hand hinzu.
      * Wenn der Kartenstapel leer ist, wird er neu erstellt.
      *
-     * @param spieler - der Spieler
-     * @param kartenstapel - der Kartenstapel
+     * @param spieler      - der Spieler
      */
-    void karteZiehen(Spieler spieler, List<Karte> kartenstapel, List<Karte> ablagestapel);
+    void karteZiehen(Spieler spieler, MauMauSpiel spiel);
 
     /**
      * Ein {@link Spieler} zieht eine bestimmte Anzahl von {@link Karte} vom Kartenstapel.
      * Wenn der Kartenstapel leer ist, wird er neu erstellt.
      *
-     * @param spieler - der Spieler
-     * @param kartenstapel - der Kartenstapel
-     * @param anzahl - Anzahl der zu ziehenden Karten
+     * @param spieler      - der Spieler
      */
-    void karteZiehen(Spieler spieler, List<Karte> kartenstapel, int anzahl, List<Karte> ablagestapel);
+    void karteZiehenSonderregel(Spieler spieler, MauMauSpiel spiel);
+
+    /**
+     * @param spieler
+     * @param spiel
+     */
+    void karteZiehenMauNichtGerufen(Spieler spieler, MauMauSpiel spiel);
 
     /**
      * Ein {@link Spieler} legt eine {@link Karte}. Falls es sich um einen Buben handelt, darf er einen Wunschtyp festlegen.
@@ -54,7 +57,7 @@ public interface ISpielverwaltung {
      * @param gewaehlteKarte - die vom Spieler ausgesuchte Karte
      * @param hand           - die aktuelle Hand des Spielers
      */
-    void karteLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) throws KeinWunschtypException;
+    void karteLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) throws KeinWunschtypException, KeineSpielerException;
 
 
     /**
@@ -70,10 +73,9 @@ public interface ISpielverwaltung {
      * Wenn ja, muss er keinen Strafzug machen und die Variable hatMauGerufen wird wieder auf false gesetzt.
      * Wenn nein, muss er zwei Karten ziehen.
      *
-     * @param spieler - der Spieler
-     * @param kartenstapel - der Kartenstapel
+     * @param spieler      - der Spieler
      */
-    void maumauPruefen(Spieler spieler, List<Karte> kartenstapel, List<Karte> ablagestapel);
+    void maumauPruefen(Spieler spieler, MauMauSpiel spiel);
 
     /**
      * Ein {@link Spieler} ruft Mau Mau und die Variable hatMauGerufen wird auf true gesetzt.
@@ -89,4 +91,6 @@ public interface ISpielverwaltung {
      * @return Minuswert der Hand
      */
     int minuspunkteBerechnen(List<Karte> hand);
+
+    void wunschtypFestlegen(Kartentyp wunschtyp, MauMauSpiel spiel);
 }

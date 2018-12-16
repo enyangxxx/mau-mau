@@ -7,6 +7,7 @@ import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
@@ -14,7 +15,6 @@ import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpie
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -38,19 +38,20 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
     IKartenverwaltung kartenverwaltung;
     ISpielregeln spielregeln;
-    //= (IKartenverwaltung) ConfigServiceImpl.context.getBean("kartenverwaltungimpl");
+    ISpielerverwaltung spielerverwaltung;
 
-    public SpielverwaltungImpl(final IKartenverwaltung kartenverwaltungimpl, final ISpielregeln spielregelnImpl){
+    public SpielverwaltungImpl(final IKartenverwaltung kartenverwaltungImpl, final ISpielregeln spielregelnImpl, final ISpielerverwaltung spielerverwaltungImpl) {
         log.info("SpielverwaltungsImpl Konstruktor called");
-        this.kartenverwaltung = kartenverwaltungimpl;
+        this.kartenverwaltung = kartenverwaltungImpl;
         this.spielregeln = spielregelnImpl;
+        this.spielerverwaltung = spielerverwaltungImpl;
     }
 
 
-    public MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeineSpielerException{
+    public MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeineSpielerException {
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
         log.info(NEUES_SPIEL_MESSAGE);
-        if(spielerliste.isEmpty()){
+        if (spielerliste.isEmpty()) {
             log.error(KEINESPIELER_EXCEPTION_MESSAGE);
             throw new KeineSpielerException(KEINESPIELER_EXCEPTION_MESSAGE);
         }
@@ -58,15 +59,17 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     }
 
     public void neueRundeStarten(MauMauSpiel spiel) {
-        spiel.setRunde(spiel.getRunde()+1);
+        spiel.setRunde(spiel.getRunde() + 1);
         log.info(NEUE_RUNDE_MESSAGE);
     }
 
-    public void karteZiehen(Spieler spieler, List<Karte> kartenstapel, List<Karte> ablagestapel) {
+    public void karteZiehen(Spieler spieler, MauMauSpiel spiel) {
+        List<Karte> ablagestapel = spiel.getAblagestapel();
+        List<Karte> kartenstapel = spiel.getKartenstapel();
         List<Karte> hand = spieler.getHand();
         //Wenn Kartenstapel leer, nutze kartenstapelGenerieren
 
-        if(kartenstapel.isEmpty()){
+        if (kartenstapel.isEmpty()) {
             kartenverwaltung.ablagestapelWiederverwenden(ablagestapel, kartenstapel);
         }
 
@@ -74,92 +77,120 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         spieler.setHand(hand);
         kartenstapel.remove(0);
         log.info(KARTE_ZIEHEN_MESSAGE);
+        spielerverwaltung.spielerWechseln(spiel);
     }
 
-    public void karteZiehen(Spieler spieler, List<Karte> kartenstapel, int anzahl, List<Karte> ablagestapel) {
+    public void karteZiehenMauNichtGerufen(Spieler spieler, MauMauSpiel spiel) {
+        List<Karte> ablagestapel = spiel.getAblagestapel();
+        List<Karte> kartenstapel = spiel.getKartenstapel();
         List<Karte> hand = spieler.getHand();
-        int alteMenge = kartenstapel.size();
         //Wenn Kartenstapel leer, nutze kartenstapelGenerieren
 
-        for (Iterator<Karte> iterator = kartenstapel.iterator(); alteMenge - kartenstapel.size() < anzahl;){
-            if(!iterator.hasNext()){
+        if (kartenstapel.isEmpty()) {
+            kartenverwaltung.ablagestapelWiederverwenden(ablagestapel, kartenstapel);
+        }
+
+        hand.add(kartenstapel.get(0));
+        kartenstapel.remove(0);
+        log.info(KARTE_ZIEHEN_MESSAGE);
+        hand.add(kartenstapel.get(0));
+        kartenstapel.remove(0);
+        log.info(KARTE_ZIEHEN_MESSAGE);
+        spieler.setHand(hand);
+        //spielerverwaltung.spielerWechseln(spiel);
+    }
+
+
+    public void karteZiehenSonderregel(Spieler spieler, MauMauSpiel spiel) {
+        List<Karte> ablagestapel = spiel.getAblagestapel();
+        List<Karte> kartenstapel = spiel.getKartenstapel();
+        List<Karte> hand = spieler.getHand();
+        int anzahl = spiel.getAnzahlSonderregelKartenZiehen();
+
+        for (int i = 0; i < anzahl; i++) {
+            if (kartenstapel.isEmpty()) {
                 kartenverwaltung.ablagestapelWiederverwenden(ablagestapel, kartenstapel);
             }
-            if(iterator.hasNext()){
-                hand.add(iterator.next());
-                iterator.remove();
-                log.info(KARTE_ZIEHEN_MESSAGE);
-            }
+            hand.add(kartenstapel.get(0));
+            kartenstapel.remove(0);
         }
+
         spieler.setHand(hand);
+        spielerverwaltung.spielerWechseln(spiel);
+        spiel.setAnzahlSonderregelKartenZiehen(2);
+        spiel.setSonderregelSiebenAktiv(false);
     }
 
-    /*public void karteLegen(MauMauSpiel spiel, Karte gewaehlteKarte, List<Karte> hand, List<Karte> ablagestapel, Kartentyp wunschtyp) {
-        for (Iterator<Karte> iterator = hand.iterator(); iterator.hasNext();) {
-            Karte karte = iterator.next();
-            if(karte.getWert().equals(gewaehlteKarte.getWert()) && karte.getTyp().equals(gewaehlteKarte.getTyp())) {
-                iterator.remove();
-                ablagestapel.add(karte);
-                log.info(KARTE_ABLEGEN_MESSAGE);
-                break;
-            }
-        }
-        if (wunschtyp != null){
-            spiel.setAktuellerWunschtyp(wunschtyp);
-            log.info(new StringBuilder(WUNSCHTYP_GESETZT_MESSAGE + wunschtyp.toString()));
-        }
-    }
 
-    public void karteLegen(Karte gewaehlteKarte, List<Karte> hand, List<Karte> ablagestapel) {
-        for (Iterator<Karte> iterator = hand.iterator(); iterator.hasNext();) {
-            Karte karte = iterator.next();
-            if(karte.getWert().equals(gewaehlteKarte.getWert()) && karte.getTyp().equals(gewaehlteKarte.getTyp())) {
-                iterator.remove();
-                ablagestapel.add(karte);
-                log.info(KARTE_ABLEGEN_MESSAGE);
-            }
-        }
-    }
-    */
-
-    public void karteLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) throws KeinWunschtypException {
-        Karte letzteKarte = spiel.getAblagestapel().get(spiel.getAblagestapel().size()-1);
+    public void karteLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) throws KeinWunschtypException, KeineSpielerException {
+        Karte letzteKarte = spiel.getAblagestapel().get(spiel.getAblagestapel().size() - 1);
         Kartentyp aktuellerWunschtyp = spiel.getAktuellerWunschtyp();
+        int id = 0;
 
-        if(spielregeln.sonderregelEingehalten(gewaehlteKarte, letzteKarte) ){
-            if(aktuellerWunschtyp!=null){
-                if(spielregeln.istLegbar(gewaehlteKarte, aktuellerWunschtyp)){
-                    hand.remove(gewaehlteKarte);
-                    spiel.getAblagestapel().add(gewaehlteKarte);
-                    log.info(KARTE_ABLEGEN_MESSAGE);
-                }
+        for(Spieler spieler : spiel.getSpielerListe()){
+            if(spieler.istDran()){
+              id = spieler.getS_id();
             }
-            else{
-                if(spielregeln.istLegbar(letzteKarte, gewaehlteKarte)){
+        }
+
+        if (((spielregeln.sonderregelEingehaltenSieben(gewaehlteKarte, letzteKarte))||(!spiel.isSonderregelSiebenAktiv()))&&spielregeln.sonderregelEingehaltenBube(gewaehlteKarte, letzteKarte)) {
+            if (aktuellerWunschtyp != null) {
+                if (spielregeln.istLegbar(gewaehlteKarte, aktuellerWunschtyp)) {
                     hand.remove(gewaehlteKarte);
                     spiel.getAblagestapel().add(gewaehlteKarte);
                     log.info(KARTE_ABLEGEN_MESSAGE);
+                    if(gewaehlteKarte.getWert().equals(Kartenwert.SIEBEN)){
+                        spiel.setSonderregelSiebenAktiv(true);
+                        spiel.setAnzahlSonderregelKartenZiehen(spiel.getAnzahlSonderregelKartenZiehen()+2);
+                    }
+                    else if(gewaehlteKarte.getWert().equals(Kartenwert.ASS)){
+                        spiel.setSonderregelAssAktiv(true);
+                    }
+                    if(hand.size()==1){
+                        maumauPruefen(spielerverwaltung.getSpielerById(id, spiel.getSpielerListe()), spiel);
+                    }
+                    spielerverwaltung.spielerWechseln(spiel);
+                }
+            } else {
+                if (spielregeln.istLegbar(letzteKarte, gewaehlteKarte)) {
+                    hand.remove(gewaehlteKarte);
+                    spiel.getAblagestapel().add(gewaehlteKarte);
+                    log.info(KARTE_ABLEGEN_MESSAGE);
+                    if(gewaehlteKarte.getWert().equals(Kartenwert.SIEBEN)){
+                        spiel.setSonderregelSiebenAktiv(true);
+                        spiel.setAnzahlSonderregelKartenZiehen(spiel.getAnzahlSonderregelKartenZiehen()+2);
+                    }
+                    else if(gewaehlteKarte.getWert().equals(Kartenwert.ASS)){
+                        spiel.setSonderregelAssAktiv(true);
+                    }
+                    if(hand.size()==1){
+                        maumauPruefen(spielerverwaltung.getSpielerById(id, spiel.getSpielerListe()), spiel);
+                    }
+                    if(!(gewaehlteKarte.getWert().equals(Kartenwert.BUBE))){
+                        spielerverwaltung.spielerWechseln(spiel);
+                    }
                 }
             }
         }
+
     }
 
 
     public Karte letzteKarteErmitteln(List<Karte> ablagestapel) throws KeineKarteException {
-        if(ablagestapel.isEmpty()) {
+        if (ablagestapel.isEmpty()) {
             log.info(KEINEKARTEN_EXCEPTION_MESSAGE);
             throw new KeineKarteException(ABLAGESTAPEL_LEER_MESSAGE);
         }
         return ablagestapel.get(ablagestapel.size() - 1);
     }
 
-    public void maumauPruefen(Spieler spieler, List<Karte> kartenstapel, List<Karte> ablagestapel) {
-        if(spieler.hatMauGerufen()){
+    public void maumauPruefen(Spieler spieler, MauMauSpiel spiel) {
+        if (spieler.hatMauGerufen()) {
             spieler.setHatMauGerufen(false);
             log.info(MAU_GERUFEN_MESSAGE);
-        }else{
+        } else {
             log.info(MAU_NICHT_GERUFEN_MESSAGE);
-            karteZiehen(spieler,kartenstapel,2, ablagestapel);
+            karteZiehenMauNichtGerufen(spieler, spiel);
         }
     }
 
@@ -170,21 +201,45 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
     public int minuspunkteBerechnen(List<Karte> hand) {
         int punktzahl = 0;
-        for(Karte karte : hand){
+        for (Karte karte : hand) {
             Kartenwert wert = karte.getWert();
-            switch (wert){
-                case SIEBEN: punktzahl+=7; break;
-                case ACHT: punktzahl+=8; break;
-                case NEUN: punktzahl+=9; break;
-                case ZEHN: punktzahl+=10; break;
-                case ASS: punktzahl+=11; break;
-                case BUBE:punktzahl+=2; break;
-                case DAME:punktzahl+=3; break;
-                case KOENIG:punktzahl+=4; break;
-                default: punktzahl+=0;break;
+            switch (wert) {
+                case SIEBEN:
+                    punktzahl += 7;
+                    break;
+                case ACHT:
+                    punktzahl += 8;
+                    break;
+                case NEUN:
+                    punktzahl += 9;
+                    break;
+                case ZEHN:
+                    punktzahl += 10;
+                    break;
+                case ASS:
+                    punktzahl += 11;
+                    break;
+                case BUBE:
+                    punktzahl += 2;
+                    break;
+                case DAME:
+                    punktzahl += 3;
+                    break;
+                case KOENIG:
+                    punktzahl += 4;
+                    break;
+                default:
+                    punktzahl += 0;
+                    break;
             }
         }
         log.info(new StringBuilder(MINUSPUNKTE_MESSAGE + String.valueOf(punktzahl)));
         return punktzahl;
+    }
+
+
+    public void wunschtypFestlegen(Kartentyp wunschtyp, MauMauSpiel spiel){
+        spiel.setAktuellerWunschtyp(wunschtyp);
+        spielerverwaltung.spielerWechseln(spiel);
     }
 }

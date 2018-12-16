@@ -23,6 +23,7 @@ public class Spieler {
         this.name = name;
         this.s_id = s_id;
         this.istComputer = istComputer;
+        istDran = false;
     }
 
     public Karte getNaechsteKarte() {

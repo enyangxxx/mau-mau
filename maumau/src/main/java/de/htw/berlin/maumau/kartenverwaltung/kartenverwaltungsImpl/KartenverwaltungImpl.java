@@ -6,7 +6,6 @@ import de.htw.berlin.maumau.enumeration.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -20,24 +19,24 @@ import java.util.List;
 public class KartenverwaltungImpl implements IKartenverwaltung {
 
     private Log log = LogFactory.getLog(KartenverwaltungImpl.class);
-    
+
     private static final String KARTENSTAPEL_GENERIERT_MESSAGE = "Kartenstapel wurde generiert!";
     private static final String KARTEN_GEMISCHT_MESSAGE = "Kartenstapel wurde gemischt!";
     private static final String ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE = "Ablagestapel wurde in Kartenstapel gemischt!";
 
-    public KartenverwaltungImpl(){
+    public KartenverwaltungImpl() {
         log.info("KartenverwaltungImpl Konstruktor called");
     }
-  
+
     /**
      * Generiert einen Kartenstapel mit 32 Karten, wobei jede Karte einmal vorkommt.
      *
      * @return generierter Kartenstapel
      */
     public List<Karte> kartenstapelGenerieren() {
-		ArrayList<Karte> kartenstapel = new ArrayList<Karte>();
-        for(int i = 0; i < Kartentyp.values().length; i++){
-            for(int a = 0; a < Kartenwert.values().length; a++){
+        ArrayList<Karte> kartenstapel = new ArrayList<Karte>();
+        for (int i = 0; i < Kartentyp.values().length; i++) {
+            for (int a = 0; a < Kartenwert.values().length; a++) {
                 kartenstapel.add(new Karte(Kartentyp.values()[i], Kartenwert.values()[a]));
             }
         }
@@ -50,15 +49,14 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      *
      * @param kartenstapel - der aktuelle Kartenstapel
      */
-    public void kartenMischen(List<Karte> kartenstapel) throws KeineKarteException{
-        try{
+    public void kartenMischen(List<Karte> kartenstapel) throws KeineKarteException {
+        try {
             log.info(KARTEN_GEMISCHT_MESSAGE);
             Collections.shuffle(kartenstapel);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new KeineKarteException("Keine Karte Exception");
         }
     }
-
 
 
     /**
@@ -69,10 +67,14 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      */
     public void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) {
         log.info(ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE);
+        Karte letzteKarte = ablagestapel.get(ablagestapel.size()-1);
+        System.out.println("Ablagestapel.size vor remove: "+ablagestapel.size());
+        ablagestapel.remove(ablagestapel.size()-1);
+        System.out.println("Ablagestapel.size nach remove: "+ablagestapel.size());
         kartenstapel.addAll(ablagestapel);
         ablagestapel.removeAll(ablagestapel);
+        ablagestapel.add(letzteKarte);
     }
-
 
 
 }

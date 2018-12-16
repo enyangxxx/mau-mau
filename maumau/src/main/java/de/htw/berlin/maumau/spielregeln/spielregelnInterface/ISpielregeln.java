@@ -36,7 +36,11 @@ public interface ISpielregeln {
      * @param letzteKarte - die letzte Karte
      * @return die entsprechende Sonderregel oder "Keine", falls keine Sonderregel zutrifft.
      */
-    boolean sonderregelEingehalten(Karte neueKarte, Karte letzteKarte);
+    boolean sonderregelEingehaltenSieben(Karte neueKarte, Karte letzteKarte);
+
+
+    boolean sonderregelEingehaltenBube(Karte neueKarte, Karte letzteKarte);
+
 
 
 }
