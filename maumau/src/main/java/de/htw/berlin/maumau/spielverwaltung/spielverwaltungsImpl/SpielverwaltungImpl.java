@@ -143,7 +143,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
                         spiel.setSonderregelSiebenAktiv(true);
                         spiel.setAnzahlSonderregelKartenZiehen(spiel.getAnzahlSonderregelKartenZiehen()+2);
                     }
-                    else if(gewaehlteKarte.getWert().equals(Kartenwert.ASS)){
+                    if(gewaehlteKarte.getWert().equals(Kartenwert.ASS)){
                         spiel.setSonderregelAssAktiv(true);
                     }
                     if(hand.size()==1){
@@ -160,9 +160,10 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
                         spiel.setSonderregelSiebenAktiv(true);
                         spiel.setAnzahlSonderregelKartenZiehen(spiel.getAnzahlSonderregelKartenZiehen()+2);
                     }
-                    else if(gewaehlteKarte.getWert().equals(Kartenwert.ASS)){
+                    if(gewaehlteKarte.getWert().equals(Kartenwert.ASS)){
                         spiel.setSonderregelAssAktiv(true);
                     }
+
                     if(hand.size()==1){
                         maumauPruefen(spielerverwaltung.getSpielerById(id, spiel.getSpielerListe()), spiel);
                     }
