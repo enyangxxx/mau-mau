@@ -23,7 +23,7 @@ public class MauMauSpiel {
     private int spielId;
 
     public MauMauSpiel(List<Spieler> spielerliste) {
-        this.runde = 1;
+        this.runde = 0;
         this.anzahlSonderregelKartenZiehen = 0;
         this.spielerliste = spielerliste;
         this.sonderregelSiebenAktiv = false;

@@ -61,22 +61,6 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
             spiel.setSonderregelAssAktiv(false);
             spielerWechseln(spiel);
         }
-        /*if(spiel.getAblagestapel().get(spiel.getAblagestapel().size()-1).getWert().equals(Kartenwert.ASS)&&
-                (!kannAssKontern(spiel))){
-            //spielerWechseln(spiel);
-            for (int i = 0; i < spielerliste.size(); i++) {
-                if (spielerliste.get(i).istDran()) {
-                    spielerliste.get(i).setIstDran(false);
-                    if (spielerliste.size() - 1 == i) {
-                        spielerliste.get(0).setIstDran(true);
-                    } else {
-                        spielerliste.get(i + 1).setIstDran(true);
-                    }
-                    break;
-                }
-            }
-            spiel.setSonderregelAssAktiv(false);
-        }*/
     }
 
 
@@ -124,7 +108,7 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
     public void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel) {
         for (Spieler spieler : spielerliste) {
             List<Karte> hand = new ArrayList<Karte>();
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 2; i++) {
                 hand.add(kartenstapel.get(i));
                 kartenstapel.remove(kartenstapel.get(i));
             }
