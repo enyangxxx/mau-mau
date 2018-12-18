@@ -13,42 +13,40 @@ import java.util.List;
 public interface ISpielerverwaltung {
 
     /**
-     * Generiert ein {@link Spieler} mit einem Namen und einer ID.
-     *
+     * Ein Spieler wird generiert.
      * @param name        - Name des Spielers
      * @param id          - ID des Spielers
      * @param istComputer - true wenn Computer-Spieler
-     * @return den Spieler - der generierte Spieler
+     * @return spieler - der generierte Spieler
      */
     Spieler spielerGenerieren(String name, int id, boolean istComputer);
 
     /**
-     * Fügt einen {@link Spieler} zur Spielerliste hinzu.
-     *
+     * Der Spieler wird der Spielerliste hinzugefügt.
      * @param spieler      - der neue Spieler
      * @param spielerliste - aktuelle Spielerliste
+     * @throws IdDuplikatException - Wenn eine ID doppelt vergeben wird
      */
     void addSpielerZurListe(Spieler spieler, List<Spieler> spielerliste) throws IdDuplikatException;
 
     /**
-     * Ein {@link Spieler} beendet seinen Spielzug und der Spielzug des nächsten {@link Spieler} wird eingeleitet.
-     *
-     * @param aktuellerSpieler - der aktuelle Spieler
-     * @param neuerSpieler     - der nächste Spieler
+     * Der aktuelle Spieler ist nicht mehr dran, der nächste Spieler ist dran.
+     * @param spiel - das aktuelle MauMau-Spiel
      */
     void spielerWechseln(MauMauSpiel spiel);
 
     /**
-     * Gibt den {@link Spieler} aus der Spielerliste zurück, zu dem die ID gehört.
-     *
+     * Der Spieler wird durch die eindeutige ID ermittelt.
      * @param id           - ID des Spielers
      * @param spielerliste - aktuelle Spielerliste
-     * @return spieler - der Spieler mit der ID
+     * @return gefundenerSpieler - der gesuchte Spieler mit der ID
+     * @throws KeineSpielerException - Wenn kein Spieler mit der ID gefunden wurde
      */
     Spieler getSpielerById(int id, List<Spieler> spielerliste) throws KeineSpielerException;
 
     /**
      * Alle {@link Spieler} bekommen je 5 {@link Karte} aus dem Kartenstapel und es wird eine Anfangskarte aufgedeckt.
+     *
      * @param spielerliste - die aktuelle Spielerliste
      * @param kartenstapel - der aktuelle Kartenstapel
      * @param ablagestapel - der aktuelle Ablagestapel

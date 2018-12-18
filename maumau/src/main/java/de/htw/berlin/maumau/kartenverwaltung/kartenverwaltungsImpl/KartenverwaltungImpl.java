@@ -48,6 +48,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.
      *
      * @param kartenstapel - der aktuelle Kartenstapel
+     * @throws KeineKarteException - Wenn Keine Karte selektiert wurde
      */
     public void kartenMischen(List<Karte> kartenstapel) throws KeineKarteException {
         try {
@@ -60,7 +61,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
 
 
     /**
-     * Mischt die Karten des Ablagestapels in den Kartenstapel.
+     * Mischt die Karten des Ablagestapels in den Kartenstapel, außer die oberste Karte des Ablagestapels.
      *
      * @param ablagestapel - der aktuelle Ablagestapel
      * @param kartenstapel - der aktuelle Kartenstapel
@@ -68,9 +69,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
     public void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) {
         log.info(ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE);
         Karte letzteKarte = ablagestapel.get(ablagestapel.size()-1);
-        System.out.println("Ablagestapel.size vor remove: "+ablagestapel.size());
         ablagestapel.remove(ablagestapel.size()-1);
-        System.out.println("Ablagestapel.size nach remove: "+ablagestapel.size());
         kartenstapel.addAll(ablagestapel);
         ablagestapel.removeAll(ablagestapel);
         ablagestapel.add(letzteKarte);

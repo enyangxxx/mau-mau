@@ -21,6 +21,14 @@ public class SpielregelnImpl implements ISpielregeln {
     }
 
 
+    /**
+     * Anhand des {@link Kartentyp} Wunschtyps wird geprüft, ob die neue {@link Karte} gelegt werden kann.
+     *
+     * @param neueKarte - die neue Karte
+     * @param wunschtyp - der Wunschtyp
+     * @return true, wenn  die neue Karte legbar ist.
+     * @throws KeinWunschtypException - falls kein Wunschtyp festgelegt wurde
+     */
     public boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp) throws KeinWunschtypException {
         if (wunschtyp == null) {
             throw new KeinWunschtypException("Es wurde kein Wunschtyp gesetzt.");
@@ -29,15 +37,27 @@ public class SpielregelnImpl implements ISpielregeln {
     }
 
 
+    /**
+     * Anhand der Farbe und des Werts der letzten {@link Karte} wird geprüft, ob die neue {@link Karte} gelegt werden kann.
+     *
+     * @param letzteKarte - die letzte Karte
+     * @param neueKarte   - die neue Karte
+     * @return true, wenn legbar.
+     */
     public boolean istLegbar(Karte letzteKarte, Karte neueKarte) {
         return neueKarte.getTyp().equals(letzteKarte.getTyp()) || neueKarte.getWert().equals(letzteKarte.getWert());
     }
 
 
+    /**
+     * Es wird überprüft, ob die neue Karte {@link Karte} eine Sieben ist, wenn die letzte Karte auch eine Sieben ist.
+     *
+     * @param letzteKarte - die letzte Karte
+     * @param neueKarte   - die neue Karte die gelegt werden soll
+     * @return true - wenn die Sonderregel Sieben eingehalten wurde
+     */
     public boolean sonderregelEingehaltenSieben(Karte neueKarte, Karte letzteKarte) {
         switch (letzteKarte.getWert()) {
-            //case ASS:
-              //  return neueKarte.getWert().equals(Kartenwert.ASS);
             case SIEBEN:
                 return neueKarte.getWert().equals(Kartenwert.SIEBEN);
             default:
@@ -46,10 +66,15 @@ public class SpielregelnImpl implements ISpielregeln {
     }
 
 
+    /**
+     * Es wird überprüft, ob die neue Karte {@link Karte} ein Bube ist, wenn die letzte Karte auch ein Bube ist.
+     *
+     * @param letzteKarte - die letzte Karte
+     * @param neueKarte   - die neue Karte die gelegt werden soll
+     * @return true - wenn versucht wird einen Buben auf einen Buben zu legen.
+     */
     public boolean sonderregelEingehaltenBube(Karte neueKarte, Karte letzteKarte) {
         switch (letzteKarte.getWert()) {
-            //case ASS:
-            //  return neueKarte.getWert().equals(Kartenwert.ASS);
             case BUBE:
                 return !(neueKarte.getWert().equals(Kartenwert.BUBE));
             default:
