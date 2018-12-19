@@ -9,6 +9,14 @@ import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpie
 
 import java.util.List;
 
+/**
+ * @author Enyang Wang, Steve Engel, Theo Radig
+ *
+ * Diese Klasse beinhaltet alle Ausgaben sowie alle Benutzereingaben,
+ * die für den Controller benötigt werden.
+ */
+
+
 public class View {
 
     public void printWillkommen(){
@@ -25,6 +33,7 @@ public class View {
 
         Console.println("Soll ein neuer Spieler erstellt werden? (Ja/Nein)");
         String s = Console.readLine();
+        Console.println();
         return s;
     }
 
@@ -34,19 +43,14 @@ public class View {
 
     public String userInputNeuerSpielerName(){
         Console.println();
-        Console.println("Wie soll der neue Spieler heißen?");
+        Console.println("Name des Spielers eingeben:");
         String s = Console.readLine();
+        Console.println();
         return s;
     }
 
-    public int userInputNeuerSpielerId(){
-        Console.println();
-        Console.println("Welche ID soll der neue Spieler haben?");
-        int i = Console.readInt();
-        return i;
-    }
-
     public void printNeuesSpielGestartet(){
+        Console.println();
         Console.println("Ein neues Spiel wurde gestartet.");
     }
 
@@ -80,29 +84,28 @@ public class View {
     }
 
 
-
     public String userInputAktionWaehlenMitMau(){
         Console.println();
-        Console.println("Was moechtest du tun? (Legen/Ziehen/Mau)");
+        Console.println("Aktion selektieren (Legen/Ziehen/Mau)");
         String s = Console.readLine();
         return s;
     }
 
     public String userInputAktionWaehlenOhneMau(){
         Console.println();
-        Console.println("Was moechtest du tun? (Legen/Ziehen)");
+        Console.println("Aktion selektieren (Legen/Ziehen)");
         String s = Console.readLine();
         return s;
     }
 
     public void printGebeLegenOderZiehenEin(){
         Console.println();
-        Console.println("Wähle entweder die Aktion Legen oder Ziehen!");
+        Console.println("Schreibe entweder Legen oder Ziehen!");
     }
 
     public int userInputKarteWaehlen(){
         Console.println();
-        Console.println("Welche Karte möchtest du legen?");
+        Console.println("Welche Karte willst du legen?");
         int index = Console.readInt();
         return index-1;
     }
@@ -135,12 +138,12 @@ public class View {
 
     public String userInputWunschtypFestlegen(){
         Console.println();
-        Console.println("Wähle den Wunschtyp aus: \n"+Kartentyp.KREUZ+"\n"+Kartentyp.HERZ+"\n"+Kartentyp.KARO+"\n"+Kartentyp.PIK);
+        Console.println("Wunschtyp festlegen: \n"+Kartentyp.KREUZ+"\n"+Kartentyp.HERZ+"\n"+Kartentyp.KARO+"\n"+Kartentyp.PIK);
         Console.println();
         String s = Console.readLine();;
 
         while(!(s.equalsIgnoreCase("Kreuz")||s.equalsIgnoreCase("Pik")||s.equalsIgnoreCase("Herz")||s.equalsIgnoreCase("Karo"))){
-            Console.println("Wähle den Wunschtyp aus: \n"+Kartentyp.KREUZ+"\n"+Kartentyp.HERZ+"\n"+Kartentyp.KARO+"\n"+Kartentyp.PIK);
+            Console.println("validen Wunschtyp eingeben: \n"+Kartentyp.KREUZ+"\n"+Kartentyp.HERZ+"\n"+Kartentyp.KARO+"\n"+Kartentyp.PIK);
             Console.println();
             s = Console.readLine();
         }
@@ -157,7 +160,6 @@ public class View {
     }
 
     public String userInputNeueRundeStarten(){
-        Console.println();
         Console.println("Neue Runde starten? (Ja/Nein)");
         String s = Console.readLine();;
 

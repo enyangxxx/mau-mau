@@ -19,6 +19,7 @@ public interface IKartenverwaltung {
     /**
      * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.
      * @param kartenstapel - der aktuelle Kartenstapel
+     * @throws KeineKarteException - Wenn Keine Karte selektiert wurde
      */
     void kartenMischen(List<Karte> kartenstapel) throws KeineKarteException;
 

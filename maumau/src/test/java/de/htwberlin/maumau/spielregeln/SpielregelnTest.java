@@ -43,7 +43,6 @@ public class SpielregelnTest {
 
     @Before
     public void setUp() {
-        //spielregeln = new SpielregelnImpl();
         spielregeln = (ISpielregeln) ConfigServiceImpl.context.getBean("spielregelnimpl");
         spiel = new MauMauSpiel(spielerliste);
     }
@@ -131,32 +130,8 @@ public class SpielregelnTest {
 
 
     /**
-     * Testet, ob der Sonderregeltyp Ass ermittelt wird, wenn der Kartentyp der letzten Karte Ass ist.
-     * Das erwartete Ergebnis ist der Sonderregeltyp ASS
-     */
-    @Test
-    public void testSonderregelnNichtEingehaltenAss() {
-        Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.ASS);
-        Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN);
-
-        assertFalse("Sonderregel nicht eingehalten.", spielregeln.sonderregelEingehaltenSieben(neueKarte, letzteKarte));
-    }
-
-    /**
-     * Testet, ob der Sonderregeltyp Ass ermittelt wird, wenn der Kartentyp der letzten Karte Ass ist.
-     * Das erwartete Ergebnis ist der Sonderregeltyp ASS
-     */
-    @Test
-    public void testSonderregelnEingehaltenAss() {
-        Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.ASS);
-        Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ASS);
-
-        assertTrue("Sonderregel eingehalten.", spielregeln.sonderregelEingehaltenSieben(neueKarte, letzteKarte));
-    }
-
-    /**
-     * Testet, ob der Sonderregeltyp Ass ermittelt wird, wenn der Kartentyp der letzten Karte Ass ist.
-     * Das erwartete Ergebnis ist der Sonderregeltyp ASS
+     * Testet, ob die Sonderregel Sieben eingehalten wird, wenn der Kartenwert der neuen Karte Zehn ist.
+     * Das erwartete Ergebnis ist False
      */
     @Test
     public void testSonderregelnNichtEingehaltenSieben() {
@@ -167,25 +142,13 @@ public class SpielregelnTest {
     }
 
     /**
-     * Testet, ob der Sonderregeltyp Ass ermittelt wird, wenn der Kartentyp der letzten Karte Ass ist.
-     * Das erwartete Ergebnis ist der Sonderregeltyp ASS
+     * Testet, ob die Sonderregel Sieben eingehalten wird, wenn der Kartenwert der neuen Karte Sieben ist.
+     * Das erwartete Ergebnis ist True
      */
     @Test
     public void testSonderregelnEingehaltenSieben() {
         Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.SIEBEN);
         Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.SIEBEN);
-
-        assertTrue("Sonderregel nicht eingehalten.", spielregeln.sonderregelEingehaltenSieben(neueKarte, letzteKarte));
-    }
-
-    /**
-     * Testet, ob der Sonderregeltyp Ass ermittelt wird, wenn der Kartentyp der letzten Karte Ass ist.
-     * Das erwartete Ergebnis ist der Sonderregeltyp ASS
-     */
-    @Test
-    public void testSonderregelnEingehaltenWederAssNochSieben() {
-        Karte letzteKarte = new Karte(Kartentyp.KARO, Kartenwert.ACHT);
-        Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.NEUN);
 
         assertTrue("Sonderregel eingehalten.", spielregeln.sonderregelEingehaltenSieben(neueKarte, letzteKarte));
     }

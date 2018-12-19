@@ -21,7 +21,6 @@ import static org.junit.Assert.*;
  */
 public class KartenverwaltungsTest {
 
-    //private static final Log log = LogFactory.getLog(KartenverwaltungsTest.class);
     private IKartenverwaltung kartenverwaltung;
     private List<Karte> testKartenstapel = new ArrayList<Karte>() {{
         add(new Karte(Kartentyp.HERZ, Kartenwert.SIEBEN));
@@ -102,7 +101,7 @@ public class KartenverwaltungsTest {
 
     /**
      * Testet, ob die Methode Kartenstapel Generieren genau jede Karte von jedem Typ und Farbe einmal erzeugt.
-     * Das erwartete Ergebnis ist ein Kartenstapel ohne Duplikat mit gleicher Anzahl von Karten
+     * Das erwartete Ergebnis ist ein Kartenstapel ohne Duplikat mit gleicher Anzahl von Karten.
      */
     @Test
     public void testKartenstapelGenerierenErzeugtKeineDuplikate() {
@@ -157,19 +156,19 @@ public class KartenverwaltungsTest {
 
 
     /**
-     * Testet, ob die Methode Ablagestapel Wiederverwenden den Ablagestapel und den Kartenstapel zu einem
-     * neuen Kartenstapel zusammenfügt.
-     * Das erwartete Ergebnis ist dass der neue Kartenstapel so viele Karten hat wie die Kartenmenge
-     * des Ablagenstapels und des alten Kartenstapels
+     * Testet, ob die Methode ablagestapelWiederverwenden() den Ablagestapel und den Kartenstapel zu einem
+     * neuen Kartenstapel zusammenfügt, mit Ausnahme der obersten Karte des Ablagestapels.
+     * Das erwartete Ergebnis ist, dass der neue Kartenstapel so viele Karten hat wie die Kartenmenge
+     * des Ablagestapels-1 und des alten Kartenstapels zusammen.
      */
     @Test
     public void testAblagestapelWiederverwenden() {
-        List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
-        List<Karte> ablagestapel = new ArrayList<Karte>();
-        int erwarteteAnzahl = kartenstapel.size() + ablagestapel.size();
+        List<Karte> ablagestapel = kartenverwaltung.kartenstapelGenerieren();
+        List<Karte> kartenstapel = new ArrayList<Karte>();
+        int erwarteteAnzahl = ablagestapel.size()-1;
         kartenverwaltung.ablagestapelWiederverwenden(ablagestapel, kartenstapel);
 
-        assertEquals("Der neue Kartenstapel muss " + erwarteteAnzahl + " Karten haben", erwarteteAnzahl, kartenstapel.size());
+        assertEquals("Der neue Kartenstapel muss " + erwarteteAnzahl + " Karten haben.", erwarteteAnzahl, kartenstapel.size());
     }
 
 }

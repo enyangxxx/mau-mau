@@ -16,9 +16,11 @@ public interface ISpielregeln {
 
     /**
      * Anhand des {@link Kartentyp} Wunschtyps wird geprüft, ob die neue {@link Karte} gelegt werden kann.
+     *
      * @param neueKarte - die neue Karte
      * @param wunschtyp - der Wunschtyp
-     * @return true, wenn legbar.
+     * @return true, wenn  die neue Karte legbar ist.
+     * @throws KeinWunschtypException - falls kein Wunschtyp festgelegt wurde
      */
     boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp) throws KeinWunschtypException;
 
@@ -32,13 +34,19 @@ public interface ISpielregeln {
 
 
     /**
-     * Es wird überprüft, ob die letzte {@link Karte} eine Sonderregel einleitet.
+     * Es wird überprüft, ob die neue Karte {@link Karte} eine Sieben ist, wenn die letzte Karte auch eine Sieben ist.
      * @param letzteKarte - die letzte Karte
-     * @return die entsprechende Sonderregel oder "Keine", falls keine Sonderregel zutrifft.
+     * @param  neueKarte - die neue Karte die gelegt werden soll
+     * @return true - wenn die Sonderregel Sieben eingehalten wurde
      */
     boolean sonderregelEingehaltenSieben(Karte neueKarte, Karte letzteKarte);
 
-
+    /**
+     * Es wird überprüft, ob die neue Karte {@link Karte} ein Bube ist, wenn die letzte Karte auch ein Bube ist.
+     * @param letzteKarte - die letzte Karte
+     * @param  neueKarte - die neue Karte die gelegt werden soll
+     * @return true - wenn versucht wird einen Buben auf einen Buben zu legen.
+     */
     boolean sonderregelEingehaltenBube(Karte neueKarte, Karte letzteKarte);
 
 

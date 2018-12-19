@@ -1,6 +1,5 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl;
 
-import de.htw.berlin.maumau.enumeration.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
@@ -28,11 +27,23 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
         log.info("SpielerverwaltungsImpl Konstruktor called");
     }
 
+    /**
+     * Ein Spieler wird generiert.
+     * @param name        - Name des Spielers
+     * @param id          - ID des Spielers
+     * @param istComputer - true wenn Computer-Spieler
+     * @return spieler - der generierte Spieler
+     */
     public Spieler spielerGenerieren(String name, int id, boolean istComputer) {
-        Spieler spieler = new Spieler(name, id, istComputer);
-        return spieler;
+        return new Spieler(name, id, istComputer);
     }
 
+    /**
+     * Der Spieler wird der Spielerliste hinzugefügt.
+     * @param spieler      - der neue Spieler
+     * @param spielerliste - aktuelle Spielerliste
+     * @throws IdDuplikatException - Wenn eine ID doppelt vergeben wird
+     */
     public void addSpielerZurListe(Spieler spieler, List<Spieler> spielerliste) throws IdDuplikatException {
         for (Spieler spielerx : spielerliste) {
             if (spielerx.getS_id() == spieler.getS_id()) {
@@ -43,6 +54,10 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
     }
 
 
+    /**
+     * Der aktuelle Spieler ist nicht mehr dran, der nächste Spieler ist dran.
+     * @param spiel - das aktuelle MauMau-Spiel
+     */
     public void spielerWechseln(MauMauSpiel spiel) {
         List<Spieler> spielerliste = spiel.getSpielerListe();
         for (int i = 0; i < spielerliste.size(); i++) {
@@ -64,24 +79,13 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
     }
 
 
-    /*private boolean kannAssKontern(MauMauSpiel spiel){
-        boolean tmp = false;
-        if(spiel.getAblagestapel().get(spiel.getAblagestapel().size()-1).getWert().equals(Kartenwert.ASS)
-        &&spiel.isSonderregelAssAktiv()){
-            for(Spieler spieler : spiel.getSpielerListe()){
-                if (spieler.istDran()) {
-                    for(Karte karte : spieler.getHand()){
-                        if(karte.getWert().equals(Kartenwert.ASS)){
-                            tmp = true;
-                        }
-                    }
-                }
-            }
-        }
-        return tmp;
-    }
-    */
-
+    /**
+     * Der Spieler wird durch die eindeutige ID ermittelt.
+     * @param id           - ID des Spielers
+     * @param spielerliste - aktuelle Spielerliste
+     * @return gefundenerSpieler - der gesuchte Spieler mit der ID
+     * @throws KeineSpielerException - Wenn kein Spieler mit der ID gefunden wurde
+     */
     public Spieler getSpielerById(int id, List<Spieler> spielerliste) throws KeineSpielerException {
         Spieler gefundenerSpieler = null;
         for (Spieler spieler : spielerliste) {
@@ -97,7 +101,6 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
 
     }
 
-
     /**
      * Alle {@link Spieler} bekommen je 5 {@link Karte} aus dem Kartenstapel und es wird eine Anfangskarte aufgedeckt.
      *
@@ -108,7 +111,7 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
     public void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel) {
         for (Spieler spieler : spielerliste) {
             List<Karte> hand = new ArrayList<Karte>();
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 5; i++) {
                 hand.add(kartenstapel.get(i));
                 kartenstapel.remove(kartenstapel.get(i));
             }
