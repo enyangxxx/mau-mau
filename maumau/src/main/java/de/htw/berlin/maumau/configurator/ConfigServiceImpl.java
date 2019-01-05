@@ -31,13 +31,18 @@ public class ConfigServiceImpl {
      * @throws KeineKarteException - Wenn Keine Karte selektiert wurde
      * @throws KeinWunschtypException - Wenn kein Wunschtyp gesetzt wurde
      */
-    public static void main(String[] args) throws KeineSpielerException, IdDuplikatException, KeineKarteException, KeinWunschtypException {
+    public static void main(String[] args) throws KeineSpielerException, Exception {
         Console.init(new Font(null, Font.BOLD,30));
         controller = new Controller();
 
+        // controller get bean holen
+
         controller.updateViewSpielerlisteBefuellen();
 
+        // run in den controller verschieben
         run();
+
+        // enum package auflösen und in die exports der jeweiligen komponenten verschieben
     }
 
 
@@ -48,7 +53,7 @@ public class ConfigServiceImpl {
      * @throws KeineKarteException - Wenn Keine Karte selektiert wurde
      * @throws KeinWunschtypException - Wenn kein Wunschtyp gesetzt wurde
      */
-    public static void run() throws KeineSpielerException, IdDuplikatException, KeineKarteException, KeinWunschtypException {
+    public static void run() throws KeineSpielerException, Exception {
 
         while(controller.checkNeueRundeStarten()) {
             controller.updateViewSpielStarten();

@@ -39,6 +39,8 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     private ISpielregeln spielregeln;
     private ISpielerverwaltung spielerverwaltung;
 
+    private MauMauSpielDao maumauspielDao = new MauMauSpielDaoImpl();
+
     public SpielverwaltungImpl(final IKartenverwaltung kartenverwaltungImpl, final ISpielregeln spielregelnImpl, final ISpielerverwaltung spielerverwaltungImpl) {
         log.info("SpielverwaltungsImpl Konstruktor called");
         this.kartenverwaltung = kartenverwaltungImpl;
@@ -53,7 +55,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * @throws KeineSpielerException - Wenn kein Spieler mit der ID gefunden wurde
      * @return das MauMau Spiel
      */
-    public MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeineSpielerException {
+    public MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeineSpielerException, Exception {
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
         log.info(NEUES_SPIEL_MESSAGE);
         if (spielerliste.isEmpty()) {
@@ -202,7 +204,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         int id = 0;
 
         for (Spieler spieler : spiel.getSpielerListe()) {
-            if (spieler.istDran()) {
+            if (spieler.isDran()) {
                 id = spieler.getS_id();
             }
         }

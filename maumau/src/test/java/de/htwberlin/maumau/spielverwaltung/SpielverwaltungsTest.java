@@ -71,7 +71,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist ein neues Spiel mit der Runde 1.
      */
     @Test
-    public void testNeuesSpielStartenMitSpielerliste() throws KeineSpielerException {
+    public void testNeuesSpielStartenMitSpielerliste() throws KeineSpielerException, Exception {
         spielerliste.add(hans);
         spielerliste.add(enyang);
         MauMauSpiel neuesSpiel = spielverwaltung.neuesSpielStarten(spielerliste);
@@ -84,7 +84,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist KeineSpielerException
      */
     @Test
-    public void testNeuesSpielStartenMitSpielerlisteOhneSpieler() throws KeineSpielerException {
+    public void testNeuesSpielStartenMitSpielerlisteOhneSpieler() throws KeineSpielerException, Exception {
         exceptionRule.expect(KeineSpielerException.class);
         spielverwaltung.neuesSpielStarten(spielerliste);
     }
@@ -345,11 +345,11 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist, dass Hans wieder dran ist.
      */
     @Test
-    public void testAssAussetzen() throws KeineSpielerException, KeinWunschtypException {
+    public void testAssAussetzen() throws KeineSpielerException, Exception {
         hans.setHand(hand);
         hans.getHand().add(new Karte(Kartentyp.PIK,Kartenwert.ASS));
         enyang.setHand(hand);
-        hans.setIstDran(true);
+        hans.setDran(true);
 
         spielerliste.add(hans);
         spielerliste.add(enyang);
@@ -360,6 +360,6 @@ public class SpielverwaltungsTest {
 
         spielverwaltung.karteLegen(hans.getHand().get(hans.getHand().size()-1), hans.getHand(),spiel);
 
-        assertTrue("Hans muss wieder dran sein.", hans.istDran());
+        assertTrue("Hans muss wieder dran sein.", hans.isDran());
     }
 }

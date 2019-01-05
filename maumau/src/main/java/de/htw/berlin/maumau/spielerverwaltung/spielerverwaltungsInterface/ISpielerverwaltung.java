@@ -19,7 +19,7 @@ public interface ISpielerverwaltung {
      * @param istComputer - true wenn Computer-Spieler
      * @return spieler - der generierte Spieler
      */
-    Spieler spielerGenerieren(String name, int id, boolean istComputer);
+    Spieler spielerGenerieren(String name, int id, boolean istComputer) throws Exception;
 
     /**
      * Der Spieler wird der Spielerliste hinzugefügt.

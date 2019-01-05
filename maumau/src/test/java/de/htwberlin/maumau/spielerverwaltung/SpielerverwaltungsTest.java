@@ -6,7 +6,6 @@ import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
@@ -85,7 +84,7 @@ public class SpielerverwaltungsTest {
      * Das erwartete Ergebnis ist not null.
      */
     @Test
-    public void testSpielerGenerierenIsNotNull(){
+    public void testSpielerGenerierenIsNotNull() throws Exception {
         Spieler otto = spielerverwaltung.spielerGenerieren( "Otto",  21,  true);
         assertNotNull("Der generierte Spieler darf nicht Null sein.", otto);
     }
@@ -96,7 +95,7 @@ public class SpielerverwaltungsTest {
      * Das erwartete Ergebnis ist eine IdDuplikatException.
      */
     @Test (expected = IdDuplikatException.class)
-    public void testAddSpielerZurListeIdBereitsVergeben() throws IdDuplikatException{
+    public void testAddSpielerZurListeIdBereitsVergeben() throws Exception {
         Spieler otto = spielerverwaltung.spielerGenerieren( "Otto",  4,  true);
         spielerverwaltung.addSpielerZurListe(otto, spielerliste);
         Spieler hans = spielerverwaltung.spielerGenerieren( "Hans",  4,  false);
@@ -127,12 +126,12 @@ public class SpielerverwaltungsTest {
         spielerliste.add(caner);
         spielerliste.add(enyang);
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
-        caner.setIstDran(true);
-        assertTrue("Caner muss dran sein.", caner.istDran());
+        caner.setDran(true);
+        assertTrue("Caner muss dran sein.", caner.isDran());
 
         spielerverwaltung.spielerWechseln(spiel);
-        assertTrue("Enyang muss dran sein.", enyang.istDran());
-        assertFalse("Caner darf nicht mehr dran sein.", caner.istDran());
+        assertTrue("Enyang muss dran sein.", enyang.isDran());
+        assertFalse("Caner darf nicht mehr dran sein.", caner.isDran());
     }
 
     /**
@@ -142,11 +141,11 @@ public class SpielerverwaltungsTest {
     @Test
     public void testSpielerWechselnGleicherSpieler(){
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
-        caner.setIstDran(true);
-        assertTrue("Caner muss dran sein.", caner.istDran());
+        caner.setDran(true);
+        assertTrue("Caner muss dran sein.", caner.isDran());
 
         spielerverwaltung.spielerWechseln(spiel);
-        assertTrue("Caner muss immer noch dran sein.", caner.istDran());
+        assertTrue("Caner muss immer noch dran sein.", caner.isDran());
     }
 
     /**
