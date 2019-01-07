@@ -4,12 +4,15 @@ import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
+
+@Entity
 public class MauMauSpiel {
 
     private List<Spieler> spielerliste;
@@ -31,6 +34,7 @@ public class MauMauSpiel {
     }
 
 
+    @Id
     public int getSpielId() {
         return spielId;
     }
@@ -39,54 +43,7 @@ public class MauMauSpiel {
         this.spielId = spielId;
     }
 
-    public List<Spieler> getSpielerliste() {
-        return spielerliste;
-    }
-
-    public void setSpielerliste(List<Spieler> spielerliste) {
-        this.spielerliste = spielerliste;
-    }
-
-    public int getAnzahlSonderregelKartenZiehen() {
-        return anzahlSonderregelKartenZiehen;
-    }
-
-    public void setAnzahlSonderregelKartenZiehen(int anzahlSonderregelKartenZiehen) {
-        this.anzahlSonderregelKartenZiehen = anzahlSonderregelKartenZiehen;
-    }
-
-    public int getRunde() {
-        return runde;
-    }
-
-    public void setRunde(int runde) {
-        this.runde = runde;
-    }
-
-    public List<Karte> getAblagestapel() {
-        return ablagestapel;
-    }
-
-    public void setAblagestapel(List<Karte> ablagestapel) {
-        this.ablagestapel = ablagestapel;
-    }
-
-    public List<Karte> getKartenstapel() {
-        return kartenstapel;
-    }
-
-    public void setKartenstapel(List<Karte> kartenstapel) {
-        this.kartenstapel = kartenstapel;
-    }
-
-    public Kartentyp getAktuellerWunschtyp() {
-        return aktuellerWunschtyp;
-    }
-
-    public void setAktuellerWunschtyp(Kartentyp aktuellerWunschtyp) {
-        this.aktuellerWunschtyp = aktuellerWunschtyp;
-    }
-
+    @OneToMany
     public List<Spieler> getSpielerListe() {
         return spielerliste;
     }
@@ -95,6 +52,53 @@ public class MauMauSpiel {
         this.spielerliste = spielerliste;
     }
 
+    @Column(nullable=false)
+    public int getAnzahlSonderregelKartenZiehen() {
+        return anzahlSonderregelKartenZiehen;
+    }
+
+    public void setAnzahlSonderregelKartenZiehen(int anzahlSonderregelKartenZiehen) {
+        this.anzahlSonderregelKartenZiehen = anzahlSonderregelKartenZiehen;
+    }
+
+    @Column(nullable=false)
+    public int getRunde() {
+        return runde;
+    }
+
+    public void setRunde(int runde) {
+        this.runde = runde;
+    }
+
+    @OneToMany
+    public List<Karte> getAblagestapel() {
+        return ablagestapel;
+    }
+
+    public void setAblagestapel(List<Karte> ablagestapel) {
+        this.ablagestapel = ablagestapel;
+    }
+
+    @OneToMany
+    public List<Karte> getKartenstapel() {
+        return kartenstapel;
+    }
+
+    public void setKartenstapel(List<Karte> kartenstapel) {
+        this.kartenstapel = kartenstapel;
+    }
+
+    @Column(nullable=true)
+    public Kartentyp getAktuellerWunschtyp() {
+        return aktuellerWunschtyp;
+    }
+
+    public void setAktuellerWunschtyp(Kartentyp aktuellerWunschtyp) {
+        this.aktuellerWunschtyp = aktuellerWunschtyp;
+    }
+
+
+    @Column(nullable=false)
     public boolean isSonderregelSiebenAktiv() {
         return sonderregelSiebenAktiv;
     }
@@ -103,6 +107,7 @@ public class MauMauSpiel {
         this.sonderregelSiebenAktiv = sonderregelSiebenAktiv;
     }
 
+    @Column(nullable=false)
     public boolean isSonderregelAssAktiv() {
         return sonderregelAssAktiv;
     }

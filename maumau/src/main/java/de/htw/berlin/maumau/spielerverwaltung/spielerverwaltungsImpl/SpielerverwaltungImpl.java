@@ -22,6 +22,8 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
     private static final String SPIELER_HAND_GESETZT = "Die Hand wurde gesetzt für Spieler: ";
     private static final String KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE = "Karte auf Ablagestapel gelegt!";
 
+    private SpielerDao spielerDao = new SpielerDaoImpl();
+
 
     public SpielerverwaltungImpl() {
         log.info("SpielerverwaltungsImpl Konstruktor called");
@@ -34,8 +36,12 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
      * @param istComputer - true wenn Computer-Spieler
      * @return spieler - der generierte Spieler
      */
-    public Spieler spielerGenerieren(String name, int id, boolean istComputer) {
-        return new Spieler(name, id, istComputer);
+    public Spieler spielerGenerieren(String name, int id, boolean istComputer) throws Exception {
+        Spieler spieler = new Spieler(name, id, istComputer);
+        spielerDao.create(spieler);
+        log.info("Name: "+spielerDao.findBys_id(id).getName()+" ID: "+spielerDao.findBys_id(id).getS_id());
+        return spielerDao.findBys_id(id);
+        //return spieler;
     }
 
     /**
@@ -50,7 +56,9 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
                 throw new IdDuplikatException("Die ID ist bereits vergeben");
             }
         }
-        spielerliste.add(spieler);
+
+        log.info("Spieler hinzugefügt."+spielerDao.findBys_id(spieler.getS_id()).getName());
+        spielerliste.add(spielerDao.findBys_id(spieler.getS_id()));
     }
 
 
@@ -61,12 +69,12 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
     public void spielerWechseln(MauMauSpiel spiel) {
         List<Spieler> spielerliste = spiel.getSpielerListe();
         for (int i = 0; i < spielerliste.size(); i++) {
-            if (spielerliste.get(i).istDran()) {
-                spielerliste.get(i).setIstDran(false);
+            if (spielerliste.get(i).isDran()) {
+                spielerliste.get(i).setDran(false);
                 if (spielerliste.size() - 1 == i) {
-                    spielerliste.get(0).setIstDran(true);
+                    spielerliste.get(0).setDran(true);
                 } else {
-                    spielerliste.get(i + 1).setIstDran(true);
+                    spielerliste.get(i + 1).setDran(true);
                 }
                 break;
             }

@@ -56,7 +56,7 @@ public class Controller {
      * @throws IdDuplikatException   - Wenn eine ID doppelt vergeben wird
      * @throws KeineKarteException   - Wenn Keine Karte selektiert wurde
      */
-    public void updateViewSpielerlisteBefuellen() throws IdDuplikatException, KeineKarteException, KeineSpielerException {
+    public void updateViewSpielerlisteBefuellen() throws Exception, KeineSpielerException {
         view.printWillkommen();
         int id = 0;
         while (spielerliste.size() <= 3) {
@@ -83,7 +83,7 @@ public class Controller {
      * @throws KeineSpielerException - falls keine Spieler vorhanden sind
      * @throws KeineKarteException   - Wenn Keine Karte selektiert wurde
      */
-    public void updateViewSpielStarten() throws KeineSpielerException, KeineKarteException {
+    public void updateViewSpielStarten() throws KeineSpielerException, Exception {
 
         if (spiel == null) {
             spiel = spielverwaltung.neuesSpielStarten(spielerliste);
@@ -103,7 +103,7 @@ public class Controller {
         spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
         view.printKartenAusgeteilt();
 
-        spiel.getSpielerListe().get(0).setIstDran(true);
+        spiel.getSpielerListe().get(0).setDran(true);
     }
 
 
@@ -115,7 +115,7 @@ public class Controller {
      */
     public void updateViewNaechsterSpielzugStarten() throws KeineSpielerException, KeineKarteException {
         for (Spieler spieler : spielerliste) {
-            if (spieler.istDran()) {
+            if (spieler.isDran()) {
                 aktuellerSpieler = spielerverwaltung.getSpielerById(spieler.getS_id(), spiel.getSpielerListe());
             }
         }

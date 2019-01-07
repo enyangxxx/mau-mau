@@ -20,7 +20,7 @@ public interface ISpielverwaltung {
      * @param spielerliste - Die Liste der teilnehmenden Spieler
      * @return das MauMau Spiel
      */
-    MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeineSpielerException;
+    MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeineSpielerException, Exception;
 
     /**
      * Eine neue Runde wird eingeleitet.
