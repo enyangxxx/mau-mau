@@ -1,9 +1,12 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl;
 
+import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.persistence.EntityManager;
@@ -12,11 +15,23 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+@Transactional
 public class SpielerDaoImpl implements SpielerDao {
 
-    EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("managerHsqldb");
+    //EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("managerHsqldb");
 
-    private EntityManager entityManager = entityManagerFactory.createEntityManager();
+    //private EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    //private EntityManager entityManager = (EntityManager) ConfigServiceImpl.context.getBean("myEmf");
+
+
+    //AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+    //private EntityManager entityManager = context.getBean()
+
 
     private Log log = LogFactory.getLog(SpielerDaoImpl.class);
 
@@ -97,5 +112,13 @@ public class SpielerDaoImpl implements SpielerDao {
         //log.info(spielerliste.get(0));
 
         return spielerliste;
+    }
+
+    public void createSpielerlisteTable(){
+        entityManager.createNativeQuery("Create table Spielerliste").executeUpdate();
+    }
+
+    public void addToTableSpielerliste(Spieler spieler){
+        entityManager.createNativeQuery("Insert into spielerliste "+spieler).executeUpdate();
     }
 }

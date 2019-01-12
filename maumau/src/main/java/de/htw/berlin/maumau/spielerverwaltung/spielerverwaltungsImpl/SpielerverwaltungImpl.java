@@ -1,5 +1,6 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl;
 
+import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
@@ -22,11 +23,15 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
     private static final String SPIELER_HAND_GESETZT = "Die Hand wurde gesetzt für Spieler: ";
     private static final String KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE = "Karte auf Ablagestapel gelegt!";
 
-    private SpielerDao spielerDao = new SpielerDaoImpl();
+    private SpielerDao spielerDao;
+    //= (SpielerDao) ConfigServiceImpl.context.getBean("spielerdaoimpl");
+    //private  SpielerDao spielerDao = new SpielerDaoImpl();
 
 
-    public SpielerverwaltungImpl() {
+    public SpielerverwaltungImpl(final SpielerDao spielerDaoImpl) {
         log.info("SpielerverwaltungsImpl Konstruktor called");
+        this.spielerDao = spielerDaoImpl;
+        //private SpielerDao spielerDao = (SpielerDao) ConfigServiceImpl.context.getBean("spielerdaoimpl");
     }
 
     /**
@@ -39,7 +44,7 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
     public Spieler spielerGenerieren(String name, int id, boolean istComputer) throws Exception {
         Spieler spieler = new Spieler(name, id, istComputer);
         spielerDao.create(spieler);
-        log.info("Name: "+spielerDao.findBys_id(id).getName()+" ID: "+spielerDao.findBys_id(id).getS_id());
+        log.info("spielerDao.create -> Name: "+spielerDao.findBys_id(id).getName()+" ID: "+spielerDao.findBys_id(id).getS_id());
         return spielerDao.findBys_id(id);
         //return spieler;
     }
@@ -57,8 +62,8 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
             }
         }
 
-        log.info("Spieler hinzugefügt."+spielerDao.findBys_id(spieler.getS_id()).getName());
         spielerliste.add(spielerDao.findBys_id(spieler.getS_id()));
+        log.info("Spieler zur Liste hinzugefügt."+ "Name: "+spielerDao.findBys_id(spieler.getS_id()).getName() + "ID:"+spielerDao.findBys_id(spieler.getS_id()).getS_id());
     }
 
 

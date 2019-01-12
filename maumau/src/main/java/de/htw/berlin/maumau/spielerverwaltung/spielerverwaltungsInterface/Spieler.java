@@ -23,6 +23,10 @@ public class Spieler {
     private Karte neueKarte;// Die nächste Karte, die gelegt werden soll
     private int punktestand;
 
+    public Spieler(){
+
+    }
+
 
     public Spieler(String name, int s_id, boolean istComputer) {
         this.name = name;

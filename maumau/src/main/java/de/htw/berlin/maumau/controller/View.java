@@ -23,6 +23,7 @@ public class View {
         Console.println("Willkommen bei MauMau!\n");
     }
 
+
     public String userInputNeuerSpielerErstellen(int anzahlSpieler){
         if(anzahlSpieler==0){
             Console.println("Es gibt noch keine Spieler.\n");

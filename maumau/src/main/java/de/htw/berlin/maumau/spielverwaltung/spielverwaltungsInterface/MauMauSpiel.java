@@ -13,6 +13,7 @@ import java.util.List;
  */
 
 @Entity
+@Table(name="MAUMAUSPIEL")
 public class MauMauSpiel {
 
     private List<Spieler> spielerliste;
@@ -25,12 +26,17 @@ public class MauMauSpiel {
     private int anzahlSonderregelKartenZiehen;
     private int spielId;
 
+    public MauMauSpiel(){
+
+    }
+
     public MauMauSpiel(List<Spieler> spielerliste) {
         this.runde = 1;
         this.anzahlSonderregelKartenZiehen = 0;
         this.spielerliste = spielerliste;
         this.sonderregelSiebenAktiv = false;
         this.sonderregelAssAktiv = false;
+        this.spielId = 0;
     }
 
 
@@ -71,6 +77,7 @@ public class MauMauSpiel {
     }
 
     @OneToMany
+    @JoinColumn(name="KARTE_ID")
     public List<Karte> getAblagestapel() {
         return ablagestapel;
     }
