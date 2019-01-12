@@ -2,6 +2,7 @@ package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface;
 
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 
 import javax.persistence.*;
 
@@ -10,11 +11,13 @@ import javax.persistence.*;
  */
 
 @Entity
+@Table(name="KARTE")
 public class Karte{
 
 	private Kartentyp typ;
 	private Kartenwert wert;
 	private int karten_id;
+	private MauMauSpiel maumauspiel;
 
 	public Karte(){
 
@@ -25,6 +28,14 @@ public class Karte{
 		this.wert = wert;
 	}
 
+	@ManyToOne
+	public MauMauSpiel getMaumauspiel() {
+		return maumauspiel;
+	}
+
+	public void setMaumauspiel(MauMauSpiel maumauspiel) {
+		this.maumauspiel = maumauspiel;
+	}
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.AUTO)

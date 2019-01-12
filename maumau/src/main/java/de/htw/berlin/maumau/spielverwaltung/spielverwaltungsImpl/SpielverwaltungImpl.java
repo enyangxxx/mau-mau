@@ -38,14 +38,14 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     private IKartenverwaltung kartenverwaltung;
     private ISpielregeln spielregeln;
     private ISpielerverwaltung spielerverwaltung;
+    private MauMauSpielDao maumauspielDao;
 
-    private MauMauSpielDao maumauspielDao = new MauMauSpielDaoImpl();
-
-    public SpielverwaltungImpl(final IKartenverwaltung kartenverwaltungImpl, final ISpielregeln spielregelnImpl, final ISpielerverwaltung spielerverwaltungImpl) {
+    public SpielverwaltungImpl(final IKartenverwaltung kartenverwaltungImpl, final ISpielregeln spielregelnImpl, final ISpielerverwaltung spielerverwaltungImpl, final MauMauSpielDao maumauspielDaoimpl) {
         log.info("SpielverwaltungsImpl Konstruktor called");
         this.kartenverwaltung = kartenverwaltungImpl;
         this.spielregeln = spielregelnImpl;
         this.spielerverwaltung = spielerverwaltungImpl;
+        this.maumauspielDao = maumauspielDaoimpl;
     }
 
     /**
@@ -57,12 +57,16 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      */
     public MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeineSpielerException, Exception {
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
+        log.info( spiel.getRunde());
+        maumauspielDao.create(spiel);
+        log.info("maumauspielDao.create -> "+"SpielID: "+maumauspielDao.findById(spiel.getSpielId()));
         log.info(NEUES_SPIEL_MESSAGE);
         if (spielerliste.isEmpty()) {
             log.error(KEINESPIELER_EXCEPTION_MESSAGE);
             throw new KeineSpielerException(KEINESPIELER_EXCEPTION_MESSAGE);
         }
-        return spiel;
+        log.info("Er ist reingegangen");
+        return maumauspielDao.findById(spiel.getSpielId());
     }
 
 

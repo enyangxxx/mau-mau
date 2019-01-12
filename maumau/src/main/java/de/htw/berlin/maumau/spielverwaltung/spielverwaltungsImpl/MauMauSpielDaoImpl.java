@@ -1,15 +1,25 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
+import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
+import javax.persistence.*;
 
-import javax.persistence.PersistenceException;
-
+@Transactional
 public class MauMauSpielDaoImpl implements MauMauSpielDao {
 
+    //EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("managerHsqldb");
+
+    //private EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+    @PersistenceContext
     private EntityManager entityManager;
+
+    //private EntityManager entityManager = (EntityManager) ConfigServiceImpl.context.getBean("myEmf");
+
 
     public MauMauSpielDaoImpl() {
         super();

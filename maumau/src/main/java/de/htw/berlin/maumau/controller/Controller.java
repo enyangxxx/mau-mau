@@ -9,10 +9,13 @@ import de.htw.berlin.maumau.errorHandling.KeineKarteException;
 import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,9 @@ public class Controller {
     private IKartenverwaltung kartenverwaltung = (IKartenverwaltung) ConfigServiceImpl.context.getBean("kartenverwaltungimpl");
     private ISpielerverwaltung spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
     private ISpielverwaltung spielverwaltung = (ISpielverwaltung) ConfigServiceImpl.context.getBean("spielverwaltungimpl");
+
+    private Log log = LogFactory.getLog(SpielerverwaltungImpl.class);
+
 
     private View view = new View();
 
@@ -58,6 +64,7 @@ public class Controller {
      */
     public void updateViewSpielerlisteBefuellen() throws Exception, KeineSpielerException {
         view.printWillkommen();
+
         int id = 0;
         while (spielerliste.size() <= 3) {
             String userInput = view.userInputNeuerSpielerErstellen(spielerliste.size());
@@ -98,8 +105,10 @@ public class Controller {
         }
 
         spiel.setRunde(spiel.getRunde() + 1);
+        log.info("Er ist reingegangen Runde: "+spiel.getRunde() + "ID: " + spiel.getSpielId());
         spiel.setKartenstapel(kartenverwaltung.kartenstapelGenerieren());
         kartenverwaltung.kartenMischen(spiel.getKartenstapel());
+        //spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
         spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
         view.printKartenAusgeteilt();
 

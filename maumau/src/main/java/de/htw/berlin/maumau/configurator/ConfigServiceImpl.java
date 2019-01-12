@@ -64,7 +64,5 @@ public class ConfigServiceImpl {
             controller.updateViewMinuspunkte();
         }
         System.exit(0);
-
-
     }
 }
