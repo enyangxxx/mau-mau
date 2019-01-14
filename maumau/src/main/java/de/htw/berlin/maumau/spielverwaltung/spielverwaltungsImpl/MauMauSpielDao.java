@@ -1,5 +1,6 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 
@@ -16,6 +17,8 @@ public interface MauMauSpielDao {
     void insert_update(MauMauSpiel spiel) throws Exception;
 
     List<Spieler> findSpielerlist();
+
+    List<Karte> findKartenstapel();
 
     MauMauSpiel findById(int spielId);
 

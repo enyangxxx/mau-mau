@@ -14,7 +14,7 @@ public interface IKartenverwaltung {
      * Generiert einen Kartenstapel mit 32 Karten, wobei jede Karte einmal vorkommt.
      * @return generierter Kartenstapel
      */
-    List<Karte> kartenstapelGenerieren();
+    List<Karte> kartenstapelGenerieren() throws Exception;
 
     /**
      * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.

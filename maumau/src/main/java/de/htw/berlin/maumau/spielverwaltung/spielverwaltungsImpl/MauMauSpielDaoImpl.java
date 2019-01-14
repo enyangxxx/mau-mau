@@ -2,6 +2,7 @@ package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.hibernate.Hibernate;
@@ -51,7 +52,10 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
     }
 
     public void update(MauMauSpiel spiel) throws Exception {
+        Session session = (Session) entityManager.getDelegate();
+        //session.merge(spiel);
         try {
+            //session.merge(spiel);
             entityManager.merge(spiel);
         } catch (PersistenceException e) {
             //throw new DaoException(e);
@@ -75,9 +79,20 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
     public List<Spieler> findSpielerlist(){
         //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
         //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        List<Spieler> result = (List<Spieler>) entityManager.createQuery("from Spieler").getResultList();
+        Session session = (Session) entityManager.getDelegate();
+        List<Spieler> result = (List<Spieler>) session.createQuery("from Spieler").list();
         return result;
     }
+
+    public List<Karte> findKartenstapel(){
+        //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
+        //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Session session = (Session) entityManager.getDelegate();
+        List<Karte> result = (List<Karte>) session.createQuery("from Karte").list();
+        return result;
+    }
+
+
 
     public MauMauSpiel findById(int spielId)
     {

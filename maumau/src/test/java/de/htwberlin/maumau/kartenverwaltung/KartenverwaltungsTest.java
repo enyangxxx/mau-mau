@@ -71,7 +71,7 @@ public class KartenverwaltungsTest {
      * Das erwartete Ergebnis ist ein not null Kartenstapel
      */
     @Test
-    public void testKartenstapelGenerierenisNotNull() {
+    public void testKartenstapelGenerierenisNotNull() throws Exception {
 
         List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
         assertNotNull("Kartenstapel darf nicht null sein", kartenstapel);
@@ -82,7 +82,7 @@ public class KartenverwaltungsTest {
      * Das erwartete Ergebnis ist ein not empty Kartenstapel
      */
     @Test
-    public void testKartenstapelGenerierenIsNotEmpty() {
+    public void testKartenstapelGenerierenIsNotEmpty() throws Exception {
 
         List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
         assertFalse("Kartenstapel darf nicht empty sein", kartenstapel.isEmpty());
@@ -93,7 +93,7 @@ public class KartenverwaltungsTest {
      * Das erwartete Ergebnis ist ein Kartenstapel mit 32 Karten
      */
     @Test
-    public void testKartenstapelGenerierenRichtigeAnzahlVonKarten() {
+    public void testKartenstapelGenerierenRichtigeAnzahlVonKarten() throws Exception {
 
         List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
         assertEquals("Der Kartenstapel muss aus 32 Karten bestehen", 32, kartenstapel.size());
@@ -104,7 +104,7 @@ public class KartenverwaltungsTest {
      * Das erwartete Ergebnis ist ein Kartenstapel ohne Duplikat mit gleicher Anzahl von Karten.
      */
     @Test
-    public void testKartenstapelGenerierenErzeugtKeineDuplikate() {
+    public void testKartenstapelGenerierenErzeugtKeineDuplikate() throws Exception {
         List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
 
         //Vergleiche die Karten des Korrekten Kartenstapels mit dem generierten
@@ -124,7 +124,7 @@ public class KartenverwaltungsTest {
      * Das erwartete Ergebnis ist ein gemischter Kartenstapel
      */
     @Test
-    public void testKartenMischen() throws KeineKarteException{
+    public void testKartenMischen() throws Exception {
         List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
         kartenverwaltung.kartenMischen(kartenstapel);
         boolean istKartenstapelGemischt = false;
@@ -162,7 +162,7 @@ public class KartenverwaltungsTest {
      * des Ablagestapels-1 und des alten Kartenstapels zusammen.
      */
     @Test
-    public void testAblagestapelWiederverwenden() {
+    public void testAblagestapelWiederverwenden() throws Exception {
         List<Karte> ablagestapel = kartenverwaltung.kartenstapelGenerieren();
         List<Karte> kartenstapel = new ArrayList<Karte>();
         int erwarteteAnzahl = ablagestapel.size()-1;

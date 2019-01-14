@@ -97,7 +97,7 @@ public class Controller {
         if (spiel == null) {
             log.info("Spielerliste Size: "+spielerliste.size());
             spiel = spielverwaltung.neuesSpielStarten(spielerliste);
-            log.info("Spiel aus DB"+ spielDao.findSpielerlist().size());
+            log.info("Spieler 1 aus DB"+ spielDao.findSpielerlist().get(1).getName());
 
             view.printNeuesSpielGestartet();
         }
@@ -110,13 +110,16 @@ public class Controller {
         }
         //spiel = new MauMauSpiel(spielerliste);
         spiel.setRunde(spiel.getRunde() + 1);
-        log.info("Er ist reingegangen Runde: "+spiel.getRunde() + "ID: " + spiel.getSpielId());
+        //log.info("Er ist reingegangen Runde: "+spiel.getRunde() + "ID: " + spiel.getSpielId());
         spiel.setKartenstapel(kartenverwaltung.kartenstapelGenerieren());
         kartenverwaltung.kartenMischen(spiel.getKartenstapel());
         //spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
         //spielDao.create(spiel);
+        log.info("Kartenstapel aus DB"+ spielDao.findKartenstapel().size());
 
-        spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
+        spielDao.update(spiel);
+        //log.info("SpielDao Kartenstapel = :"+spielDao.findById(0).getKartenstapel().size());
+        spielerverwaltung.kartenAusteilen(spielDao.findSpielerlist(), spiel.getKartenstapel(), spiel.getAblagestapel());
         view.printKartenAusgeteilt();
 
         spiel.getSpielerListe().get(0).setDran(true);

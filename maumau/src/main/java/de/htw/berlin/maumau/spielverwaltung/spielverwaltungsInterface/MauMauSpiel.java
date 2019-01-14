@@ -3,6 +3,7 @@ package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import org.hibernate.annotations.Target;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,12 +16,14 @@ import java.util.List;
 @Entity
 public class MauMauSpiel {
 
-    //@ElementCollection
+    @ElementCollection
     private List<Spieler> spielerliste;
     private int runde;
     @ElementCollection
+    @Embedded
     private List<Karte> ablagestapel = new ArrayList<Karte>();
     @ElementCollection
+    @Embedded
     private List<Karte> kartenstapel = new ArrayList<Karte>();
     private Kartentyp aktuellerWunschtyp;
     private boolean sonderregelSiebenAktiv;
