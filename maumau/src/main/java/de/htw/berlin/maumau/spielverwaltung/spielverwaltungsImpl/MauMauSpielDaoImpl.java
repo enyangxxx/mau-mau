@@ -4,9 +4,12 @@ import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Transactional
 public class MauMauSpielDaoImpl implements MauMauSpielDao {
@@ -68,6 +71,12 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
             //throw new DaoException(e);
             throw new Exception(e.getMessage());
         }
+    }
+    public List<Spieler> findSpielerlist(){
+        //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
+        //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        List<Spieler> result = (List<Spieler>) entityManager.createQuery("from Spieler").getResultList();
+        return result;
     }
 
     public MauMauSpiel findById(int spielId)

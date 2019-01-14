@@ -1,6 +1,9 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
+
+import java.util.List;
 
 public interface MauMauSpielDao {
 
@@ -11,6 +14,8 @@ public interface MauMauSpielDao {
     void update(MauMauSpiel spiel) throws Exception;
 
     void insert_update(MauMauSpiel spiel) throws Exception;
+
+    List<Spieler> findSpielerlist();
 
     MauMauSpiel findById(int spielId);
 

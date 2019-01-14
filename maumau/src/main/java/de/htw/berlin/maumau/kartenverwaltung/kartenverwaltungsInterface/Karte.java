@@ -10,14 +10,12 @@ import javax.persistence.*;
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
 
-@Entity
-@Table(name="KARTE")
+@Embeddable
 public class Karte{
 
 	private Kartentyp typ;
 	private Kartenwert wert;
-	private int karten_id;
-	private MauMauSpiel maumauspiel;
+	//private MauMauSpiel maumauspiel;
 
 	public Karte(){
 
@@ -28,6 +26,7 @@ public class Karte{
 		this.wert = wert;
 	}
 
+	/*
 	@ManyToOne
 	public MauMauSpiel getMaumauspiel() {
 		return maumauspiel;
@@ -36,16 +35,7 @@ public class Karte{
 	public void setMaumauspiel(MauMauSpiel maumauspiel) {
 		this.maumauspiel = maumauspiel;
 	}
-
-	@Id
-	@GeneratedValue(strategy= GenerationType.AUTO)
-	public int getKarten_id() {
-		return karten_id;
-	}
-
-	public void setKarten_id(int karten_id) {
-		this.karten_id = karten_id;
-	}
+	*/
 
 	@Column(nullable=false)
 	public Kartentyp getTyp() {

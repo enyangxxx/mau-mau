@@ -12,6 +12,7 @@ import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.apache.commons.logging.Log;
@@ -29,6 +30,7 @@ public class Controller {
     private IKartenverwaltung kartenverwaltung = (IKartenverwaltung) ConfigServiceImpl.context.getBean("kartenverwaltungimpl");
     private ISpielerverwaltung spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
     private ISpielverwaltung spielverwaltung = (ISpielverwaltung) ConfigServiceImpl.context.getBean("spielverwaltungimpl");
+    private MauMauSpielDao spielDao = (MauMauSpielDao) ConfigServiceImpl.context.getBean("maumauspieldaoimpl");
 
     private Log log = LogFactory.getLog(SpielerverwaltungImpl.class);
 
@@ -93,7 +95,10 @@ public class Controller {
     public void updateViewSpielStarten() throws KeineSpielerException, Exception {
 
         if (spiel == null) {
+            log.info("Spielerliste Size: "+spielerliste.size());
             spiel = spielverwaltung.neuesSpielStarten(spielerliste);
+            log.info("Spiel aus DB"+ spielDao.findSpielerlist().size());
+
             view.printNeuesSpielGestartet();
         }
         if (spiel.getRunde() > 1) {
@@ -103,12 +108,14 @@ public class Controller {
                 spieler.getHand().removeAll(spieler.getHand());
             }
         }
-
+        //spiel = new MauMauSpiel(spielerliste);
         spiel.setRunde(spiel.getRunde() + 1);
         log.info("Er ist reingegangen Runde: "+spiel.getRunde() + "ID: " + spiel.getSpielId());
         spiel.setKartenstapel(kartenverwaltung.kartenstapelGenerieren());
         kartenverwaltung.kartenMischen(spiel.getKartenstapel());
         //spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
+        //spielDao.create(spiel);
+
         spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
         view.printKartenAusgeteilt();
 
