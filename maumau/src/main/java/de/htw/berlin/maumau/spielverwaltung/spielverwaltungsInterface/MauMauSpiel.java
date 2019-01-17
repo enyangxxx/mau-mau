@@ -82,6 +82,7 @@ public class MauMauSpiel {
     }
 
     @ElementCollection
+    @Embedded
     public List<Karte> getAblagestapel() {
         return ablagestapel;
     }
@@ -91,6 +92,7 @@ public class MauMauSpiel {
     }
 
     @ElementCollection
+    @Embedded
     public List<Karte> getKartenstapel() {
         return kartenstapel;
     }

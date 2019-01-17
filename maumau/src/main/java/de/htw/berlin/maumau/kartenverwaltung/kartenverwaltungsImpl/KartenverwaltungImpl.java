@@ -44,10 +44,11 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
         ArrayList<Karte> kartenstapel = new ArrayList<Karte>();
         for (int i = 0; i < Kartentyp.values().length; i++) {
             for (int a = 0; a < Kartenwert.values().length; a++) {
-                karteDao.create(new Karte(Kartentyp.values()[i], Kartenwert.values()[a]));
+                //karteDao.create(new Karte(Kartentyp.values()[i], Kartenwert.values()[a]));
                 kartenstapel.add(new Karte(Kartentyp.values()[i], Kartenwert.values()[a]));
             }
         }
+        //karteDao.createKartenstapel(kartenstapel);
         //karteDao.create(kartenstapel);
         log.info(KARTENSTAPEL_GENERIERT_MESSAGE);
         return kartenstapel;

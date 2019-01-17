@@ -20,6 +20,8 @@ public interface MauMauSpielDao {
 
     List<Karte> findKartenstapel();
 
+    List<Karte> findAblagestapel();
+
     MauMauSpiel findById(int spielId);
 
 }

@@ -88,7 +88,15 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
         //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
         //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Session session = (Session) entityManager.getDelegate();
-        List<Karte> result = (List<Karte>) session.createQuery("from Karte").list();
+        List<Karte> result = (List<Karte>) session.createQuery("from MauMauSpiel").list();
+        return result;
+    }
+
+    public List<Karte> findAblagestapel(){
+        //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
+        //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Session session = (Session) entityManager.getDelegate();
+        List<Karte> result = (List<Karte>) session.createQuery("from MauMauSpiel").list();
         return result;
     }
 

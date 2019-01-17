@@ -115,11 +115,14 @@ public class Controller {
         kartenverwaltung.kartenMischen(spiel.getKartenstapel());
         //spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
         //spielDao.create(spiel);
-        log.info("Kartenstapel aus DB"+ spielDao.findKartenstapel().size());
+
 
         spielDao.update(spiel);
+        log.info("Kartenstapel Size aus DB"+ spielDao.findKartenstapel().size());
+        log.info("Kartenstapel Karte 0 Wert aus DB"+ spielDao.findKartenstapel().get(0).toString());
+        log.info("Ablagestapel Size aus DB: "+spielDao.findAblagestapel().size());
         //log.info("SpielDao Kartenstapel = :"+spielDao.findById(0).getKartenstapel().size());
-        spielerverwaltung.kartenAusteilen(spielDao.findSpielerlist(), spiel.getKartenstapel(), spiel.getAblagestapel());
+        spielerverwaltung.kartenAusteilen(spielDao.findSpielerlist(), spielDao.findKartenstapel(), spielDao.findAblagestapel());
         view.printKartenAusgeteilt();
 
         spiel.getSpielerListe().get(0).setDran(true);
