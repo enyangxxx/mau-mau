@@ -3,6 +3,7 @@ package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import org.hibernate.annotations.Target;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,12 +14,16 @@ import java.util.List;
  */
 
 @Entity
-@Table(name="MAUMAUSPIEL")
 public class MauMauSpiel {
 
+    @ElementCollection
     private List<Spieler> spielerliste;
     private int runde;
+    @ElementCollection
+    @Embedded
     private List<Karte> ablagestapel = new ArrayList<Karte>();
+    @ElementCollection
+    @Embedded
     private List<Karte> kartenstapel = new ArrayList<Karte>();
     private Kartentyp aktuellerWunschtyp;
     private boolean sonderregelSiebenAktiv;
@@ -49,7 +54,7 @@ public class MauMauSpiel {
         this.spielId = spielId;
     }
 
-    @OneToMany
+    @ElementCollection
     public List<Spieler> getSpielerListe() {
         return spielerliste;
     }
@@ -76,8 +81,8 @@ public class MauMauSpiel {
         this.runde = runde;
     }
 
-    @OneToMany
-    @JoinColumn(name="KARTE_ID")
+    @ElementCollection
+    @Embedded
     public List<Karte> getAblagestapel() {
         return ablagestapel;
     }
@@ -86,7 +91,8 @@ public class MauMauSpiel {
         this.ablagestapel = ablagestapel;
     }
 
-    @OneToMany
+    @ElementCollection
+    @Embedded
     public List<Karte> getKartenstapel() {
         return kartenstapel;
     }

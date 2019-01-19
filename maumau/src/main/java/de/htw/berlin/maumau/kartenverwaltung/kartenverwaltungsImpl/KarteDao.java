@@ -10,6 +10,8 @@ public interface KarteDao {
 
     void create(Karte karte) throws Exception;
 
+    void createKartenstapel(List<Karte> kartenstapel) throws Exception;
+
     void remove(Karte karte) throws Exception;
 
     void update(Karte karte) throws Exception;

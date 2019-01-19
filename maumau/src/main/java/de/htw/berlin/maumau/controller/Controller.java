@@ -12,6 +12,7 @@ import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.apache.commons.logging.Log;
@@ -29,6 +30,7 @@ public class Controller {
     private IKartenverwaltung kartenverwaltung = (IKartenverwaltung) ConfigServiceImpl.context.getBean("kartenverwaltungimpl");
     private ISpielerverwaltung spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
     private ISpielverwaltung spielverwaltung = (ISpielverwaltung) ConfigServiceImpl.context.getBean("spielverwaltungimpl");
+    private MauMauSpielDao spielDao = (MauMauSpielDao) ConfigServiceImpl.context.getBean("maumauspieldaoimpl");
 
     private Log log = LogFactory.getLog(SpielerverwaltungImpl.class);
 
@@ -93,7 +95,10 @@ public class Controller {
     public void updateViewSpielStarten() throws KeineSpielerException, Exception {
 
         if (spiel == null) {
+            log.info("Spielerliste Size: "+spielerliste.size());
             spiel = spielverwaltung.neuesSpielStarten(spielerliste);
+            log.info("Spieler 1 aus DB"+ spielDao.findSpielerlist().get(1).getName());
+
             view.printNeuesSpielGestartet();
         }
         if (spiel.getRunde() > 1) {
@@ -103,13 +108,21 @@ public class Controller {
                 spieler.getHand().removeAll(spieler.getHand());
             }
         }
-
+        //spiel = new MauMauSpiel(spielerliste);
         spiel.setRunde(spiel.getRunde() + 1);
-        log.info("Er ist reingegangen Runde: "+spiel.getRunde() + "ID: " + spiel.getSpielId());
+        //log.info("Er ist reingegangen Runde: "+spiel.getRunde() + "ID: " + spiel.getSpielId());
         spiel.setKartenstapel(kartenverwaltung.kartenstapelGenerieren());
         kartenverwaltung.kartenMischen(spiel.getKartenstapel());
         //spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
-        spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
+        //spielDao.create(spiel);
+
+
+        spielDao.update(spiel);
+        log.info("Kartenstapel Size aus DB"+ spielDao.findKartenstapel().size());
+        //log.info("Kartenstapel Karte 0 Wert aus DB"+ spielDao.findKartenstapel().get(0).toS);
+        log.info("Ablagestapel Size aus DB: "+spielDao.findAblagestapel().size());
+        //log.info("SpielDao Kartenstapel = :"+spielDao.findById(0).getKartenstapel().size());
+        spielerverwaltung.kartenAusteilen(spielDao.findSpielerlist(), spielDao.findKartenstapel(), spielDao.findAblagestapel());
         view.printKartenAusgeteilt();
 
         spiel.getSpielerListe().get(0).setDran(true);

@@ -1,11 +1,15 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface;
 
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
+import sun.invoke.empty.Empty;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
@@ -16,6 +20,7 @@ public class Spieler {
 
     private String name;
     private int s_id;
+    @ElementCollection
     private List<Karte> hand = new ArrayList<Karte>();
     private boolean hatMauGerufen;
     private boolean dran;
@@ -35,13 +40,15 @@ public class Spieler {
         dran = false;
     }
 
-    @OneToOne
-    public Karte getNaechsteKarte() {
+    //@OneToOne
+    //@Column(nullable=true)
+    @Transient
+    public Karte getNeueKarte() {
         return neueKarte;
     }
 
-    public void setNaechsteKarte(Karte naechsteKarte) {
-        this.neueKarte = naechsteKarte;
+    public void setNeueKarte(Karte neueKarte) {
+        this.neueKarte = neueKarte;
     }
 
     @Column(nullable=false)
@@ -62,7 +69,7 @@ public class Spieler {
         this.s_id = s_id;
     }
 
-    @OneToMany
+    @ElementCollection
     public List<Karte> getHand() {
         return hand;
     }
@@ -81,6 +88,7 @@ public class Spieler {
         this.dran = dran;
     }
 
+    @Transient
     public boolean hatMauGerufen() {
         return hatMauGerufen;
     }

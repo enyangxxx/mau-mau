@@ -36,7 +36,7 @@ public class SpielerverwaltungsTest {
     private Spieler enyang = new Spieler( "Enyang",2,false);
 
     @Before
-    public void setUp(){
+    public void setUp() throws Exception {
         spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
         spielerliste = new ArrayList<Spieler>();
         MockitoAnnotations.initMocks(this);
@@ -176,7 +176,7 @@ public class SpielerverwaltungsTest {
      * der Kartenstapel 21
      */
     @Test
-    public void testKartenAusteilen() {
+    public void testKartenAusteilen() throws Exception {
         List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
         List<Karte> ablagestapel = new ArrayList<Karte>();
         List<Spieler> spielerList = new ArrayList<Spieler>() {{

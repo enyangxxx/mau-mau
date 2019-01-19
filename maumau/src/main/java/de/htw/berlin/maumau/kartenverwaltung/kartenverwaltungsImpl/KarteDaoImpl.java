@@ -3,7 +3,10 @@ package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+
+import javax.persistence.Embedded;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
 
@@ -11,6 +14,7 @@ import java.util.List;
 
 public class KarteDaoImpl implements KarteDao{
 
+    @PersistenceContext
     private EntityManager entityManager;
 
     public KarteDaoImpl() {
@@ -25,6 +29,15 @@ public class KarteDaoImpl implements KarteDao{
     public void create(Karte karte) throws Exception {
         try {
             entityManager.persist(karte);
+        } catch (PersistenceException e) {
+            //throw new DaoException(e);
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public void createKartenstapel(List<Karte> kartenstapel) throws Exception {
+        try {
+            entityManager.persist(kartenstapel);
         } catch (PersistenceException e) {
             //throw new DaoException(e);
             throw new Exception(e.getMessage());
