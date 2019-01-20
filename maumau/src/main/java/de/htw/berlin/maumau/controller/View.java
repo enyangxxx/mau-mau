@@ -162,15 +162,12 @@ public class View {
 
     public String userInputNeueRundeStarten(){
         Console.println("Neue Runde starten? (Ja/Nein)");
-        String s = Console.readLine();;
-
-        while(!(s.equalsIgnoreCase("ja")||s.equalsIgnoreCase("nein"))){
-            Console.println("Gib bitte Ja oder Nein ein.");
-            Console.println();
-            s = Console.readLine();
-        }
+        String s = Console.readLine();
 
         return s;
     }
 
+    public void fehlermeldungAusgabe(String fehlerausgabe) {
+        Console.println(fehlerausgabe);
+    }
 }

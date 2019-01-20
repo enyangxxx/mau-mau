@@ -1,10 +1,7 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
+
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
-import sun.invoke.empty.Empty;
 
 import javax.persistence.*;
 import java.util.ArrayList;

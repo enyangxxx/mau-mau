@@ -1,13 +1,10 @@
 package de.htw.berlin.maumau.errorHandling;
 
-/**
- * @author Enyang Wang, Steve Engel, Theo Radig
- */
-public class KeinWunschtypException extends Exception{
+public class StapelInhaltException extends Throwable {
 
-    private static final String DEFAULT_MESSAGE = "Kein Wunschtyp gesetzt";
+    private static final String DEFAULT_MESSAGE = "Unerwarteter Fehler des Stapels.";
 
-    public KeinWunschtypException(String message) {
+    public StapelInhaltException(String message) {
         super(returnMessage(message));
     }
 
@@ -17,6 +14,5 @@ public class KeinWunschtypException extends Exception{
         }else{
             return message;
         }
-
     }
 }

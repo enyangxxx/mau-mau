@@ -3,10 +3,7 @@ package de.htw.berlin.maumau.controller;
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
-import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
-import de.htw.berlin.maumau.errorHandling.KeineKarteException;
-import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
+import de.htw.berlin.maumau.errorHandling.*;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
@@ -18,6 +15,7 @@ import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpie
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,25 +62,50 @@ public class Controller {
      * @throws IdDuplikatException   - Wenn eine ID doppelt vergeben wird
      * @throws KeineKarteException   - Wenn Keine Karte selektiert wurde
      */
-    public void updateViewSpielerlisteBefuellen() throws Exception, KeineSpielerException {
+    public void updateViewSpielerlisteBefuellen() throws Exception {
         view.printWillkommen();
 
         int id = 0;
         while (spielerliste.size() <= 3) {
             String userInput = view.userInputNeuerSpielerErstellen(spielerliste.size());
+
             if (userInput.equalsIgnoreCase("Ja")) {
-                String name = view.userInputNeuerSpielerName();
+                String name = spielernamenEintragen();
+
                 id++;
                 aktuellerSpieler = spielerverwaltung.spielerGenerieren(name, id, false);
                 spielerverwaltung.addSpielerZurListe(aktuellerSpieler, spielerliste);
-            } else {
+            } else if(userInput.equalsIgnoreCase("Nein")) {
                 if (spielerliste.size() >= 2) {
                     break;
                 } else {
                     view.printMindestanzahlSpielerNennen();
                 }
+            } else {
+                try {
+                    throw new FalscherInputException("Bitte nur Ja oder Nein eingeben");
+                } catch (FalscherInputException e) {
+                    log.error(e.toString());
+                    view.fehlermeldungAusgabe(e.getMessage());
+                }
             }
         }
+    }
+
+    public String spielernamenEintragen(){
+        String name = "";
+        while(name.isEmpty()){
+            name = view.userInputNeuerSpielerName();
+            if(name.isEmpty()){
+                try {
+                    throw new FalscherInputException("Spielername darf nicht blank sein!");
+                } catch (FalscherInputException e) {
+                    log.error(e.toString());
+                    view.fehlermeldungAusgabe(e.getMessage());
+                }
+            }
+        }
+        return name;
     }
 
 
@@ -261,10 +284,20 @@ public class Controller {
      * Leitet das startet einer neuen Runde ein
      *
      * @return true - wenn eine neue Runde gestartet werden soll
-     * @throws KeineKarteException - Wenn Keine Karte selektiert wurde
      */
-    public boolean checkNeueRundeStarten() throws KeineKarteException {
-        String userInput = view.userInputNeueRundeStarten();
+    public boolean checkNeueRundeStarten() {
+        String userInput = "";
+        while(!userInput.equalsIgnoreCase("Ja")&&!userInput.equalsIgnoreCase("Nein")){
+            userInput = view.userInputNeueRundeStarten();
+            if(!userInput.equalsIgnoreCase("Ja")&&!userInput.equalsIgnoreCase("Nein")){
+                try {
+                    throw new FalscherInputException("Bitte nur Ja oder Nein eingeben");
+                } catch (FalscherInputException e) {
+                    log.error(e.toString());
+                    view.fehlermeldungAusgabe(e.getMessage());
+                }
+            }
+        }
         return userInput.equalsIgnoreCase("ja");
     }
 

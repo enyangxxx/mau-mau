@@ -1,13 +1,10 @@
 package de.htw.berlin.maumau.errorHandling;
 
-/**
- * @author Enyang Wang, Steve Engel, Theo Radig
- */
-public class KeinWunschtypException extends Exception{
+public class FalscherInputException extends Throwable {
 
-    private static final String DEFAULT_MESSAGE = "Kein Wunschtyp gesetzt";
+    private static final String DEFAULT_MESSAGE = "Der Input ist fehlerhaft. Bitte überprüfen.";
 
-    public KeinWunschtypException(String message) {
+    public FalscherInputException(String message) {
         super(returnMessage(message));
     }
 
