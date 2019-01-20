@@ -2,7 +2,6 @@ package de.htw.berlin.maumau.spielregeln.spielregelnImpl;
 
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
 import org.apache.commons.logging.Log;
@@ -27,12 +26,9 @@ public class SpielregelnImpl implements ISpielregeln {
      * @param neueKarte - die neue Karte
      * @param wunschtyp - der Wunschtyp
      * @return true, wenn  die neue Karte legbar ist.
-     * @throws KeinWunschtypException - falls kein Wunschtyp festgelegt wurde
      */
-    public boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp) throws KeinWunschtypException {
-        if (wunschtyp == null) {
-            throw new KeinWunschtypException("Es wurde kein Wunschtyp gesetzt.");
-        }
+    public boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp){
+
         return neueKarte.getTyp().equals(wunschtyp);
     }
 

@@ -3,9 +3,9 @@ package de.htwberlin.maumau.spielverwaltung;
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
-import de.htw.berlin.maumau.errorHandling.KeineKarteException;
-import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogenException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
@@ -71,7 +71,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist ein neues Spiel mit der Runde 1.
      */
     @Test
-    public void testNeuesSpielStartenMitSpielerliste() throws KeineSpielerException, Exception {
+    public void testNeuesSpielStartenMitSpielerliste() throws KeinSpielerException, Exception {
         spielerliste.add(hans);
         spielerliste.add(enyang);
         MauMauSpiel neuesSpiel = spielverwaltung.neuesSpielStarten(spielerliste);
@@ -81,11 +81,11 @@ public class SpielverwaltungsTest {
 
     /**
      * Testet die Funktionalität, ein neues Spiel zu starten, indem eine leere Spielerliste übergeben wird.
-     * Das erwartete Ergebnis ist KeineSpielerException
+     * Das erwartete Ergebnis ist KeinSpielerException
      */
     @Test
-    public void testNeuesSpielStartenMitSpielerlisteOhneSpieler() throws KeineSpielerException, Exception {
-        exceptionRule.expect(KeineSpielerException.class);
+    public void testNeuesSpielStartenMitSpielerlisteOhneSpieler() throws KeinSpielerException, Exception {
+        exceptionRule.expect(KeinSpielerException.class);
         spielverwaltung.neuesSpielStarten(spielerliste);
     }
 
@@ -108,7 +108,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist alteAnzahlKartenInHand + 1 && alteKartenstapelMenge - 1
      */
     @Test
-    public void testKarteZiehen() {
+    public void testKarteZiehen() throws KarteNichtGezogenException, LeererStapelException {
         spielerliste.add(hans);
         Spieler spieler = spielerliste.get(0);
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
@@ -133,7 +133,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist alteAnzahlKartenInHand + 2 && alteKartenstapelMenge - 2
      */
     @Test
-    public void testZweiKartenZiehen() {
+    public void testZweiKartenZiehen() throws KarteNichtGezogenException, LeererStapelException {
         spielerliste.add(hans);
         Spieler spieler = spielerliste.get(0);
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
@@ -160,7 +160,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist alteAnzahlKartenInHand + 2 && alteKartenstapelMenge - 2
      */
     @Test
-    public void testDreiKartenZiehen() {
+    public void testDreiKartenZiehen() throws KarteNichtGezogenException, LeererStapelException {
         spielerliste.add(hans);
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
         spiel.setAblagestapel(ablagestapel);
@@ -189,7 +189,7 @@ public class SpielverwaltungsTest {
      * Karte enthalten. Erwartet wird alteAnzahlKartenInHand + 1 und dass der ablagestapel nicht leer ist.
      */
     @Test
-    public void testKarteZiehenLeererStapel() {
+    public void testKarteZiehenLeererStapel() throws KarteNichtGezogenException, LeererStapelException {
         List<Karte> kartenstapel = new ArrayList<Karte>();
         spielerliste.add(hans);
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
@@ -212,7 +212,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist, dass die Hand und der Ablagestapel sich nicht verändern.
      */
     @Test
-    public void testKarteNichtLegen() throws KeinWunschtypException, KeineSpielerException {
+    public void testKarteNichtLegen() throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException {
         MauMauSpiel maumauSpiel = new MauMauSpiel(spielerliste);
         maumauSpiel.setAblagestapel(ablagestapel);
 
@@ -238,7 +238,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist alteAnzahlKartenInHand - 1 && alteAblagestapelMenge + 1
      */
     @Test
-    public void testKarteLegen() throws KeinWunschtypException, KeineSpielerException {
+    public void testKarteLegen() throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException {
         MauMauSpiel maumauSpiel = new MauMauSpiel(spielerliste);
         maumauSpiel.setAblagestapel(ablagestapel);
 
@@ -264,19 +264,9 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist die Karte PIK/BUBE
      */
     @Test
-    public void testLetzteKarteVomAblagestapelErmitteln() throws KeineKarteException {
+    public void testLetzteKarteVomAblagestapelErmitteln() {
         Karte letzteKarte = spielverwaltung.letzteKarteErmitteln(ablagestapel);
         assertEquals("Die letzte Karte soll PIK/BUBE sein", letzteKarte, ablagestapel.get(ablagestapel.size() - 1));
-    }
-
-    /**
-     * Teste die Funktionalität, die letzte Karte im leeren Ablagestapel zu ermitteln.
-     * Das erwartete Ergebnis ist KeineKarteException
-     */
-    @Test
-    public void testLetzteKarteInLeererListeErmitteln() throws KeineKarteException {
-        exceptionRule.expect(KeineKarteException.class);
-        spielverwaltung.letzteKarteErmitteln(new ArrayList<Karte>());
     }
 
     /**
@@ -284,7 +274,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist ein unveränderter Kartenstapel, bedeutet dass Spieler keine Karten zur Strafe gezogen hat
      */
     @Test
-    public void testMauMauPruefenWennTrue() {
+    public void testMauMauPruefenWennTrue() throws KarteNichtGezogenException, LeererStapelException {
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
         hans.setHatMauGerufen(true);
         int alteKartenstapelMenge = ablagestapel.size();
@@ -299,7 +289,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist alteMengeInHand + 2 && alteKartenstapelMenge - 2
      */
     @Test
-    public void testMauMauPruefenWennFalse() {
+    public void testMauMauPruefenWennFalse() throws KarteNichtGezogenException, LeererStapelException {
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
         spiel.setAblagestapel(ablagestapel);
         spiel.setKartenstapel(kartenstapel);
@@ -345,7 +335,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist, dass Hans wieder dran ist.
      */
     @Test
-    public void testAssAussetzen() throws KeineSpielerException, Exception {
+    public void testAssAussetzen() throws KeinSpielerException, Exception, KarteNichtGezogenException, LeererStapelException {
         hans.setHand(hand);
         hans.getHand().add(new Karte(Kartentyp.PIK,Kartenwert.ASS));
         enyang.setHand(hand);

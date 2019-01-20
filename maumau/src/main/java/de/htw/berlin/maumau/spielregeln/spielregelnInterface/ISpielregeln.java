@@ -1,13 +1,7 @@
 package de.htw.berlin.maumau.spielregeln.spielregelnInterface;
 
 import de.htw.berlin.maumau.enumeration.Kartentyp;
-import de.htw.berlin.maumau.enumeration.SonderregelTyp;
-import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
-
-import java.util.List;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
@@ -20,9 +14,8 @@ public interface ISpielregeln {
      * @param neueKarte - die neue Karte
      * @param wunschtyp - der Wunschtyp
      * @return true, wenn  die neue Karte legbar ist.
-     * @throws KeinWunschtypException - falls kein Wunschtyp festgelegt wurde
      */
-    boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp) throws KeinWunschtypException;
+    boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp);
 
     /**
      * Anhand der Farbe und des Werts der letzten {@link Karte} wird geprüft, ob die neue {@link Karte} gelegt werden kann.
