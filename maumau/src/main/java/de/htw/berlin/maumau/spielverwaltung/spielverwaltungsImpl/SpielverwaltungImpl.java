@@ -2,9 +2,12 @@ package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
-import de.htw.berlin.maumau.errorHandling.KeineKarteException;
-import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.IdNichtVorhandenException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.LeereInitialeSpielerlisteException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.VerdaechtigerStapelException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogenException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
@@ -23,7 +26,6 @@ import java.util.List;
 public class SpielverwaltungImpl implements ISpielverwaltung {
 
     private Log log = LogFactory.getLog(SpielverwaltungImpl.class);
-    private static final String KEINESPIELER_EXCEPTION_MESSAGE = "Keine Spielerliste im Spiel";
     private static final String KEINEKARTEN_EXCEPTION_MESSAGE = "Keine Karten sind an der Aktion beteiligt";
     private static final String NEUE_RUNDE_MESSAGE = "Neue Runde im Spiel";
     private static final String KARTE_ZIEHEN_MESSAGE = "Eine Karte wurde zogen";
@@ -52,20 +54,23 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * Der Punktestand der {@link Spieler} wird zurückgesetzt und ein neues Spiel wird eingeleitet.
      *
      * @param spielerliste - Die Liste der teilnehmenden Spieler
-     * @throws KeineSpielerException - Wenn kein Spieler mit der ID gefunden wurde
      * @return das MauMau Spiel
+     * @throws Exception - Eine Exception kann geworfen werden
      */
-    public MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeineSpielerException, Exception {
-        MauMauSpiel spiel = new MauMauSpiel(spielerliste);
-        log.info( spiel.getRunde());
-        maumauspielDao.create(spiel);
-        log.info("maumauspielDao.create -> "+"SpielID: "+maumauspielDao.findById(spiel.getSpielId()));
-        log.info(NEUES_SPIEL_MESSAGE);
+    public MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws Exception {
         if (spielerliste.isEmpty()) {
-            log.error(KEINESPIELER_EXCEPTION_MESSAGE);
-            throw new KeineSpielerException(KEINESPIELER_EXCEPTION_MESSAGE);
+            try {
+                throw new LeereInitialeSpielerlisteException("Leere Spielerliste für das Mau Mau Spiel!");
+            } catch (LeereInitialeSpielerlisteException e) {
+            }
         }
-        log.info("Er ist reingegangen");
+
+        MauMauSpiel spiel = new MauMauSpiel(spielerliste);
+        log.info(spiel.getRunde());
+        maumauspielDao.create(spiel);
+        log.info("maumauspielDao.create -> " + "SpielID: " + maumauspielDao.findById(spiel.getSpielId()));
+        log.info(NEUES_SPIEL_MESSAGE);
+
         return maumauspielDao.findById(spiel.getSpielId());
     }
 
@@ -86,23 +91,28 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * Wenn der Kartenstapel leer ist, wird die Methode ablagestapelWiederverwenden aufgerufen.
      *
      * @param spieler - der Spieler
-     * @param spiel - das aktuelle MauMau-Spiel
+     * @param spiel   - das aktuelle MauMau-Spiel
      */
-    public void karteZiehen(Spieler spieler, MauMauSpiel spiel) {
+    public void karteZiehen(Spieler spieler, MauMauSpiel spiel) throws KarteNichtGezogenException, LeererStapelException {
         List<Karte> ablagestapel = spiel.getAblagestapel();
         List<Karte> kartenstapel = spiel.getKartenstapel();
         List<Karte> hand = spieler.getHand();
-        //Wenn Kartenstapel leer, nutze kartenstapelGenerieren
 
         if (kartenstapel.isEmpty()) {
             kartenverwaltung.ablagestapelWiederverwenden(ablagestapel, kartenstapel);
         }
 
-        hand.add(kartenstapel.get(0));
-        spieler.setHand(hand);
-        kartenstapel.remove(0);
+        try {
+            hand.add(kartenstapel.get(0));
+            spieler.setHand(hand);
+            kartenstapel.remove(0);
+        } catch (Exception e) {
+            throw new KarteNichtGezogenException("Karte konnte nicht gezogen werden, weil Kartenstapel leer ist");
+        }
+
         log.info(KARTE_ZIEHEN_MESSAGE);
         spielerverwaltung.spielerWechseln(spiel);
+
     }
 
 
@@ -110,25 +120,28 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * Diese Merhode wird verwendet, wenn der {@link Spieler} nicht Mau gerufen hat. Er zieht zwei Karten als Strafe
      * von dem Kartenstapel und fügt diese seiner Hand hinzu. Wenn der Kartenstapel leer ist, wird er neu erstellt.
      *
-     * @param spieler  - der Spieler
-     * @param spiel - das aktuelle MauMau-Spiel
+     * @param spieler - der Spieler
+     * @param spiel   - das aktuelle MauMau-Spiel
      */
-    public void karteZiehenMauNichtGerufen(Spieler spieler, MauMauSpiel spiel) {
+    public void karteZiehenMauNichtGerufen(Spieler spieler, MauMauSpiel spiel) throws KarteNichtGezogenException, LeererStapelException {
         List<Karte> ablagestapel = spiel.getAblagestapel();
         List<Karte> kartenstapel = spiel.getKartenstapel();
         List<Karte> hand = spieler.getHand();
 
-        if (kartenstapel.isEmpty()) {
-            kartenverwaltung.ablagestapelWiederverwenden(ablagestapel, kartenstapel);
+        for (int i = 0; i < 2; i++) {
+            if (kartenstapel.isEmpty()) {
+                kartenverwaltung.ablagestapelWiederverwenden(ablagestapel, kartenstapel);
+            }
+            try{
+                hand.add(kartenstapel.get(0));
+                kartenstapel.remove(0);
+                log.info(KARTE_ZIEHEN_MESSAGE);
+            } catch (Exception e) {
+                throw new KarteNichtGezogenException("Karte konnte nicht gezogen werden, weil Kartenstapel leer ist");
+            }
         }
-
-        hand.add(kartenstapel.get(0));
-        kartenstapel.remove(0);
-        log.info(KARTE_ZIEHEN_MESSAGE);
-        hand.add(kartenstapel.get(0));
-        kartenstapel.remove(0);
-        log.info(KARTE_ZIEHEN_MESSAGE);
         spieler.setHand(hand);
+
     }
 
 
@@ -138,9 +151,9 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * der zu ziehenden Karten wieder auf 0 gesetzt und die Regel auf inaktiv gesetzt.
      *
      * @param spieler - der Spieler
-     * @param spiel - das aktuelle MauMau-Spiel
+     * @param spiel   - das aktuelle MauMau-Spiel
      */
-    public void karteZiehenSonderregel(Spieler spieler, MauMauSpiel spiel) {
+    public void karteZiehenSonderregel(Spieler spieler, MauMauSpiel spiel) throws KarteNichtGezogenException, LeererStapelException {
         List<Karte> ablagestapel = spiel.getAblagestapel();
         List<Karte> kartenstapel = spiel.getKartenstapel();
         List<Karte> hand = spieler.getHand();
@@ -150,8 +163,13 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
             if (kartenstapel.isEmpty()) {
                 kartenverwaltung.ablagestapelWiederverwenden(ablagestapel, kartenstapel);
             }
-            hand.add(kartenstapel.get(0));
-            kartenstapel.remove(0);
+
+            try{
+                hand.add(kartenstapel.get(0));
+                kartenstapel.remove(0);
+            } catch (Exception e) {
+                throw new KarteNichtGezogenException("Karte konnte nicht gezogen werden, weil Kartenstapel leer ist");
+            }
         }
 
         spieler.setHand(hand);
@@ -164,9 +182,9 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     /**
      * Die gewählte Karte wird von der Hand des Spielers auf den Ablagestapel gelegt.
      *
-     * @param gewaehlteKarte  - die Karte, die gelegt werden soll
-     * @param hand - die Hand des aktuellen Spielers
-     * @param spiel - das aktuelle MauMau-Spiel
+     * @param gewaehlteKarte - die Karte, die gelegt werden soll
+     * @param hand           - die Hand des aktuellen Spielers
+     * @param spiel          - das aktuelle MauMau-Spiel
      */
     private void karteVonHandAufStapelLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) {
         hand.remove(gewaehlteKarte);
@@ -180,12 +198,12 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * eine Karte auf der Hand hat wird überprüft, ob er vor dem Legen "Mau" gesagt hat, indem die Methode maumauPruefen()
      * aufgerufen wird.
      *
-     * @param gewaehlteKarte  - die gelegte Karte
-     * @param hand - die Hand des aktuellen Spielers
-     * @param spiel - das aktuelle MauMau-Spiel
-     * @param id - die Spieler ID des aktuellen Spielers
+     * @param gewaehlteKarte - die gelegte Karte
+     * @param hand           - die Hand des aktuellen Spielers
+     * @param spiel          - das aktuelle MauMau-Spiel
+     * @param id             - die Spieler ID des aktuellen Spielers
      */
-    private void regelwerkUmsetzen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel, int id) throws KeineSpielerException {
+    private void regelwerkUmsetzen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel, int id) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException {
         if (gewaehlteKarte.getWert().equals(Kartenwert.SIEBEN)) {
             spiel.setSonderregelSiebenAktiv(true);
             spiel.setAnzahlSonderregelKartenZiehen(spiel.getAnzahlSonderregelKartenZiehen() + 2);
@@ -212,6 +230,14 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
                 id = spieler.getS_id();
             }
         }
+
+        if (id == 0) {
+            try {
+                throw new IdNichtVorhandenException("Default ID 0 ist aufgetreten, warum ist kein Spieler dran?");
+            } catch (IdNichtVorhandenException e) {
+            }
+        }
+
         return id;
     }
 
@@ -221,11 +247,11 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * ein Wunschtyp gesetzt wurde. Für den jeweiligen Fall werden die entsprechenden Methoden aufgerufen, sofern die Karte
      * gelegt werden kann. Falls nicht, dann passiert gar nichts.
      *
-     * @param gewaehlteKarte  - die Karte, die gelegt werden soll
-     * @param hand - die Hand des aktuellen Spielers
-     * @param spiel - das aktuelle MauMau-Spiel
+     * @param gewaehlteKarte - die Karte, die gelegt werden soll
+     * @param hand           - die Hand des aktuellen Spielers
+     * @param spiel          - das aktuelle MauMau-Spiel
      */
-    public void karteLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) throws KeinWunschtypException, KeineSpielerException {
+    public void karteLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException {
         Karte letzteKarte = spiel.getAblagestapel().get(spiel.getAblagestapel().size() - 1);
         Kartentyp aktuellerWunschtyp = spiel.getAktuellerWunschtyp();
         int id = aktuellerSpielerIdErmitteln(spiel);
@@ -257,14 +283,17 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      *
      * @param ablagestapel - der Ablagestapel
      * @return die letzte Karte - die neueste Karte vom Ablagestapel
-     * @throws KeineKarteException - Wenn Keine Karte selektiert wurde
      */
-    public Karte letzteKarteErmitteln(List<Karte> ablagestapel) throws KeineKarteException {
-        if (ablagestapel.isEmpty()) {
-            log.info(KEINEKARTEN_EXCEPTION_MESSAGE);
-            throw new KeineKarteException(ABLAGESTAPEL_LEER_MESSAGE);
+    public Karte letzteKarteErmitteln(List<Karte> ablagestapel) {
+        Karte karte;
+
+        try {
+            karte = ablagestapel.get(ablagestapel.size() - 1);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new VerdaechtigerStapelException(ABLAGESTAPEL_LEER_MESSAGE);
         }
-        return ablagestapel.get(ablagestapel.size() - 1);
+
+        return karte;
     }
 
 
@@ -273,13 +302,13 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * Wenn ja, muss er keinen Strafzug machen und die Variable hatMauGerufen wird wieder auf false gesetzt.
      * Wenn nein, muss er zwei Karten ziehen, indem die Methode karteZiehenMauNichtGerufen() aufgerufen wird.
      *
-     * @param spieler  - der Spieler
-     * @param spiel - das aktuelle MauMau-Spiel
+     * @param spieler - der Spieler
+     * @param spiel   - das aktuelle MauMau-Spiel
      */
-    public void maumauPruefen(Spieler spieler, MauMauSpiel spiel) {
+    public void maumauPruefen(Spieler spieler, MauMauSpiel spiel) throws KarteNichtGezogenException, LeererStapelException {
         if (spieler.hatMauGerufen()) {
-            spieler.setHatMauGerufen(false);
             log.info(MAU_GERUFEN_MESSAGE);
+            spieler.setHatMauGerufen(false);
         } else {
             log.info(MAU_NICHT_GERUFEN_MESSAGE);
             karteZiehenMauNichtGerufen(spieler, spiel);
@@ -337,7 +366,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
                     break;
             }
         }
-        log.info(new StringBuilder(MINUSPUNKTE_MESSAGE + String.valueOf(punktzahl)));
+        log.info(new StringBuilder(MINUSPUNKTE_MESSAGE + punktzahl));
         return punktzahl;
     }
 
@@ -346,7 +375,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * Der Wunschtyp des Spiels wird gesetzt. Nachdem dies getan wurde, wird der Spielzug des wünschenden Spielers beendet.
      *
      * @param wunschtyp - der zu setzende Wunschtyp
-     * @param spiel - das aktuelle Spiel
+     * @param spiel     - das aktuelle Spiel
      */
     public void wunschtypFestlegen(Kartentyp wunschtyp, MauMauSpiel spiel) {
         spiel.setAktuellerWunschtyp(wunschtyp);

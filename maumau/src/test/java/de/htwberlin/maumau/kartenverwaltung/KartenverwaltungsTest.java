@@ -3,11 +3,9 @@ package de.htwberlin.maumau.kartenverwaltung;
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.errorHandling.KeineKarteException;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.KartenverwaltungImpl;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -144,16 +142,6 @@ public class KartenverwaltungsTest {
         assertTrue("Der Kartenstapel scheint nicht durchmischt worden zu sein.", istKartenstapelGemischt);
     }
 
-    /**
-     * Testet die Funktionalität von kartenMischen, wenn der Kartenstapel leer ist.
-     * Das erwartete Ergebnis ist eine KeineKarteException
-     */
-    @Test (expected = KeineKarteException.class)
-    public void testKartenMischenStapelNull()throws KeineKarteException{
-        List<Karte> kartenstapel = null;
-        kartenverwaltung.kartenMischen(kartenstapel);
-    }
-
 
     /**
      * Testet, ob die Methode ablagestapelWiederverwenden() den Ablagestapel und den Kartenstapel zu einem
@@ -162,7 +150,7 @@ public class KartenverwaltungsTest {
      * des Ablagestapels-1 und des alten Kartenstapels zusammen.
      */
     @Test
-    public void testAblagestapelWiederverwenden() throws Exception {
+    public void testAblagestapelWiederverwenden() throws Exception, LeererStapelException {
         List<Karte> ablagestapel = kartenverwaltung.kartenstapelGenerieren();
         List<Karte> kartenstapel = new ArrayList<Karte>();
         int erwarteteAnzahl = ablagestapel.size()-1;

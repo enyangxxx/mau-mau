@@ -4,6 +4,10 @@ import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.*;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.FalscherInputException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogenException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
@@ -15,7 +19,6 @@ import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpie
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,9 +61,8 @@ public class Controller {
     /**
      * Registriert Spieler solange, bis mindestens 2 Spieler registriert sind. sodass eine Runde MauMau gespielt werden kann.
      *
-     * @throws KeineSpielerException - falls keine Spieler vorhanden sind
+     * @throws KeinSpielerException - falls keine Spieler vorhanden sind
      * @throws IdDuplikatException   - Wenn eine ID doppelt vergeben wird
-     * @throws KeineKarteException   - Wenn Keine Karte selektiert wurde
      */
     public void updateViewSpielerlisteBefuellen() throws Exception {
         view.printWillkommen();
@@ -79,13 +81,13 @@ public class Controller {
                 if (spielerliste.size() >= 2) {
                     break;
                 } else {
+                    log.warn("Spieleranzahl nicht ausreichend, um das Spiel zu starten!");
                     view.printMindestanzahlSpielerNennen();
                 }
             } else {
                 try {
                     throw new FalscherInputException("Bitte nur Ja oder Nein eingeben");
                 } catch (FalscherInputException e) {
-                    log.error(e.toString());
                     view.fehlermeldungAusgabe(e.getMessage());
                 }
             }
@@ -100,7 +102,6 @@ public class Controller {
                 try {
                     throw new FalscherInputException("Spielername darf nicht blank sein!");
                 } catch (FalscherInputException e) {
-                    log.error(e.toString());
                     view.fehlermeldungAusgabe(e.getMessage());
                 }
             }
@@ -112,10 +113,9 @@ public class Controller {
     /**
      * Startet ein neues Spiel, wenn es die erste Runde ist, oder startet eine neue Runde für ein bereits vorhandenes Spiel.
      *
-     * @throws KeineSpielerException - falls keine Spieler vorhanden sind
-     * @throws KeineKarteException   - Wenn Keine Karte selektiert wurde
+     * @throws KeinSpielerException - falls keine Spieler vorhanden sind
      */
-    public void updateViewSpielStarten() throws KeineSpielerException, Exception {
+    public void updateViewSpielStarten() throws KeinSpielerException, Exception, LeererStapelException {
 
         if (spiel == null) {
             log.info("Spielerliste Size: "+spielerliste.size());
@@ -155,10 +155,9 @@ public class Controller {
     /**
      * Ermittelt den aktuellen Spieler und zeigt seine Hand, die letzte Karte auf dem Ablagestapel und den Namen des Spielers an.
      *
-     * @throws KeineSpielerException - falls keine Spieler vorhanden sind
-     * @throws KeineKarteException   - Wenn Keine Karte selektiert wurde
+     * @throws KeinSpielerException - falls keine Spieler vorhanden sind
      */
-    public void updateViewNaechsterSpielzugStarten() throws KeineSpielerException, KeineKarteException {
+    public void updateViewNaechsterSpielzugStarten() throws KeinSpielerException {
         for (Spieler spieler : spielerliste) {
             if (spieler.isDran()) {
                 aktuellerSpieler = spielerverwaltung.getSpielerById(spieler.getS_id(), spiel.getSpielerListe());
@@ -175,11 +174,9 @@ public class Controller {
      * Prüft den Userinput auf Validität und anschließen wird die Update View Aktion für "legen", "ziehen" oder "Mau"
      * eingeleitet.
      *
-     * @throws KeineSpielerException  - falls keine Spieler vorhanden sind
-     * @throws KeineKarteException    - Wenn Keine Karte selektiert wurde
-     * @throws KeinWunschtypException - Wenn kein Wunschtyp gesetzt wurde
+     * @throws KeinSpielerException  - falls keine Spieler vorhanden sind
      */
-    public void updateViewSpielzugDurchfuehren() throws KeinWunschtypException, KeineKarteException, KeineSpielerException {
+    public void updateViewSpielzugDurchfuehren() throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException {
         String gewaehlteAktion = view.userInputAktionWaehlenMitMau();
 
         while (!(gewaehlteAktion.equalsIgnoreCase("legen") ||
@@ -226,11 +223,9 @@ public class Controller {
      * Updated den View wenn eine Karte gelegt wurde. Prüft dabei, ob ein Wunschtyp festgelegt werden muss oder die Karte nicht
      * legbar ist.
      *
-     * @throws KeineSpielerException  - falls keine Spieler vorhanden sind
-     * @throws KeineKarteException    - Wenn Keine Karte selektiert wurde
-     * @throws KeinWunschtypException - Wenn kein Wunschtyp gesetzt wurde
+     * @throws KeinSpielerException  - falls keine Spieler vorhanden sind
      */
-    public void updateViewAktionKarteLegen() throws KeinWunschtypException, KeineKarteException, KeineSpielerException {
+    public void updateViewAktionKarteLegen() throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException {
         int anzahlKartenAlt = aktuellerSpieler.getHand().size();
         int gewaehlteKarteIndex = view.userInputKarteWaehlen();
         int id = aktuellerSpieler.getS_id();
@@ -257,9 +252,8 @@ public class Controller {
     /**
      * Updated den View wenn eine Karte gezogen wurde bzw. wenn wegen einer 7 mehrere Karten gezogen werden mussten.
      *
-     * @throws KeineKarteException - Wenn Keine Karte selektiert wurde
      */
-    public void updateViewAktionKarteZiehen() throws KeineKarteException {
+    public void updateViewAktionKarteZiehen() throws KarteNichtGezogenException, LeererStapelException {
         if (spiel.isSonderregelSiebenAktiv()) {
             view.printKartenGezogenSonderregel(aktuellerSpieler, spiel);
             spielverwaltung.karteZiehenSonderregel(aktuellerSpieler, spiel);
@@ -293,7 +287,6 @@ public class Controller {
                 try {
                     throw new FalscherInputException("Bitte nur Ja oder Nein eingeben");
                 } catch (FalscherInputException e) {
-                    log.error(e.toString());
                     view.fehlermeldungAusgabe(e.getMessage());
                 }
             }

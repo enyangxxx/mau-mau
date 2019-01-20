@@ -3,7 +3,8 @@ package de.htwberlin.maumau.spielerverwaltung;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
-import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
@@ -153,7 +154,7 @@ public class SpielerverwaltungsTest {
      * Das erwartete Ergebnis ist der Spieler Caner
      */
     @Test
-    public void testGetSpielerById() throws KeineSpielerException, IdDuplikatException {
+    public void testGetSpielerById() throws KeinSpielerException, IdDuplikatException {
         spielerverwaltung.addSpielerZurListe(caner, spielerliste);
         assertEquals("Der Spieler Caner mit der ID 9 muss zurückgegeben werden.", caner,  spielerverwaltung.getSpielerById(9, spielerliste));
     }
@@ -161,10 +162,10 @@ public class SpielerverwaltungsTest {
 
     /**
      * Testet, ob kein Spieler zu einer ID gefunden werden kann, die nicht vergeben ist.
-     * Das erwartete Ergebnis ist KeineSpielerException.
+     * Das erwartete Ergebnis ist KeinSpielerException.
      */
-    @Test(expected = KeineSpielerException.class)
-    public void testgetSpielerByIdIdNichtVergeben() throws KeineSpielerException, IdDuplikatException {
+    @Test(expected = KeinSpielerException.class)
+    public void testgetSpielerByIdIdNichtVergeben() throws KeinSpielerException, IdDuplikatException {
         spielerverwaltung.addSpielerZurListe(enyang, spielerliste);
         spielerverwaltung.getSpielerById(9, spielerliste);
     }
@@ -176,7 +177,7 @@ public class SpielerverwaltungsTest {
      * der Kartenstapel 21
      */
     @Test
-    public void testKartenAusteilen() throws Exception {
+    public void testKartenAusteilen() throws LeererStapelException {
         List<Karte> kartenstapel = kartenverwaltung.kartenstapelGenerieren();
         List<Karte> ablagestapel = new ArrayList<Karte>();
         List<Spieler> spielerList = new ArrayList<Spieler>() {{

@@ -3,7 +3,6 @@ package de.htwberlin.maumau.spielregeln;
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
@@ -94,7 +93,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist false.
      */
     @Test
-    public void testIstLegbarKreuzZehnBeiWunschtypKaro() throws KeinWunschtypException {
+    public void testIstLegbarKreuzZehnBeiWunschtypKaro(){
 
         Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN);
         Kartentyp wunschtyp = Kartentyp.KARO;
@@ -108,24 +107,13 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist true.
      */
     @Test
-    public void testIstLegbarKreuzZehnBeiWunschtypKreuz() throws KeinWunschtypException {
+    public void testIstLegbarKreuzZehnBeiWunschtypKreuz(){
 
         Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN);
         Kartentyp wunschtyp = Kartentyp.KREUZ;
 
         assertTrue("Kreuz Zehn soll legbar sein, wenn der Wunschtyp Kreuz ist.", spielregeln.istLegbar(neueKarte, wunschtyp));
 
-    }
-
-    /**
-     * Testet die Funktionalität von istLegbar, wenn kein Wunschtyp gesetzt wurde.
-     * Das erwartete Ergebnis ist eine KeinWunschtypException
-     */
-    @Test(expected = KeinWunschtypException.class)
-    public void testIstLegbarHerzAchtBeiWunschtypNull() throws KeinWunschtypException {
-        Karte neueKarte = new Karte(Kartentyp.HERZ, Kartenwert.ACHT);
-        Kartentyp wunschtyp = null;
-        spielregeln.istLegbar(neueKarte, wunschtyp);
     }
 
 

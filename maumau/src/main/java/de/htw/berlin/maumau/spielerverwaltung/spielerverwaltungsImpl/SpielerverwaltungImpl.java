@@ -1,8 +1,8 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl;
 
-import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
-import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
@@ -97,9 +97,9 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
      * @param id           - ID des Spielers
      * @param spielerliste - aktuelle Spielerliste
      * @return gefundenerSpieler - der gesuchte Spieler mit der ID
-     * @throws KeineSpielerException - Wenn kein Spieler mit der ID gefunden wurde
+     * @throws KeinSpielerException - Wenn kein Spieler mit der ID gefunden wurde
      */
-    public Spieler getSpielerById(int id, List<Spieler> spielerliste) throws KeineSpielerException {
+    public Spieler getSpielerById(int id, List<Spieler> spielerliste) throws KeinSpielerException {
         Spieler gefundenerSpieler = null;
         for (Spieler spieler : spielerliste) {
             if (spieler.getS_id() == id) {
@@ -107,7 +107,9 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
             }
         }
         if (gefundenerSpieler == null) {
-            throw new KeineSpielerException("Keine Spieler Exception");
+            try {
+                throw new KeinSpielerException("Kein Spieler konnte mit der ID " + id + "gefunden werden!");
+            }catch(KeinSpielerException e){}
         }
 
         return gefundenerSpieler;
@@ -121,18 +123,26 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
      * @param kartenstapel - der aktuelle Kartenstapel
      * @param ablagestapel - der aktuelle Ablagestapel
      */
-    public void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel) {
+    public void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel) throws LeererStapelException {
         for (Spieler spieler : spielerliste) {
             List<Karte> hand = new ArrayList<Karte>();
             for (int i = 0; i < 5; i++) {
-                hand.add(kartenstapel.get(i));
-                kartenstapel.remove(kartenstapel.get(i));
+                try {
+                    hand.add(kartenstapel.get(i));
+                    kartenstapel.remove(kartenstapel.get(i));
+                }catch(Exception e){
+                    throw new LeererStapelException("Nicht genug Karten im Kartenstapel!");
+                }
             }
             log.info(SPIELER_HAND_GESETZT + spieler.getName());
             spieler.setHand(hand);
         }
         log.info(KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE);
-        ablagestapel.add(kartenstapel.get(kartenstapel.size() - 1));
-        kartenstapel.remove(kartenstapel.get(kartenstapel.size() - 1));
+        try {
+            ablagestapel.add(kartenstapel.get(kartenstapel.size() - 1));
+            kartenstapel.remove(kartenstapel.get(kartenstapel.size() - 1));
+        }catch(Exception e){
+            throw new LeererStapelException("Es konnte keine Karte konnte nicht vom Kartenstapel auf Ablagestapel gelegt werden");
+        }
     }
 }

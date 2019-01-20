@@ -3,7 +3,8 @@ package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl;
 
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.errorHandling.StapelInhaltException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.VerdaechtigerStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import org.apache.commons.logging.Log;
@@ -60,8 +61,8 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
     public void kartenMischen(List<Karte> kartenstapel){
         if(kartenstapel.isEmpty()){
             try {
-                throw new StapelInhaltException("Der Kartenstapel ist leer");
-            } catch (StapelInhaltException e) {
+                throw new VerdaechtigerStapelException("Der Kartenstapel ist leer");
+            } catch (VerdaechtigerStapelException e) {
                 log.error(e.toString());
             }
         }else {
@@ -78,26 +79,25 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      * @param ablagestapel - der aktuelle Ablagestapel
      * @param kartenstapel - der aktuelle Kartenstapel
      */
-    public void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) {
-        if(ablagestapel.isEmpty()){
+    public void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) throws LeererStapelException{
+
+        if(!kartenstapel.isEmpty()){
             try {
-                throw new StapelInhaltException("Der Ablagestapel darf nicht leer sein.");
-            } catch (StapelInhaltException e) {
-                log.error(e.toString());
-            }
-        } else if(!kartenstapel.isEmpty()){
-            try {
-                throw new StapelInhaltException("Der Kartenstapel darf keine Karten haben.");
-            } catch (StapelInhaltException e) {
-                log.error(e.toString());
+                throw new VerdaechtigerStapelException("Der Kartenstapel darf keine Karten haben.");
+            } catch (VerdaechtigerStapelException e) {
             }
         }else{
-            Karte letzteKarte = ablagestapel.get(ablagestapel.size()-1);
-            ablagestapel.remove(ablagestapel.size()-1);
-            kartenstapel.addAll(ablagestapel);
-            ablagestapel.removeAll(ablagestapel);
-            log.info(ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE);
-            ablagestapel.add(letzteKarte);
+            try{
+                Karte letzteKarte = ablagestapel.get(ablagestapel.size()-1);
+                ablagestapel.remove(ablagestapel.size()-1);
+                kartenstapel.addAll(ablagestapel);
+                ablagestapel.removeAll(ablagestapel);
+                log.info(ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE);
+                ablagestapel.add(letzteKarte);
+            }catch(Exception e){
+                throw new LeererStapelException("Der Ablagestapel darf nicht leer sein.");
+            }
+
         }
 
     }

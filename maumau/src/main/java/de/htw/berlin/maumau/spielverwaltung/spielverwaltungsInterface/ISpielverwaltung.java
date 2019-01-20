@@ -1,9 +1,9 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface;
 
 import de.htw.berlin.maumau.enumeration.Kartentyp;
-import de.htw.berlin.maumau.errorHandling.KeinWunschtypException;
-import de.htw.berlin.maumau.errorHandling.KeineKarteException;
-import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogenException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 
@@ -20,7 +20,7 @@ public interface ISpielverwaltung {
      * @param spielerliste - Die Liste der teilnehmenden Spieler
      * @return das MauMau Spiel
      */
-    MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeineSpielerException, Exception;
+    MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeinSpielerException, Exception;
 
     /**
      * Eine neue Runde wird eingeleitet.
@@ -36,7 +36,7 @@ public interface ISpielverwaltung {
      * @param spieler - der Spieler
      * @param spiel - das aktuelle MauMau-Spiel
      */
-    void karteZiehen(Spieler spieler, MauMauSpiel spiel);
+    void karteZiehen(Spieler spieler, MauMauSpiel spiel) throws KarteNichtGezogenException, LeererStapelException;
 
     /**
      * Ein {@link Spieler} zieht eine bestimmte Anzahl von {@link Karte} vom Kartenstapel.
@@ -46,7 +46,7 @@ public interface ISpielverwaltung {
      * @param spieler - der Spieler
      * @param spiel - das aktuelle MauMau-Spiel
      */
-    void karteZiehenSonderregel(Spieler spieler, MauMauSpiel spiel);
+    void karteZiehenSonderregel(Spieler spieler, MauMauSpiel spiel) throws KarteNichtGezogenException, LeererStapelException;
 
     /**
      * Diese Merhode wird verwendet, wenn der {@link Spieler} nicht Mau gerufen hat. Er zieht zwei Karten als Strafe
@@ -55,7 +55,7 @@ public interface ISpielverwaltung {
      * @param spieler  - der Spieler
      * @param spiel - das aktuelle MauMau-Spiel
      */
-    void karteZiehenMauNichtGerufen(Spieler spieler, MauMauSpiel spiel);
+    void karteZiehenMauNichtGerufen(Spieler spieler, MauMauSpiel spiel) throws KarteNichtGezogenException, LeererStapelException;
 
     /**
      * Es wird überprüft, ob die gewählte Karte legbar ist. Wenn dies der Fall ist, dann wird überprüft, ob für das Spiel
@@ -66,7 +66,7 @@ public interface ISpielverwaltung {
      * @param hand - die Hand des aktuellen Spielers
      * @param spiel - das aktuelle MauMau-Spiel
      */
-    void karteLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) throws KeinWunschtypException, KeineSpielerException;
+    void karteLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException;
 
 
     /**
@@ -74,9 +74,8 @@ public interface ISpielverwaltung {
      *
      * @param ablagestapel - der Ablagestapel
      * @return die letzte Karte - die neueste Karte vom Ablagestapel
-     * @throws KeineKarteException - Wenn Keine Karte selektiert wurde
      */
-    Karte letzteKarteErmitteln(List<Karte> ablagestapel) throws KeineKarteException;
+    Karte letzteKarteErmitteln(List<Karte> ablagestapel);
 
     /**
      * Es wird geprüft, ob der Spieler Mau gesagt hat.
@@ -86,7 +85,7 @@ public interface ISpielverwaltung {
      * @param spieler  - der Spieler
      * @param spiel - das aktuelle MauMau-Spiel
      */
-    void maumauPruefen(Spieler spieler, MauMauSpiel spiel);
+    void maumauPruefen(Spieler spieler, MauMauSpiel spiel) throws KarteNichtGezogenException, LeererStapelException;
 
     /**
      * Ein {@link Spieler} ruft Mau Mau und die Variable hatMauGerufen wird auf true gesetzt.
