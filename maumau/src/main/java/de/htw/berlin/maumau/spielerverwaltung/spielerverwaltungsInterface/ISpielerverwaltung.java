@@ -1,7 +1,8 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface;
 
 import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
-import de.htw.berlin.maumau.errorHandling.KeineSpielerException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 
@@ -40,9 +41,9 @@ public interface ISpielerverwaltung {
      * @param id           - ID des Spielers
      * @param spielerliste - aktuelle Spielerliste
      * @return gefundenerSpieler - der gesuchte Spieler mit der ID
-     * @throws KeineSpielerException - Wenn kein Spieler mit der ID gefunden wurde
+     * @throws KeinSpielerException - Wenn kein Spieler mit der ID gefunden wurde
      */
-    Spieler getSpielerById(int id, List<Spieler> spielerliste) throws KeineSpielerException;
+    Spieler getSpielerById(int id, List<Spieler> spielerliste) throws KeinSpielerException;
 
     /**
      * Alle {@link Spieler} bekommen je 5 {@link Karte} aus dem Kartenstapel und es wird eine Anfangskarte aufgedeckt.
@@ -51,5 +52,6 @@ public interface ISpielerverwaltung {
      * @param kartenstapel - der aktuelle Kartenstapel
      * @param ablagestapel - der aktuelle Ablagestapel
      */
-    void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel) throws Exception;
+    void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel) throws LeererStapelException;
+
 }

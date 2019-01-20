@@ -5,7 +5,7 @@ package de.htw.berlin.maumau.errorHandling;
  */
 public class IdDuplikatException extends Exception{
 
-    public static final String errorMessage = "Die ID ist bereits vergeben";
+    private static final String errorMessage = "Die ID ist bereits vergeben";
 
     public IdDuplikatException(String message){
         super(message);

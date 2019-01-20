@@ -1,13 +1,12 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl;
 
 
-import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.errorHandling.KeineKarteException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.VerdaechtigerStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -40,7 +39,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      *
      * @return generierter Kartenstapel
      */
-    public List<Karte> kartenstapelGenerieren() throws Exception {
+    public List<Karte> kartenstapelGenerieren(){
         ArrayList<Karte> kartenstapel = new ArrayList<Karte>();
         for (int i = 0; i < Kartentyp.values().length; i++) {
             for (int a = 0; a < Kartenwert.values().length; a++) {
@@ -58,15 +57,19 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.
      *
      * @param kartenstapel - der aktuelle Kartenstapel
-     * @throws KeineKarteException - Wenn Keine Karte selektiert wurde
      */
-    public void kartenMischen(List<Karte> kartenstapel) throws KeineKarteException {
-        try {
+    public void kartenMischen(List<Karte> kartenstapel){
+        if(kartenstapel.isEmpty()){
+            try {
+                throw new VerdaechtigerStapelException("Der Kartenstapel ist leer");
+            } catch (VerdaechtigerStapelException e) {
+                log.error(e.toString());
+            }
+        }else {
             log.info(KARTEN_GEMISCHT_MESSAGE);
             Collections.shuffle(kartenstapel);
-        } catch (Exception e) {
-            throw new KeineKarteException("Keine Karte Exception");
         }
+
     }
 
 
@@ -76,13 +79,27 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      * @param ablagestapel - der aktuelle Ablagestapel
      * @param kartenstapel - der aktuelle Kartenstapel
      */
-    public void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) {
-        log.info(ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE);
-        Karte letzteKarte = ablagestapel.get(ablagestapel.size()-1);
-        ablagestapel.remove(ablagestapel.size()-1);
-        kartenstapel.addAll(ablagestapel);
-        ablagestapel.removeAll(ablagestapel);
-        ablagestapel.add(letzteKarte);
+    public void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) throws LeererStapelException{
+
+        if(!kartenstapel.isEmpty()){
+            try {
+                throw new VerdaechtigerStapelException("Der Kartenstapel darf keine Karten haben.");
+            } catch (VerdaechtigerStapelException e) {
+            }
+        }else{
+            try{
+                Karte letzteKarte = ablagestapel.get(ablagestapel.size()-1);
+                ablagestapel.remove(ablagestapel.size()-1);
+                kartenstapel.addAll(ablagestapel);
+                ablagestapel.removeAll(ablagestapel);
+                log.info(ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE);
+                ablagestapel.add(letzteKarte);
+            }catch(Exception e){
+                throw new LeererStapelException("Der Ablagestapel darf nicht leer sein.");
+            }
+
+        }
+
     }
 
 

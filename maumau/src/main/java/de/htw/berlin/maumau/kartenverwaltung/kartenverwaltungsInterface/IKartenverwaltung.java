@@ -1,7 +1,6 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface;
 
-import de.htw.berlin.maumau.errorHandling.KeineKarteException;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 
 import java.util.List;
 
@@ -14,14 +13,13 @@ public interface IKartenverwaltung {
      * Generiert einen Kartenstapel mit 32 Karten, wobei jede Karte einmal vorkommt.
      * @return generierter Kartenstapel
      */
-    List<Karte> kartenstapelGenerieren() throws Exception;
+    List<Karte> kartenstapelGenerieren();
 
     /**
      * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.
      * @param kartenstapel - der aktuelle Kartenstapel
-     * @throws KeineKarteException - Wenn Keine Karte selektiert wurde
      */
-    void kartenMischen(List<Karte> kartenstapel) throws KeineKarteException;
+    void kartenMischen(List<Karte> kartenstapel);
 
 
     /**
@@ -29,5 +27,5 @@ public interface IKartenverwaltung {
      * @param ablagestapel - der aktuelle Ablagestapel
      * @param kartenstapel - der aktuelle Kartenstapel
      */
-    void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel);
+    void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) throws LeererStapelException;
 }
