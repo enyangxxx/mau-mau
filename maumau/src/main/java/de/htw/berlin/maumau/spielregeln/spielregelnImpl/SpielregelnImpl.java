@@ -27,12 +27,16 @@ public class SpielregelnImpl implements ISpielregeln {
      * @param neueKarte - die neue Karte
      * @param wunschtyp - der Wunschtyp
      * @return true, wenn  die neue Karte legbar ist.
-     * @throws KeinWunschtypException - falls kein Wunschtyp festgelegt wurde
      */
-    public boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp) throws KeinWunschtypException {
+    public boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp){
         if (wunschtyp == null) {
-            throw new KeinWunschtypException("Es wurde kein Wunschtyp gesetzt.");
+            try {
+                throw new KeinWunschtypException("Es wurde kein Wunschtyp gesetzt.");
+            } catch (KeinWunschtypException e) {
+                log.error(e.toString());
+            }
         }
+
         return neueKarte.getTyp().equals(wunschtyp);
     }
 
