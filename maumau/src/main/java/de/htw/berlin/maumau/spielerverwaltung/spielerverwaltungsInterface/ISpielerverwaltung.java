@@ -51,5 +51,5 @@ public interface ISpielerverwaltung {
      * @param kartenstapel - der aktuelle Kartenstapel
      * @param ablagestapel - der aktuelle Ablagestapel
      */
-    void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel);
+    void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel) throws Exception;
 }

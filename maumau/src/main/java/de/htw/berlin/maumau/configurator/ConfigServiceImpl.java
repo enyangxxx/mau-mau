@@ -32,7 +32,7 @@ public class ConfigServiceImpl {
      * @throws KeinWunschtypException - Wenn kein Wunschtyp gesetzt wurde
      */
     public static void main(String[] args) throws KeineSpielerException, Exception {
-        Console.init(new Font(null, Font.BOLD,20));
+        Console.init(new Font(null, Font.BOLD,40));
         controller = new Controller();
 
         // controller get bean holen

@@ -1,19 +1,27 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
+import de.htw.berlin.maumau.enumeration.Kartentyp;
+import de.htw.berlin.maumau.enumeration.Kartenwert;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
 public class MauMauSpielDaoImpl implements MauMauSpielDao {
+
+    private Log log = LogFactory.getLog(MauMauSpielDaoImpl.class);
 
     //EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("managerHsqldb");
 
@@ -56,6 +64,7 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
         //session.merge(spiel);
         try {
             //session.merge(spiel);
+            //session.update(spiel);
             entityManager.merge(spiel);
         } catch (PersistenceException e) {
             //throw new DaoException(e);
@@ -88,9 +97,23 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
         //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
         //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Session session = (Session) entityManager.getDelegate();
-        //List<Karte> result = (List<Karte>) session.createQuery("from MauMauSpiel").list();
-        List<Karte> result = (List<Karte>) session.createSQLQuery("Select * from MauMauSpiel_kartenstapel").list();
-        return result;
+
+        List<Integer> resultKartentyp = (List<Integer>) session.createSQLQuery("Select typ from MauMauSpiel_kartenstapel").list();
+        List<Integer> resultKartenwert = (List<Integer>) session.createSQLQuery("Select wert from MauMauSpiel_kartenstapel").list();
+
+        List<Karte> finalResult = new ArrayList<Karte>();
+
+        for(int i=0;i<resultKartentyp.size();i++){
+            //log.info("Typ aus findMethode: "+Kartentyp.getName(resultKartentyp.get(i)));
+            //log.info("Wert aus findMethode: "+Kartenwert.getName(resultKartenwert.get(i)));
+
+            Karte karte = new Karte(Kartentyp.getName(resultKartentyp.get(i)),Kartenwert.getName(resultKartenwert.get(i)));
+            finalResult.add(karte);
+        }
+
+        //List<Karte> result = (List<Karte>) session.createSQLQuery("Select * from MauMauSpiel_kartenstapel").list();
+
+        return finalResult;
     }
 
     public List<Karte> findAblagestapel(){

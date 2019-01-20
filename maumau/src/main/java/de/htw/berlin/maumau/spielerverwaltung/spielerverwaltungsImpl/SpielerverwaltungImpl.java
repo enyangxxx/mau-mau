@@ -121,7 +121,7 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
      * @param kartenstapel - der aktuelle Kartenstapel
      * @param ablagestapel - der aktuelle Ablagestapel
      */
-    public void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel) {
+    public void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel) throws Exception {
         for (Spieler spieler : spielerliste) {
             List<Karte> hand = new ArrayList<Karte>();
             for (int i = 0; i < 5; i++) {
@@ -130,6 +130,7 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
             }
             log.info(SPIELER_HAND_GESETZT + spieler.getName());
             spieler.setHand(hand);
+            //spielerDao.update(spieler);
         }
         log.info(KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE);
         ablagestapel.add(kartenstapel.get(kartenstapel.size() - 1));
