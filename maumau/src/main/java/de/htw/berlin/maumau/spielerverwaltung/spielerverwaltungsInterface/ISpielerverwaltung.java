@@ -53,4 +53,5 @@ public interface ISpielerverwaltung {
      * @param ablagestapel - der aktuelle Ablagestapel
      */
     void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel) throws LeererStapelException;
+
 }

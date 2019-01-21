@@ -13,7 +13,10 @@ import javax.persistence.*;
 @Embeddable
 public class Karte{
 
+	@Column(name="typ")
 	private Kartentyp typ;
+
+	@Column(name="wert")
 	private Kartenwert wert;
 	//private MauMauSpiel maumauspiel;
 
@@ -37,7 +40,7 @@ public class Karte{
 	}
 	*/
 
-	@Column(nullable=false)
+	//@Column(nullable=false)
 	public Kartentyp getTyp() {
 		return typ;
 	}
@@ -46,7 +49,7 @@ public class Karte{
 		this.typ = typ;
 	}
 
-	@Column(nullable=false)
+	//@Column(nullable=false)
 	public Kartenwert getWert() {
 		return wert;
 	}

@@ -10,6 +10,7 @@ import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogen
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerDao;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
@@ -32,6 +33,7 @@ public class Controller {
     private ISpielerverwaltung spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
     private ISpielverwaltung spielverwaltung = (ISpielverwaltung) ConfigServiceImpl.context.getBean("spielverwaltungimpl");
     private MauMauSpielDao spielDao = (MauMauSpielDao) ConfigServiceImpl.context.getBean("maumauspieldaoimpl");
+    private SpielerDao spielerDao = (SpielerDao) ConfigServiceImpl.context.getBean("spielerdaoimpl");
 
     private Log log = LogFactory.getLog(SpielerverwaltungImpl.class);
 
@@ -41,6 +43,7 @@ public class Controller {
     private MauMauSpiel spiel;
     private Spieler aktuellerSpieler;
     private List<Spieler> spielerliste = new ArrayList<Spieler>();
+    private List<Karte> ablagestapel = new ArrayList<Karte>();
 
 
     /**
@@ -49,7 +52,7 @@ public class Controller {
      * @return true - wenn ein Spieler keine Karte mehr auf der Hand hat.
      */
     public boolean checkSpielIstFertig() {
-        for (Spieler spieler : spiel.getSpielerListe()) {
+        for (Spieler spieler : spielDao.findSpielerlist()) {
             if (spieler.getHand().isEmpty()) {
                 return true;
             }
@@ -120,7 +123,9 @@ public class Controller {
         if (spiel == null) {
             log.info("Spielerliste Size: "+spielerliste.size());
             spiel = spielverwaltung.neuesSpielStarten(spielerliste);
-            log.info("Spieler 1 aus DB"+ spielDao.findSpielerlist().get(1).getName());
+            log.info("Spieler 1 aus DB Name: "+ spielDao.findSpielerlist().get(0).getName());
+            log.info("Spieler 1 aus DB s_Id: "+ spielDao.findSpielerlist().get(0).getS_id());
+            log.info("Spieler 1 aus DB dran: "+ spielDao.findSpielerlist().get(0).isDran());
 
             view.printNeuesSpielGestartet();
         }
@@ -133,22 +138,60 @@ public class Controller {
         }
         //spiel = new MauMauSpiel(spielerliste);
         spiel.setRunde(spiel.getRunde() + 1);
-        //log.info("Er ist reingegangen Runde: "+spiel.getRunde() + "ID: " + spiel.getSpielId());
+        log.info("Spielobjekt Runde: "+spiel.getRunde());
+        spielDao.update(spiel);
+        log.info("SpielDao Runde: "+spielDao.findById(0).getRunde());
+
+
         spiel.setKartenstapel(kartenverwaltung.kartenstapelGenerieren());
+        log.info("Spielobjekt Kartenstapel Size: "+spiel.getKartenstapel().size());
+        spielDao.update(spiel);
+        log.info("SpielDao Kartenstapel Size: "+spielDao.findKartenstapel().size());
+        log.info("SpielDao Kartenstapel Size: "+spielDao.findKartenstapel().get(0));
+
+
+
         kartenverwaltung.kartenMischen(spiel.getKartenstapel());
-        //spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
-        //spielDao.create(spiel);
+        log.info("erste Karte aus Spielobjekt Wert: "+spiel.getKartenstapel().get(0).getWert());
+        log.info("erste Karte aus Spielobjekt Typ: "+spiel.getKartenstapel().get(0).getTyp());
+        spielDao.update(spiel);
+        //log.info("erste Karte aus SpielDao Wert: "+spielDao.findKartenstapel().get(0).getWert());
+        log.info("erste Karte aus SpielDao Wert: "+spielDao.findKartenstapel().get(0).getWert());
+        log.info("erste Karte aus SpielDao Typ: "+spielDao.findKartenstapel().get(0).getTyp());
+
+
+        spiel.setSpielerListe(spielerliste);
+        spiel.setAblagestapel(ablagestapel);
+        spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
+        log.info("karten erfolgreich ausgeteilt");
+        spielDao.update(spiel);
+
+
+        for (int i=1; i<=spiel.getSpielerListe().size();i++){
+            Spieler spieler = spiel.getSpielerListe().get(i-1);
+            log.info("Spielerobjekt Hand Size: "+ spieler.getName()+" hat "+spieler.getHand().size());
+
+            //NOTIZ:  Die hand von einem Spieler aus der Datenbank ist nicht vom Typ List<Karte> sondern vom Typ hibernate PersistentBag?!
+            log.info("SpielDao Hand Size: "+ spielDao.findSpielerlist().get(i-1).getName()+" hat "+ spielDao.findSpielerlist().get(i-1).getHand().getClass());
+        }
 
 
         spielDao.update(spiel);
-        log.info("Kartenstapel Size aus DB"+ spielDao.findKartenstapel().size());
-        //log.info("Kartenstapel Karte 0 Wert aus DB"+ spielDao.findKartenstapel().get(0).toS);
-        log.info("Ablagestapel Size aus DB: "+spielDao.findAblagestapel().size());
-        //log.info("SpielDao Kartenstapel = :"+spielDao.findById(0).getKartenstapel().size());
-        spielerverwaltung.kartenAusteilen(spielDao.findSpielerlist(), spielDao.findKartenstapel(), spielDao.findAblagestapel());
+        /////////////////////////
+        log.info("Hand von spieler 0 aus Dao: "+spielDao.findSpielerlist().get(0).getHand());
+        log.info("spielverwaltung.kartenAusteilen() aufgerufen");
         view.printKartenAusgeteilt();
 
+        //spiel.setSpielerListe(spielDao.findSpielerlist());
+        log.info("spielerliste von spiel: "+spiel.getSpielerListe().size());
+        //spiel.getSpielerListe().get(0).setDran(true);
+        //log.info("dran Status von Spieler 0: "+spielerDao.findBys_id(0).isDran());
         spiel.getSpielerListe().get(0).setDran(true);
+        //spielDao.update(spiel);
+        spielerDao.update(spiel.getSpielerListe().get(0));
+        log.info("dran status von Spieler 0 aus Spiel : "+spiel.getSpielerListe().get(0).isDran());
+        log.info("dran status von Spieler 0 aus SpielDao: "+spielDao.findSpielerlist().get(0).isDran());
+
     }
 
 

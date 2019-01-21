@@ -136,6 +136,7 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
             }
             log.info(SPIELER_HAND_GESETZT + spieler.getName());
             spieler.setHand(hand);
+            //spielerDao.update(spieler);
         }
         log.info(KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE);
         try {

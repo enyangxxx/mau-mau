@@ -18,6 +18,7 @@ public class Spieler {
     private String name;
     private int s_id;
     @ElementCollection
+    @Embedded
     private List<Karte> hand = new ArrayList<Karte>();
     private boolean hatMauGerufen;
     private boolean dran;
@@ -67,6 +68,7 @@ public class Spieler {
     }
 
     @ElementCollection
+    @Embedded
     public List<Karte> getHand() {
         return hand;
     }
