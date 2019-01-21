@@ -1,8 +1,7 @@
 package de.htw.berlin.maumau.controller;
 
-import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
-import de.htw.berlin.maumau.enumeration.Kartentyp;
-import de.htw.berlin.maumau.enumeration.Kartenwert;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.*;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.FalscherInputException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
@@ -29,13 +28,20 @@ import java.util.List;
 
 public class Controller {
 
-    private IKartenverwaltung kartenverwaltung = (IKartenverwaltung) ConfigServiceImpl.context.getBean("kartenverwaltungimpl");
+    /*private IKartenverwaltung kartenverwaltung = (IKartenverwaltung) ConfigServiceImpl.context.getBean("kartenverwaltungimpl");
     private ISpielerverwaltung spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
     private ISpielverwaltung spielverwaltung = (ISpielverwaltung) ConfigServiceImpl.context.getBean("spielverwaltungimpl");
     private MauMauSpielDao spielDao = (MauMauSpielDao) ConfigServiceImpl.context.getBean("maumauspieldaoimpl");
     private SpielerDao spielerDao = (SpielerDao) ConfigServiceImpl.context.getBean("spielerdaoimpl");
+*/
 
     private Log log = LogFactory.getLog(SpielerverwaltungImpl.class);
+
+    private IKartenverwaltung kartenverwaltung;
+    private ISpielerverwaltung spielerverwaltung;
+    private ISpielverwaltung spielverwaltung;
+    private MauMauSpielDao spielDao;
+    private SpielerDao spielerDao;
 
 
     private View view = new View();
@@ -44,6 +50,34 @@ public class Controller {
     private Spieler aktuellerSpieler;
     private List<Spieler> spielerliste = new ArrayList<Spieler>();
     private List<Karte> ablagestapel = new ArrayList<Karte>();
+
+    public Controller(final IKartenverwaltung kartenverwaltung, final ISpielerverwaltung spielerverwaltung, final ISpielverwaltung spielverwaltung, final MauMauSpielDao spielDao, final SpielerDao spielerDao){
+        this.kartenverwaltung = kartenverwaltung;
+        this.spielerverwaltung = spielerverwaltung;
+        this.spielverwaltung = spielverwaltung;
+        this.spielDao = spielDao;
+        this.spielerDao = spielerDao;
+    }
+
+
+    /**
+     * Realisiert das MauMau spiel innerhalb einer Schleife, solange bis ein Spieler gewonnen hat.
+     *
+     * @throws KeinSpielerException  - falls keine Spieler vorhanden sind
+     * @throws IdDuplikatException    - Wenn eine ID doppelt vergeben wird
+     */
+    public void run() throws KeinSpielerException, Exception, KarteNichtGezogenException, LeererStapelException {
+
+        while (checkNeueRundeStarten()) {
+            updateViewSpielStarten();
+            while (!checkSpielIstFertig()) {
+                updateViewNaechsterSpielzugStarten();
+                updateViewSpielzugDurchfuehren();
+            }
+            updateViewMinuspunkte();
+        }
+        System.exit(0);
+    }
 
 
     /**
@@ -147,17 +181,13 @@ public class Controller {
         log.info("Spielobjekt Kartenstapel Size: "+spiel.getKartenstapel().size());
         spielDao.update(spiel);
         log.info("SpielDao Kartenstapel Size: "+spielDao.findKartenstapel().size());
-        log.info("SpielDao Kartenstapel Size: "+spielDao.findKartenstapel().get(0));
-
 
 
         kartenverwaltung.kartenMischen(spiel.getKartenstapel());
-        log.info("erste Karte aus Spielobjekt Wert: "+spiel.getKartenstapel().get(0).getWert());
-        log.info("erste Karte aus Spielobjekt Typ: "+spiel.getKartenstapel().get(0).getTyp());
+        log.info("erste Karte aus Spielobjekt: "+spiel.getKartenstapel().get(0).getTyp()+" "+spiel.getKartenstapel().get(0).getWert());
         spielDao.update(spiel);
         //log.info("erste Karte aus SpielDao Wert: "+spielDao.findKartenstapel().get(0).getWert());
-        log.info("erste Karte aus SpielDao Wert: "+spielDao.findKartenstapel().get(0).getWert());
-        log.info("erste Karte aus SpielDao Typ: "+spielDao.findKartenstapel().get(0).getTyp());
+        log.info("erste Karte aus SpielDao: "+spielDao.findKartenstapel().get(0).getTyp()+" "+spielDao.findKartenstapel().get(0).getWert());
 
 
         spiel.setSpielerListe(spielerliste);
@@ -165,14 +195,14 @@ public class Controller {
         spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
         log.info("karten erfolgreich ausgeteilt");
         spielDao.update(spiel);
-
+        log.info("Nach dem Austeilen: Spielobjekt Kartenstapel Size: "+spiel.getKartenstapel().size());
+        log.info("Nach dem Austeilen: SpielDao Kartenstapel Size: "+spielDao.findKartenstapel().size());
 
         for (int i=1; i<=spiel.getSpielerListe().size();i++){
             Spieler spieler = spiel.getSpielerListe().get(i-1);
-            log.info("Spielerobjekt Hand Size: "+ spieler.getName()+" hat "+spieler.getHand().size());
-
-            //NOTIZ:  Die hand von einem Spieler aus der Datenbank ist nicht vom Typ List<Karte> sondern vom Typ hibernate PersistentBag?!
-            log.info("SpielDao Hand Size: "+ spielDao.findSpielerlist().get(i-1).getName()+" hat "+ spielDao.findSpielerlist().get(i-1).getHand().getClass());
+            log.info("Spielerobjekt Hand Size: "+ spieler.getName()+" hat "+spieler.getHand().size() +" Karten");
+            //NOTIZ:  Die hand von einem Spieler aus der Datenbank ist nicht vom Typ List<Karte> sondern vom Typ hibernate PersistentBag
+            log.info("SpielDao Hand Size: "+ spielDao.findSpielerlist().get(i-1).getName()+" hat "+ spielDao.findSpielerlist().get(i-1).getHand().size()+" Karten");
         }
 
 

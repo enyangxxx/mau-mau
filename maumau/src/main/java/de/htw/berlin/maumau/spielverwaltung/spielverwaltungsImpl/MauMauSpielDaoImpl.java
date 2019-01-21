@@ -1,16 +1,12 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
-import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
-import de.htw.berlin.maumau.enumeration.Kartentyp;
-import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,6 +86,7 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
         //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Session session = (Session) entityManager.getDelegate();
         List<Spieler> result = (List<Spieler>) session.createQuery("from Spieler").list();
+
         return result;
     }
 

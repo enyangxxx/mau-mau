@@ -1,10 +1,9 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl;
 
-import de.htw.berlin.maumau.enumeration.Kartentyp;
-import de.htw.berlin.maumau.enumeration.Kartenwert;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 
-import javax.persistence.Embedded;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;

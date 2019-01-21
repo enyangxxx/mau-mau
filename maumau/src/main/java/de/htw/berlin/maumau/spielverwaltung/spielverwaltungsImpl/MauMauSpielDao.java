@@ -1,6 +1,5 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
-import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;

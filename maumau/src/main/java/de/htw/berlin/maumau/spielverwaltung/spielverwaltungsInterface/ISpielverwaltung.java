@@ -1,6 +1,6 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface;
 
-import de.htw.berlin.maumau.enumeration.Kartentyp;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogenException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;

@@ -55,6 +55,18 @@
     <bean id="spielregelnimpl" class="de.htw.berlin.maumau.spielregeln.spielregelnImpl.SpielregelnImpl">
     </bean>
 
+    <bean id="controller" class="de.htw.berlin.maumau.controller.Controller">
+        <constructor-arg ref="kartenverwaltungimpl"/>
+        <constructor-arg ref="spielerverwaltungimpl"/>
+        <constructor-arg ref="spielverwaltungimpl"/>
+        <constructor-arg ref="maumauspieldaoimpl"/>
+        <constructor-arg ref="spielerdaoimpl"/>
+    </bean>
+
+    <bean id="configserviceimpl" class="de.htw.berlin.maumau.configurator.ConfigServiceImpl">
+    </bean>
+
+
 
 
 
