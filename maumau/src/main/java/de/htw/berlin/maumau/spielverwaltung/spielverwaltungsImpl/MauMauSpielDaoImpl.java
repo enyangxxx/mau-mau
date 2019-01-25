@@ -117,8 +117,33 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
         //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
         //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Session session = (Session) entityManager.getDelegate();
-        List<Karte> result = (List<Karte>) session.createSQLQuery("Select * from MauMauSpiel_ablagestapel").list();
-        return result;
+
+        List<Integer> resultKartentyp = (List<Integer>) session.createSQLQuery("Select typ from MauMauSpiel_ablagestapel").list();
+        List<Integer> resultKartenwert = (List<Integer>) session.createSQLQuery("Select wert from MauMauSpiel_ablagestapel").list();
+
+        List<Karte> finalResult = new ArrayList<Karte>();
+
+        for(int i=0;i<resultKartentyp.size();i++){
+            //log.info("Typ aus findMethode: "+Kartentyp.getName(resultKartentyp.get(i)));
+            //log.info("Wert aus findMethode: "+Kartenwert.getName(resultKartenwert.get(i)));
+
+            Karte karte = new Karte(Kartentyp.getName(resultKartentyp.get(i)),Kartenwert.getName(resultKartenwert.get(i)));
+            finalResult.add(karte);
+        }
+
+        //List<Karte> result = (List<Karte>) session.createSQLQuery("Select * from MauMauSpiel_kartenstapel").list();
+
+        return finalResult;
+    }
+
+    ///////////////////////
+    public void updateRunde(int runde){
+        Session session = (Session) entityManager.getDelegate();
+        session.createSQLQuery("Update MauMauSpiel set runde ="+runde+" where spielid=0").executeUpdate();
+    }
+
+    public void updateKartenstapel(List<Karte> kartenstapel){
+
     }
 
 

@@ -22,6 +22,8 @@ public interface MauMauSpielDao {
 
     List<Karte> findAblagestapel();
 
+    void updateRunde(int runde);
+
     MauMauSpiel findById(int spielId);
 
 }

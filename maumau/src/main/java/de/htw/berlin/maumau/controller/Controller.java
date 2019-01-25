@@ -18,14 +18,16 @@ import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverw
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Hibernate;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
-
 public class Controller {
 
     /*private IKartenverwaltung kartenverwaltung = (IKartenverwaltung) ConfigServiceImpl.context.getBean("kartenverwaltungimpl");
@@ -34,6 +36,9 @@ public class Controller {
     private MauMauSpielDao spielDao = (MauMauSpielDao) ConfigServiceImpl.context.getBean("maumauspieldaoimpl");
     private SpielerDao spielerDao = (SpielerDao) ConfigServiceImpl.context.getBean("spielerdaoimpl");
 */
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private Log log = LogFactory.getLog(SpielerverwaltungImpl.class);
 
@@ -87,7 +92,7 @@ public class Controller {
      */
     public boolean checkSpielIstFertig() {
         for (Spieler spieler : spielDao.findSpielerlist()) {
-            if (spieler.getHand().isEmpty()) {
+            if (spielerDao.findHand(spieler.getS_id()).isEmpty()) {
                 return true;
             }
         }
@@ -112,8 +117,8 @@ public class Controller {
                 String name = spielernamenEintragen();
 
                 id++;
-                aktuellerSpieler = spielerverwaltung.spielerGenerieren(name, id, false);
-                spielerverwaltung.addSpielerZurListe(aktuellerSpieler, spielerliste);
+                spielerverwaltung.spielerGenerieren(name, id, false);
+                spielerverwaltung.addSpielerZurListe(spielerDao.findBys_id(id), spielerliste);
             } else if(userInput.equalsIgnoreCase("Nein")) {
                 if (spielerliste.size() >= 2) {
                     break;
@@ -154,73 +159,53 @@ public class Controller {
      */
     public void updateViewSpielStarten() throws KeinSpielerException, Exception, LeererStapelException {
 
-        if (spiel == null) {
-            log.info("Spielerliste Size: "+spielerliste.size());
-            spiel = spielverwaltung.neuesSpielStarten(spielerliste);
-            log.info("Spieler 1 aus DB Name: "+ spielDao.findSpielerlist().get(0).getName());
-            log.info("Spieler 1 aus DB s_Id: "+ spielDao.findSpielerlist().get(0).getS_id());
-            log.info("Spieler 1 aus DB dran: "+ spielDao.findSpielerlist().get(0).isDran());
-
+        if (spielDao.findById(0) == null) {
+            spielverwaltung.neuesSpielStarten(spielerliste);
             view.printNeuesSpielGestartet();
         }
-        if (spiel.getRunde() > 1) {
-            spiel.getAblagestapel().removeAll(spiel.getAblagestapel());
+        if (spielDao.findById(0).getRunde() > 1) {
+            /*spiel.getAblagestapel().removeAll(spiel.getAblagestapel());
             spiel.getKartenstapel().removeAll(spiel.getKartenstapel());
             for (Spieler spieler : spiel.getSpielerListe()) {
                 spieler.getHand().removeAll(spieler.getHand());
-            }
+            }*/
         }
-        //spiel = new MauMauSpiel(spielerliste);
-        spiel.setRunde(spiel.getRunde() + 1);
-        log.info("Spielobjekt Runde: "+spiel.getRunde());
-        spielDao.update(spiel);
-        log.info("SpielDao Runde: "+spielDao.findById(0).getRunde());
+        //spiel.setRunde(spiel.getRunde() + 1);
+        spielDao.updateRunde(spielDao.findById(0).getRunde()+1);
 
+        log.info("SpielDao Runde muss 2 sein, Runde ist: "+spielDao.findById(0).getRunde());
 
-        spiel.setKartenstapel(kartenverwaltung.kartenstapelGenerieren());
-        log.info("Spielobjekt Kartenstapel Size: "+spiel.getKartenstapel().size());
-        spielDao.update(spiel);
+        kartenverwaltung.kartenstapelGenerieren();
         log.info("SpielDao Kartenstapel Size: "+spielDao.findKartenstapel().size());
 
+        //kartenverwaltung.kartenMischen(spiel.getKartenstapel());
+        kartenverwaltung.kartenMischen();
 
-        kartenverwaltung.kartenMischen(spiel.getKartenstapel());
-        log.info("erste Karte aus Spielobjekt: "+spiel.getKartenstapel().get(0).getTyp()+" "+spiel.getKartenstapel().get(0).getWert());
-        spielDao.update(spiel);
-        //log.info("erste Karte aus SpielDao Wert: "+spielDao.findKartenstapel().get(0).getWert());
         log.info("erste Karte aus SpielDao: "+spielDao.findKartenstapel().get(0).getTyp()+" "+spielDao.findKartenstapel().get(0).getWert());
+        log.info("zweite Karte aus SpielDao: "+spielDao.findKartenstapel().get(1).getTyp()+" "+spielDao.findKartenstapel().get(1).getWert());
 
 
-        spiel.setSpielerListe(spielerliste);
-        spiel.setAblagestapel(ablagestapel);
-        spielerverwaltung.kartenAusteilen(spiel.getSpielerListe(), spiel.getKartenstapel(), spiel.getAblagestapel());
+        spielerverwaltung.kartenAusteilen();
         log.info("karten erfolgreich ausgeteilt");
-        spielDao.update(spiel);
-        log.info("Nach dem Austeilen: Spielobjekt Kartenstapel Size: "+spiel.getKartenstapel().size());
+        //spielDao.update(spiel);
         log.info("Nach dem Austeilen: SpielDao Kartenstapel Size: "+spielDao.findKartenstapel().size());
 
-        for (int i=1; i<=spiel.getSpielerListe().size();i++){
+        /*for (int i=1; i<=spiel.getSpielerListe().size();i++){
             Spieler spieler = spiel.getSpielerListe().get(i-1);
             log.info("Spielerobjekt Hand Size: "+ spieler.getName()+" hat "+spieler.getHand().size() +" Karten");
-            //NOTIZ:  Die hand von einem Spieler aus der Datenbank ist nicht vom Typ List<Karte> sondern vom Typ hibernate PersistentBag
+            // über spielerDao machen
             log.info("SpielDao Hand Size: "+ spielDao.findSpielerlist().get(i-1).getName()+" hat "+ spielDao.findSpielerlist().get(i-1).getHand().size()+" Karten");
-        }
+        }*/
 
-
-        spielDao.update(spiel);
-        /////////////////////////
-        log.info("Hand von spieler 0 aus Dao: "+spielDao.findSpielerlist().get(0).getHand());
-        log.info("spielverwaltung.kartenAusteilen() aufgerufen");
         view.printKartenAusgeteilt();
 
-        //spiel.setSpielerListe(spielDao.findSpielerlist());
-        log.info("spielerliste von spiel: "+spiel.getSpielerListe().size());
         //spiel.getSpielerListe().get(0).setDran(true);
-        //log.info("dran Status von Spieler 0: "+spielerDao.findBys_id(0).isDran());
-        spiel.getSpielerListe().get(0).setDran(true);
-        //spielDao.update(spiel);
-        spielerDao.update(spiel.getSpielerListe().get(0));
-        log.info("dran status von Spieler 0 aus Spiel : "+spiel.getSpielerListe().get(0).isDran());
-        log.info("dran status von Spieler 0 aus SpielDao: "+spielDao.findSpielerlist().get(0).isDran());
+
+        Spieler spieler = spielerDao.findBys_id(1);
+        spieler.setDran(true);
+        spielerDao.update(spieler);
+
+        log.info("Spieler 0.istDran = "+spielerDao.findBys_id(1).isDran());
 
     }
 
@@ -231,15 +216,21 @@ public class Controller {
      * @throws KeinSpielerException - falls keine Spieler vorhanden sind
      */
     public void updateViewNaechsterSpielzugStarten() throws KeinSpielerException {
-        for (Spieler spieler : spielerliste) {
-            if (spieler.isDran()) {
-                aktuellerSpieler = spielerverwaltung.getSpielerById(spieler.getS_id(), spiel.getSpielerListe());
+        for (Spieler spieler : spielDao.findSpielerlist()) {
+            if (spielerDao.findBys_id(spieler.getS_id()).isDran()) {
+                //aktuellerSpieler = spielerverwaltung.getSpielerById(spieler.getS_id(), spiel.getSpielerListe());
+                aktuellerSpieler = spielerDao.findBys_id(spieler.getS_id());
             }
         }
 
+        //aktuellerSpieler = spielerDao.findAktuellerSpieler();
+        log.info("aktuellerSpieler wurde gefunden: "+aktuellerSpieler.getName());
+
         view.printSpielerGewechselt(aktuellerSpieler.getName());
-        view.printHandAnzeigen(aktuellerSpieler.getHand());
-        view.printLetzteKarteAblagestapel(spielverwaltung.letzteKarteErmitteln(spiel.getAblagestapel()));
+        //view.printHandAnzeigen(aktuellerSpieler.getHand());
+        view.printHandAnzeigen(spielerDao.findHand(aktuellerSpieler.getS_id()));
+
+        view.printLetzteKarteAblagestapel(spielverwaltung.letzteKarteErmitteln());
     }
 
 
@@ -249,7 +240,7 @@ public class Controller {
      *
      * @throws KeinSpielerException  - falls keine Spieler vorhanden sind
      */
-    public void updateViewSpielzugDurchfuehren() throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException {
+    public void updateViewSpielzugDurchfuehren() throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception {
         String gewaehlteAktion = view.userInputAktionWaehlenMitMau();
 
         while (!(gewaehlteAktion.equalsIgnoreCase("legen") ||
@@ -261,7 +252,8 @@ public class Controller {
         }
 
         if (gewaehlteAktion.equalsIgnoreCase("Mau")) {
-            spielverwaltung.maumauRufen(aktuellerSpieler);
+            //spielverwaltung.maumauRufen(aktuellerSpieler);
+            spielverwaltung.maumauRufen();
             while (!(gewaehlteAktion.equalsIgnoreCase("legen") ||
                     gewaehlteAktion.equalsIgnoreCase("ziehen"))) {
                 gewaehlteAktion = view.userInputAktionWaehlenOhneMau();

@@ -37,11 +37,14 @@
     <bean id="spielerverwaltungimpl"
           class="de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl">
           <constructor-arg ref="spielerdaoimpl"/>
+          <constructor-arg ref="maumauspieldaoimpl"/>
+
     </bean>
 
     <bean id="kartenverwaltungimpl"
           class="de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.KartenverwaltungImpl">
         <constructor-arg ref="kartedaoimpl"/>
+        <constructor-arg ref="maumauspieldaoimpl"/>
     </bean>
 
     <bean id="spielverwaltungimpl"
@@ -50,6 +53,7 @@
         <constructor-arg ref="spielregelnimpl"/>
         <constructor-arg ref="spielerverwaltungimpl"/>
         <constructor-arg ref="maumauspieldaoimpl"/>
+        <constructor-arg ref="spielerdaoimpl"/>
     </bean>
 
     <bean id="spielregelnimpl" class="de.htw.berlin.maumau.spielregeln.spielregelnImpl.SpielregelnImpl">
@@ -96,7 +100,7 @@
         <property name="jpaProperties">
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
-                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.show_sql">false</prop>
                 <prop key="hibernate.format_sql">true</prop>
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
             </props>

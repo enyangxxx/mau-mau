@@ -1,5 +1,6 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl;
 
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 
 import java.util.List;
@@ -18,4 +19,9 @@ public interface SpielerDao {
 
     List<Spieler> findAll();
 
-}
+    public List<Karte> findHand(int s_id);
+
+    public Spieler findAktuellerSpieler();
+
+    public void updateHatMauGerufen(boolean status, int s_id);
+    }

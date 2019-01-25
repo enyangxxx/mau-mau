@@ -6,7 +6,6 @@ import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
@@ -36,6 +35,7 @@ public class Spieler {
         this.s_id = s_id;
         this.istComputer = istComputer;
         dran = false;
+        hatMauGerufen = false;
     }
 
     //@OneToOne
@@ -87,11 +87,12 @@ public class Spieler {
         this.dran = dran;
     }
 
-    @Transient
+    @Column(nullable=false)
     public boolean hatMauGerufen() {
         return hatMauGerufen;
     }
 
+    @Transient
     public void setHatMauGerufen(boolean hatMauGerufen) {
         this.hatMauGerufen = hatMauGerufen;
     }

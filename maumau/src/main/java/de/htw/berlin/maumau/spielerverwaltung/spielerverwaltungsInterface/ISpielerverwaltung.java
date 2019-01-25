@@ -20,7 +20,7 @@ public interface ISpielerverwaltung {
      * @param istComputer - true wenn Computer-Spieler
      * @return spieler - der generierte Spieler
      */
-    Spieler spielerGenerieren(String name, int id, boolean istComputer) throws Exception;
+    void spielerGenerieren(String name, int id, boolean istComputer) throws Exception;
 
     /**
      * Der Spieler wird der Spielerliste hinzugefügt.
@@ -48,10 +48,10 @@ public interface ISpielerverwaltung {
     /**
      * Alle {@link Spieler} bekommen je 5 {@link Karte} aus dem Kartenstapel und es wird eine Anfangskarte aufgedeckt.
      *
-     * @param spielerliste - die aktuelle Spielerliste
-     * @param kartenstapel - der aktuelle Kartenstapel
-     * @param ablagestapel - der aktuelle Ablagestapel
+     * //@param spielerliste - die aktuelle Spielerliste
+     * //@param kartenstapel - der aktuelle Kartenstapel
+     * //@param ablagestapel - der aktuelle Ablagestapel
      */
-    void kartenAusteilen(List<Spieler> spielerliste, List<Karte> kartenstapel, List<Karte> ablagestapel) throws LeererStapelException;
+    void kartenAusteilen() throws LeererStapelException, Exception;
 
 }

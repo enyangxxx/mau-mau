@@ -7,6 +7,7 @@ import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerExcep
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogenException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerDao;
+import org.hibernate.Hibernate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -42,6 +43,7 @@ public class ConfigServiceImpl {
 
 
         // controller get bean holen
+
 
         controller.updateViewSpielerlisteBefuellen();
 

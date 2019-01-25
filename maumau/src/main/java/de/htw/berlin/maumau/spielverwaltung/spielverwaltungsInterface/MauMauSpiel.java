@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 public class MauMauSpiel {
 
-    @ElementCollection
+    //@ElementCollection
     private List<Spieler> spielerliste;
     private int runde;
     @ElementCollection
@@ -53,7 +53,8 @@ public class MauMauSpiel {
         this.spielId = spielId;
     }
 
-    @ElementCollection
+    //@ElementCollection
+    @OneToMany
     public List<Spieler> getSpielerListe() {
         return spielerliste;
     }
