@@ -1,7 +1,7 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
-import de.htw.berlin.maumau.enumeration.Kartentyp;
-import de.htw.berlin.maumau.enumeration.Kartenwert;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.IdNichtVorhandenException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.LeereInitialeSpielerlisteException;
@@ -10,6 +10,7 @@ import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogen
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerDao;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
@@ -41,13 +42,16 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     private ISpielregeln spielregeln;
     private ISpielerverwaltung spielerverwaltung;
     private MauMauSpielDao maumauspielDao;
+    private SpielerDao spielerDao;
 
-    public SpielverwaltungImpl(final IKartenverwaltung kartenverwaltungImpl, final ISpielregeln spielregelnImpl, final ISpielerverwaltung spielerverwaltungImpl, final MauMauSpielDao maumauspielDaoimpl) {
+
+    public SpielverwaltungImpl(final IKartenverwaltung kartenverwaltungImpl, final ISpielregeln spielregelnImpl, final ISpielerverwaltung spielerverwaltungImpl, final MauMauSpielDao maumauspielDaoimpl, final SpielerDao spielerDaoImpl) {
         log.info("SpielverwaltungsImpl Konstruktor called");
         this.kartenverwaltung = kartenverwaltungImpl;
         this.spielregeln = spielregelnImpl;
         this.spielerverwaltung = spielerverwaltungImpl;
         this.maumauspielDao = maumauspielDaoimpl;
+        this.spielerDao = spielerDaoImpl;
     }
 
     /**
@@ -57,7 +61,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * @return das MauMau Spiel
      * @throws Exception - Eine Exception kann geworfen werden
      */
-    public MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws Exception {
+    public void neuesSpielStarten(List<Spieler> spielerliste) throws Exception {
         if (spielerliste.isEmpty()) {
             try {
                 throw new LeereInitialeSpielerlisteException("Leere Spielerliste für das Mau Mau Spiel!");
@@ -70,8 +74,6 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         maumauspielDao.create(spiel);
         log.info("maumauspielDao.create -> " + "SpielID: " + maumauspielDao.findById(spiel.getSpielId()));
         log.info(NEUES_SPIEL_MESSAGE);
-
-        return maumauspielDao.findById(spiel.getSpielId());
     }
 
 
@@ -281,13 +283,15 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     /**
      * Ermittelt die letzte {@link Karte} auf dem Ablagestapel und gibt diese zurück.
      *
-     * @param ablagestapel - der Ablagestapel
+     //* @param ablagestapel - der Ablagestapel
      * @return die letzte Karte - die neueste Karte vom Ablagestapel
      */
-    public Karte letzteKarteErmitteln(List<Karte> ablagestapel) {
+    public Karte letzteKarteErmitteln() {
+        List<Karte> ablagestapel = maumauspielDao.findAblagestapel();
         Karte karte;
 
         try {
+
             karte = ablagestapel.get(ablagestapel.size() - 1);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new VerdaechtigerStapelException(ABLAGESTAPEL_LEER_MESSAGE);
@@ -318,10 +322,23 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     /**
      * Ein {@link Spieler} ruft Mau Mau und die Variable hatMauGerufen wird auf true gesetzt.
      *
-     * @param spieler - der Spieler
+     //* @param spieler - der Spieler
      */
-    public void maumauRufen(Spieler spieler) {
-        spieler.setHatMauGerufen(true);
+    public void maumauRufen() throws Exception {
+        //spieler.setHatMauGerufen(true);
+
+        for (Spieler spieler : maumauspielDao.findSpielerlist()) {
+            if (spielerDao.findBys_id(spieler.getS_id()).isDran()) {
+                //Spieler aktuellerSpieler = spielerDao.findBys_id(spieler.getS_id());
+                //aktuellerSpieler.setHatMauGerufen(true);
+                //spielerDao.update(aktuellerSpieler);
+
+                spielerDao.updateHatMauGerufen(true,spieler.getS_id());
+
+                log.info(spielerDao.findBys_id(spieler.getS_id()).getName()+" Hat Mau gerufen: "+spielerDao.findBys_id(spieler.getS_id()).hatMauGerufen());
+            }
+        }
+
         log.info(MAU_RUFEN_MESSAGE);
     }
 

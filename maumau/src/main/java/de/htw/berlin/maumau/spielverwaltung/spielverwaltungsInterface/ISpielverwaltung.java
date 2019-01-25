@@ -1,6 +1,6 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface;
 
-import de.htw.berlin.maumau.enumeration.Kartentyp;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogenException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
@@ -20,7 +20,7 @@ public interface ISpielverwaltung {
      * @param spielerliste - Die Liste der teilnehmenden Spieler
      * @return das MauMau Spiel
      */
-    MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeinSpielerException, Exception;
+    void neuesSpielStarten(List<Spieler> spielerliste) throws KeinSpielerException, Exception;
 
     /**
      * Eine neue Runde wird eingeleitet.
@@ -72,10 +72,10 @@ public interface ISpielverwaltung {
     /**
      * Ermittelt die letzte {@link Karte} auf dem Ablagestapel und gibt diese zurück.
      *
-     * @param ablagestapel - der Ablagestapel
+     //* @param ablagestapel - der Ablagestapel
      * @return die letzte Karte - die neueste Karte vom Ablagestapel
      */
-    Karte letzteKarteErmitteln(List<Karte> ablagestapel);
+    Karte letzteKarteErmitteln();
 
     /**
      * Es wird geprüft, ob der Spieler Mau gesagt hat.
@@ -90,9 +90,9 @@ public interface ISpielverwaltung {
     /**
      * Ein {@link Spieler} ruft Mau Mau und die Variable hatMauGerufen wird auf true gesetzt.
      *
-     * @param spieler - der Spieler
+     //* @param spieler - der Spieler
      */
-    void maumauRufen(Spieler spieler);
+    void maumauRufen() throws Exception;
 
     /**
      * Der Wert der Hand des {@link Spieler}, der verloren hat, wird berechnet.

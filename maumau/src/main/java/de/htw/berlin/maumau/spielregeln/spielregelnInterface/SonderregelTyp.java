@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.htw.berlin.maumau.enumeration;
+package de.htw.berlin.maumau.spielregeln.spielregelnInterface;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig

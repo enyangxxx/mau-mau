@@ -2,10 +2,14 @@ package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl;
 
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Session;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -13,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -88,7 +93,6 @@ public class SpielerDaoImpl implements SpielerDao {
         }
     }
 
-
     public Spieler findBys_id(int s_id)
     {
         return entityManager.find(Spieler.class,s_id);
@@ -121,4 +125,42 @@ public class SpielerDaoImpl implements SpielerDao {
     public void addToTableSpielerliste(Spieler spieler){
         entityManager.createNativeQuery("Insert into spielerliste "+spieler).executeUpdate();
     }
+
+    public List<Karte> findHand(int s_id){
+        //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
+        //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Session session = (Session) entityManager.getDelegate();
+
+        List<Integer> resultKartentyp = (List<Integer>) session.createSQLQuery("Select typ from Spieler_hand where spieler_s_id=" +s_id).list();
+        List<Integer> resultKartenwert = (List<Integer>) session.createSQLQuery("Select wert from Spieler_hand where spieler_s_id=" +s_id).list();
+
+        List<Karte> finalResult = new ArrayList<Karte>();
+
+        for(int i=0;i<resultKartentyp.size();i++){
+            //log.info("Typ aus findMethode: "+Kartentyp.getName(resultKartentyp.get(i)));
+            //log.info("Wert aus findMethode: "+Kartenwert.getName(resultKartenwert.get(i)));
+
+            Karte karte = new Karte(Kartentyp.getName(resultKartentyp.get(i)), Kartenwert.getName(resultKartenwert.get(i)));
+            finalResult.add(karte);
+        }
+
+        //List<Karte> result = (List<Karte>) session.createSQLQuery("Select * from MauMauSpiel_kartenstapel").list();
+
+        return finalResult;
+    }
+
+    public Spieler findAktuellerSpieler(){
+        Session session = (Session) entityManager.getDelegate();
+        Spieler aktuellerSpieler = (Spieler) session.createSQLQuery("Select spieler from spieler where spieler_dran = true");
+        return aktuellerSpieler;
+    }
+
+    public void updateHatMauGerufen(boolean status, int s_id){
+        Session session = (Session) entityManager.getDelegate();
+        session.createSQLQuery("Update Spieler set \"hatMauGerufen\" ="+String.valueOf(status)+" where s_id="+s_id).executeUpdate();
+
+        //session.createSQLQuery("Update MauMauSpiel set runde ="+runde+" where spielid=0").executeUpdate();
+
+    }
+
 }

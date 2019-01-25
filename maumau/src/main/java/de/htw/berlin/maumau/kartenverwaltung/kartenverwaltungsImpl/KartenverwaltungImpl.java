@@ -1,12 +1,14 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl;
 
 
-import de.htw.berlin.maumau.enumeration.Kartentyp;
-import de.htw.berlin.maumau.enumeration.Kartenwert;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.VerdaechtigerStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -27,9 +29,11 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
     private static final String ABLAGESTAPEL_WIEDERVERWENDET_MESSAGE = "Ablagestapel wurde in Kartenstapel gemischt!";
 
     private KarteDao karteDao;
+    private MauMauSpielDao maumauSpielDao;
 
-    public KartenverwaltungImpl(final KarteDao karteDaoImpl) {
+    public KartenverwaltungImpl(final KarteDao karteDaoImpl, final MauMauSpielDao maumauSpielDaoImpl) {
         this.karteDao = karteDaoImpl;
+        this.maumauSpielDao = maumauSpielDaoImpl;
 
         log.info("KartenverwaltungImpl Konstruktor called");
     }
@@ -39,7 +43,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      *
      * @return generierter Kartenstapel
      */
-    public List<Karte> kartenstapelGenerieren(){
+    public void kartenstapelGenerieren() throws Exception {
         ArrayList<Karte> kartenstapel = new ArrayList<Karte>();
         for (int i = 0; i < Kartentyp.values().length; i++) {
             for (int a = 0; a < Kartenwert.values().length; a++) {
@@ -47,18 +51,22 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
                 kartenstapel.add(new Karte(Kartentyp.values()[i], Kartenwert.values()[a]));
             }
         }
+        MauMauSpiel spiel = maumauSpielDao.findById(0);
+        spiel.setKartenstapel(kartenstapel);
+        maumauSpielDao.update(spiel);
         //karteDao.createKartenstapel(kartenstapel);
         //karteDao.create(kartenstapel);
         log.info(KARTENSTAPEL_GENERIERT_MESSAGE);
-        return kartenstapel;
     }
 
     /**
      * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.
      *
-     * @param kartenstapel - der aktuelle Kartenstapel
+     * //@param kartenstapel - der aktuelle Kartenstapel
      */
-    public void kartenMischen(List<Karte> kartenstapel){
+    public void kartenMischen() throws Exception {
+        MauMauSpiel spiel = maumauSpielDao.findById(0);
+        List<Karte> kartenstapel = maumauSpielDao.findKartenstapel();
         if(kartenstapel.isEmpty()){
             try {
                 throw new VerdaechtigerStapelException("Der Kartenstapel ist leer");
@@ -69,7 +77,8 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
             log.info(KARTEN_GEMISCHT_MESSAGE);
             Collections.shuffle(kartenstapel);
         }
-
+        spiel.setKartenstapel(kartenstapel);
+        maumauSpielDao.update(spiel);
     }
 
 

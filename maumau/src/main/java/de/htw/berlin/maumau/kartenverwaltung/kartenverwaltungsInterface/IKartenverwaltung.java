@@ -13,13 +13,13 @@ public interface IKartenverwaltung {
      * Generiert einen Kartenstapel mit 32 Karten, wobei jede Karte einmal vorkommt.
      * @return generierter Kartenstapel
      */
-    List<Karte> kartenstapelGenerieren();
+    void kartenstapelGenerieren() throws Exception;
 
     /**
      * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.
-     * @param kartenstapel - der aktuelle Kartenstapel
+     * //@param kartenstapel - der aktuelle Kartenstapel
      */
-    void kartenMischen(List<Karte> kartenstapel);
+    void kartenMischen() throws Exception;
 
 
     /**
