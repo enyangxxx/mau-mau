@@ -18,8 +18,6 @@ import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverw
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.Hibernate;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -278,7 +276,7 @@ public class Controller {
      */
     private boolean hatKarteGelegtOhneMauZuRufen(int anzahlKartenAlt, int anzahlKartenNeu) {
         if (anzahlKartenAlt == 2 && anzahlKartenNeu == 3) {
-            return !aktuellerSpieler.hatMauGerufen();
+            return !aktuellerSpieler.isMauGerufen();
         }
         return false;
     }
@@ -290,15 +288,20 @@ public class Controller {
      *
      * @throws KeinSpielerException  - falls keine Spieler vorhanden sind
      */
-    public void updateViewAktionKarteLegen() throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException {
-        int anzahlKartenAlt = aktuellerSpieler.getHand().size();
+    public void updateViewAktionKarteLegen() throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception {
+        int anzahlKartenAlt = spielerDao.findHand(aktuellerSpieler.getS_id()).size();
         int gewaehlteKarteIndex = view.userInputKarteWaehlen();
         int id = aktuellerSpieler.getS_id();
-        Karte gewaehlteKarte = aktuellerSpieler.getHand().get(gewaehlteKarteIndex);
+        Karte gewaehlteKarte = spielerDao.findHand(aktuellerSpieler.getS_id()).get(gewaehlteKarteIndex);
 
-        spielverwaltung.karteLegen(aktuellerSpieler.getHand().get(gewaehlteKarteIndex), aktuellerSpieler.getHand(), spiel);
+        log.info("Letze Karte Wert auf Ablagestapel vor Karte legen: "+spielDao.findAblagestapel().get(spielDao.findAblagestapel().size()-1).getWert());
+        log.info("Letze Karte Typ auf Ablagestapel vor Karte legen: "+spielDao.findAblagestapel().get(spielDao.findAblagestapel().size()-1).getTyp());
+        spielverwaltung.karteLegen(aktuellerSpieler, gewaehlteKarte);
+        log.info("Letze Karte Wert auf Ablagestapel vor Karte legen: "+spielDao.findAblagestapel().get(spielDao.findAblagestapel().size()-1).getWert());
+        log.info("Letze Karte Typ auf Ablagestapel vor Karte legen: "+spielDao.findAblagestapel().get(spielDao.findAblagestapel().size()-1).getTyp());
 
-        int anzahlKartenNeu = spielerverwaltung.getSpielerById(id, spiel.getSpielerListe()).getHand().size();
+        //int anzahlKartenNeu = spielerverwaltung.getSpielerById(id, spiel.getSpielerListe()).getHand().size();
+        int anzahlKartenNeu = spielerDao.findHand(aktuellerSpieler.getS_id()).size();
 
         if (anzahlKartenAlt - 1 == anzahlKartenNeu) {
             view.printKarteGelegt(spielerverwaltung.getSpielerById(id, spiel.getSpielerListe()), gewaehlteKarte);

@@ -221,13 +221,12 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     /**
      * Die Spieler ID des aktuellen Spielers wird ermittelt und zurückgegeben.
      *
-     * @param spiel - das aktuelle MauMau-Spiel
      * @return id - die Spieler ID
      */
-    private int aktuellerSpielerIdErmitteln(MauMauSpiel spiel) {
+    private int aktuellerSpielerIdErmitteln() {
         int id = 0;
 
-        for (Spieler spieler : spiel.getSpielerListe()) {
+        for (Spieler spieler : maumauspielDao.findSpielerlist()) {
             if (spieler.isDran()) {
                 id = spieler.getS_id();
             }
@@ -250,13 +249,15 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * gelegt werden kann. Falls nicht, dann passiert gar nichts.
      *
      * @param gewaehlteKarte - die Karte, die gelegt werden soll
-     * @param hand           - die Hand des aktuellen Spielers
-     * @param spiel          - das aktuelle MauMau-Spiel
      */
-    public void karteLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException {
-        Karte letzteKarte = spiel.getAblagestapel().get(spiel.getAblagestapel().size() - 1);
+    public void karteLegen(Spieler aktuellerSpieler, Karte gewaehlteKarte) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception {
+        List<Karte> hand = aktuellerSpieler.getHand();
+        MauMauSpiel spiel = maumauspielDao.findById(0);
+
+        Karte letzteKarte = maumauspielDao.findAblagestapel().get(maumauspielDao.findAblagestapel().size() - 1);
+        //Karte letzteKarte = spiel.getAblagestapel().get(spiel.getAblagestapel().size() - 1);
         Kartentyp aktuellerWunschtyp = spiel.getAktuellerWunschtyp();
-        int id = aktuellerSpielerIdErmitteln(spiel);
+        int id = aktuellerSpielerIdErmitteln();
 
         if (((spielregeln.sonderregelEingehaltenSieben(gewaehlteKarte, letzteKarte)) ||
                 (!spiel.isSonderregelSiebenAktiv())) && spielregeln.sonderregelEingehaltenBube(gewaehlteKarte, letzteKarte)) {
@@ -277,6 +278,8 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
                 }
             }
         }
+        maumauspielDao.update(spiel);
+        spielerDao.update(aktuellerSpieler);
     }
 
 
@@ -303,16 +306,16 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
     /**
      * Es wird geprüft, ob der Spieler Mau gesagt hat.
-     * Wenn ja, muss er keinen Strafzug machen und die Variable hatMauGerufen wird wieder auf false gesetzt.
+     * Wenn ja, muss er keinen Strafzug machen und die Variable isMauGerufen wird wieder auf false gesetzt.
      * Wenn nein, muss er zwei Karten ziehen, indem die Methode karteZiehenMauNichtGerufen() aufgerufen wird.
      *
      * @param spieler - der Spieler
      * @param spiel   - das aktuelle MauMau-Spiel
      */
     public void maumauPruefen(Spieler spieler, MauMauSpiel spiel) throws KarteNichtGezogenException, LeererStapelException {
-        if (spieler.hatMauGerufen()) {
+        if (spieler.isMauGerufen()) {
             log.info(MAU_GERUFEN_MESSAGE);
-            spieler.setHatMauGerufen(false);
+            spieler.setMauGerufen(false);
         } else {
             log.info(MAU_NICHT_GERUFEN_MESSAGE);
             karteZiehenMauNichtGerufen(spieler, spiel);
@@ -320,22 +323,22 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     }
 
     /**
-     * Ein {@link Spieler} ruft Mau Mau und die Variable hatMauGerufen wird auf true gesetzt.
+     * Ein {@link Spieler} ruft Mau Mau und die Variable isMauGerufen wird auf true gesetzt.
      *
      //* @param spieler - der Spieler
      */
     public void maumauRufen() throws Exception {
-        //spieler.setHatMauGerufen(true);
+        //spieler.setMauGerufen(true);
 
         for (Spieler spieler : maumauspielDao.findSpielerlist()) {
             if (spielerDao.findBys_id(spieler.getS_id()).isDran()) {
                 //Spieler aktuellerSpieler = spielerDao.findBys_id(spieler.getS_id());
-                //aktuellerSpieler.setHatMauGerufen(true);
+                //aktuellerSpieler.setMauGerufen(true);
                 //spielerDao.update(aktuellerSpieler);
 
                 spielerDao.updateHatMauGerufen(true,spieler.getS_id());
 
-                log.info(spielerDao.findBys_id(spieler.getS_id()).getName()+" Hat Mau gerufen: "+spielerDao.findBys_id(spieler.getS_id()).hatMauGerufen());
+                log.info(spielerDao.findBys_id(spieler.getS_id()).getName()+" Hat Mau gerufen: "+spielerDao.findBys_id(spieler.getS_id()).isMauGerufen());
             }
         }
 

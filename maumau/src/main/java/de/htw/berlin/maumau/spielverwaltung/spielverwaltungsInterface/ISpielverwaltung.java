@@ -63,10 +63,8 @@ public interface ISpielverwaltung {
      * gelegt werden kann. Falls nicht, dann passiert gar nichts.
      *
      * @param gewaehlteKarte  - die Karte, die gelegt werden soll
-     * @param hand - die Hand des aktuellen Spielers
-     * @param spiel - das aktuelle MauMau-Spiel
      */
-    void karteLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException;
+    void karteLegen(Spieler aktuellerSpieler, Karte gewaehlteKarte) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception;
 
 
     /**
@@ -79,7 +77,7 @@ public interface ISpielverwaltung {
 
     /**
      * Es wird geprüft, ob der Spieler Mau gesagt hat.
-     * Wenn ja, muss er keinen Strafzug machen und die Variable hatMauGerufen wird wieder auf false gesetzt.
+     * Wenn ja, muss er keinen Strafzug machen und die Variable isMauGerufen wird wieder auf false gesetzt.
      * Wenn nein, muss er zwei Karten ziehen, indem die Methode karteZiehenMauNichtGerufen() aufgerufen wird.
      *
      * @param spieler  - der Spieler
@@ -88,7 +86,7 @@ public interface ISpielverwaltung {
     void maumauPruefen(Spieler spieler, MauMauSpiel spiel) throws KarteNichtGezogenException, LeererStapelException;
 
     /**
-     * Ein {@link Spieler} ruft Mau Mau und die Variable hatMauGerufen wird auf true gesetzt.
+     * Ein {@link Spieler} ruft Mau Mau und die Variable isMauGerufen wird auf true gesetzt.
      *
      //* @param spieler - der Spieler
      */
