@@ -260,6 +260,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
     private void regelwerkUmsetzen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel, int id) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException {
 
+
         if (gewaehlteKarte.getWert().equals(Kartenwert.SIEBEN)) {
             spiel.setSonderregelSiebenAktiv(true);
             spiel.setAnzahlSonderregelKartenZiehen(spiel.getAnzahlSonderregelKartenZiehen() + 2);
@@ -267,7 +268,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         if (gewaehlteKarte.getWert().equals(Kartenwert.ASS)) {
             spiel.setSonderregelAssAktiv(true);
         }
-        if (hand.size() == 1) {
+        if (hand.size() == 2) {
             maumauPruefen();
         }
     }
