@@ -72,26 +72,37 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
 
     /**
      * Der aktuelle Spieler ist nicht mehr dran, der nächste Spieler ist dran.
-     * @param spiel - das aktuelle MauMau-Spiel
+     //* @param spiel - das aktuelle MauMau-Spiel
      */
-    public void spielerWechseln(MauMauSpiel spiel) {
-        List<Spieler> spielerliste = spiel.getSpielerListe();
-        for (int i = 0; i < spielerliste.size(); i++) {
-            if (spielerliste.get(i).isDran()) {
-                spielerliste.get(i).setDran(false);
-                if (spielerliste.size() - 1 == i) {
-                    spielerliste.get(0).setDran(true);
-                } else {
-                    spielerliste.get(i + 1).setDran(true);
-                }
-                break;
-            }
+    public void spielerWechseln() throws Exception {
+        MauMauSpiel spiel = maumauSpielDao.findById(0);
+        List<Spieler> spielerliste = maumauSpielDao.findSpielerlist();
+        Spieler alterSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
+        Spieler neuerSpieler;
+
+        int alterSpielerId = alterSpieler.getS_id();
+        log.info("alterSpieler ID: "+alterSpielerId);
+        alterSpieler.setDran(false);
+        spielerDao.update(alterSpieler);
+
+
+        if(alterSpielerId==maumauSpielDao.findSpielerlist().size()){
+            neuerSpieler = spielerDao.findBys_id(1);
+            neuerSpieler.setDran(true);
+            spielerDao.update(neuerSpieler);
+        }
+        else{
+            neuerSpieler = spielerDao.findBys_id(alterSpielerId+1);
+            neuerSpieler.setDran(true);
+            spielerDao.update(neuerSpieler);
         }
 
         if(spiel.isSonderregelAssAktiv()){
             spiel.setSonderregelAssAktiv(false);
-            spielerWechseln(spiel);
+            maumauSpielDao.update(spiel);
+            spielerWechseln();
         }
+        maumauSpielDao.update(spiel);
     }
 
 
@@ -135,7 +146,7 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
 
         for (Spieler spieler : spielerliste) {
             List<Karte> hand = new ArrayList<Karte>();
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 2; i++) {
                 try {
                     hand.add(kartenstapel.get(i));
                     kartenstapel.remove(kartenstapel.get(i));

@@ -214,19 +214,10 @@ public class Controller {
      * @throws KeinSpielerException - falls keine Spieler vorhanden sind
      */
     public void updateViewNaechsterSpielzugStarten() throws KeinSpielerException {
-        for (Spieler spieler : spielDao.findSpielerlist()) {
-            if (spielerDao.findBys_id(spieler.getS_id()).isDran()) {
-                //aktuellerSpieler = spielerverwaltung.getSpielerById(spieler.getS_id(), spiel.getSpielerListe());
-                aktuellerSpieler = spielerDao.findBys_id(spieler.getS_id());
-            }
-        }
 
-        //aktuellerSpieler = spielerDao.findAktuellerSpieler();
-        log.info("aktuellerSpieler wurde gefunden: "+aktuellerSpieler.getName());
+        view.printSpielerGewechselt(spielerDao.findBys_id(spielerDao.findAktuellerSpielerId()).getName());
 
-        view.printSpielerGewechselt(aktuellerSpieler.getName());
-        //view.printHandAnzeigen(aktuellerSpieler.getHand());
-        view.printHandAnzeigen(spielerDao.findHand(aktuellerSpieler.getS_id()));
+        view.printHandAnzeigen(spielerDao.findHand(spielerDao.findAktuellerSpielerId()));
 
         view.printLetzteKarteAblagestapel(spielverwaltung.letzteKarteErmitteln());
     }
@@ -276,7 +267,8 @@ public class Controller {
      */
     private boolean hatKarteGelegtOhneMauZuRufen(int anzahlKartenAlt, int anzahlKartenNeu) {
         if (anzahlKartenAlt == 2 && anzahlKartenNeu == 3) {
-            return !aktuellerSpieler.isMauGerufen();
+            //return !aktuellerSpieler.isMauGerufen();
+            return !spielerDao.findBys_id(alterSpielerIdErmitteln()).isMauGerufen();
         }
         return false;
     }
@@ -289,30 +281,38 @@ public class Controller {
      * @throws KeinSpielerException  - falls keine Spieler vorhanden sind
      */
     public void updateViewAktionKarteLegen() throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception {
-        int anzahlKartenAlt = spielerDao.findHand(aktuellerSpieler.getS_id()).size();
+        int anzahlKartenAlt = spielerDao.findHand(spielerDao.findAktuellerSpielerId()).size();
+
         int gewaehlteKarteIndex = view.userInputKarteWaehlen();
-        int id = aktuellerSpieler.getS_id();
-        Karte gewaehlteKarte = spielerDao.findHand(aktuellerSpieler.getS_id()).get(gewaehlteKarteIndex);
+        int alterSpielerId = spielerDao.findAktuellerSpielerId();
+        Karte gewaehlteKarte = spielerDao.findHand(spielerDao.findAktuellerSpielerId()).get(gewaehlteKarteIndex);
+        log.info("gewaehlteKarte Typ: "+gewaehlteKarte.getTyp());
+        log.info("gewaehlteKarte Wert: "+gewaehlteKarte.getWert());
+
 
         log.info("Letze Karte Wert auf Ablagestapel vor Karte legen: "+spielDao.findAblagestapel().get(spielDao.findAblagestapel().size()-1).getWert());
         log.info("Letze Karte Typ auf Ablagestapel vor Karte legen: "+spielDao.findAblagestapel().get(spielDao.findAblagestapel().size()-1).getTyp());
-        spielverwaltung.karteLegen(aktuellerSpieler, gewaehlteKarte);
+        spielverwaltung.karteLegen(gewaehlteKarte);
         log.info("Letze Karte Wert auf Ablagestapel vor Karte legen: "+spielDao.findAblagestapel().get(spielDao.findAblagestapel().size()-1).getWert());
         log.info("Letze Karte Typ auf Ablagestapel vor Karte legen: "+spielDao.findAblagestapel().get(spielDao.findAblagestapel().size()-1).getTyp());
 
         //int anzahlKartenNeu = spielerverwaltung.getSpielerById(id, spiel.getSpielerListe()).getHand().size();
-        int anzahlKartenNeu = spielerDao.findHand(aktuellerSpieler.getS_id()).size();
+        log.info("alterSpielerID: "+alterSpielerId);
+        int anzahlKartenNeu = spielerDao.findHand(alterSpielerId).size();
+        //log.info("Anzahl Karten Alt: "+spielerDao.findHand(aktuellerSpieler.getS_id()).size());
+        log.info("Anzahl karten alt: "+anzahlKartenAlt);
+        log.info("Anzahl karten neu: "+anzahlKartenNeu);
 
         if (anzahlKartenAlt - 1 == anzahlKartenNeu) {
-            view.printKarteGelegt(spielerverwaltung.getSpielerById(id, spiel.getSpielerListe()), gewaehlteKarte);
+            view.printKarteGelegt(spielerverwaltung.getSpielerById(alterSpielerId, spielDao.findSpielerlist()), gewaehlteKarte);
             if ((gewaehlteKarte.getWert() == Kartenwert.BUBE)) {
-                spielverwaltung.wunschtypFestlegen(Kartentyp.valueOf(view.userInputWunschtypFestlegen()), spiel);
+                spielverwaltung.wunschtypFestlegen(Kartentyp.valueOf(view.userInputWunschtypFestlegen()));
             }
         } else if (hatKarteGelegtOhneMauZuRufen(anzahlKartenAlt, anzahlKartenNeu)) {
-            view.printKarteGelegt(spielerverwaltung.getSpielerById(id, spiel.getSpielerListe()), gewaehlteKarte);
-            view.printStrafzugKeinMauGerufen(aktuellerSpieler);
+            view.printKarteGelegt(spielerDao.findBys_id(alterSpielerId), gewaehlteKarte);
+            view.printStrafzugKeinMauGerufen(spielerDao.findBys_id(alterSpielerId));
         } else {
-            view.printKarteNichtLegbar(aktuellerSpieler.getHand().get(gewaehlteKarteIndex));
+            view.printKarteNichtLegbar(spielerDao.findHand(alterSpielerId).get(gewaehlteKarteIndex));
         }
     }
 
@@ -321,13 +321,14 @@ public class Controller {
      * Updated den View wenn eine Karte gezogen wurde bzw. wenn wegen einer 7 mehrere Karten gezogen werden mussten.
      *
      */
-    public void updateViewAktionKarteZiehen() throws KarteNichtGezogenException, LeererStapelException {
+    public void updateViewAktionKarteZiehen() throws KarteNichtGezogenException, LeererStapelException, Exception {
+        MauMauSpiel spiel = spielDao.findById(0);
         if (spiel.isSonderregelSiebenAktiv()) {
-            view.printKartenGezogenSonderregel(aktuellerSpieler, spiel);
-            spielverwaltung.karteZiehenSonderregel(aktuellerSpieler, spiel);
+            view.printKartenGezogenSonderregel(spielerDao.findBys_id(spielerDao.findAktuellerSpielerId()), spiel);
+            spielverwaltung.karteZiehenSonderregel();
         } else {
-            spielverwaltung.karteZiehen(aktuellerSpieler, spiel);
-            view.printEineKarteGezogen(aktuellerSpieler);
+            spielverwaltung.karteZiehen();
+            view.printEineKarteGezogen(spielerDao.findBys_id(alterSpielerIdErmitteln()));
         }
     }
 
@@ -335,11 +336,21 @@ public class Controller {
     /**
      * Berechnet die anzahl der Minuspunkte und gibt diese aus.
      */
-    public void updateViewMinuspunkte() {
-        for (Spieler spieler : spiel.getSpielerListe()) {
+    public void updateViewMinuspunkte() throws Exception {
+        //MauMauSpiel spiel = spielDao.findById(0);
+        Spieler spieler;
+        /*for (Spieler player : spielDao.findSpielerlist()) {
+            spieler = player;
             spieler.setPunktestand(spieler.getPunktestand() + spielverwaltung.minuspunkteBerechnen(spieler.getHand()));
+        }*/
+
+        for(int i=1; i<=spielDao.findSpielerlist().size();i++){
+            spieler = spielerDao.findBys_id(i);
+            spieler.setPunktestand(spieler.getPunktestand() + spielverwaltung.minuspunkteBerechnen(spielerDao.findHand(spieler.getS_id())));
+            spielerDao.update(spieler);
         }
-        view.printBerechneteMinuspunkte(spiel);
+
+        view.printBerechneteMinuspunkte(spielDao.findSpielerlist());
     }
 
     /**
@@ -360,6 +371,16 @@ public class Controller {
             }
         }
         return userInput.equalsIgnoreCase("ja");
+    }
+
+    private int alterSpielerIdErmitteln(){
+        int aktuellerSpielerID = spielerDao.findAktuellerSpielerId();
+        if(spielDao.findSpielerlist().size()==aktuellerSpielerID){
+            return 1;
+        }
+        else{
+            return aktuellerSpielerID+1;
+        }
     }
 
 

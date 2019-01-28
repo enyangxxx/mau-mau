@@ -21,7 +21,7 @@ public interface SpielerDao {
 
     public List<Karte> findHand(int s_id);
 
-    public Spieler findAktuellerSpieler();
+    public int findAktuellerSpielerId();
 
     public void updateHatMauGerufen(boolean status, int s_id);
     }

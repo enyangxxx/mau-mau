@@ -1,6 +1,5 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl;
 
-import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
@@ -8,15 +7,10 @@ import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spiele
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,10 +143,10 @@ public class SpielerDaoImpl implements SpielerDao {
         return finalResult;
     }
 
-    public Spieler findAktuellerSpieler(){
+    public int findAktuellerSpielerId(){
         Session session = (Session) entityManager.getDelegate();
-        Spieler aktuellerSpieler = (Spieler) session.createSQLQuery("Select spieler from spieler where spieler_dran = true");
-        return aktuellerSpieler;
+        int aktuellerSpielerId = (Integer) session.createSQLQuery("Select s_id from Spieler where dran = true").uniqueResult();
+        return aktuellerSpielerId;
     }
 
     public void updateHatMauGerufen(boolean status, int s_id){
@@ -160,7 +154,7 @@ public class SpielerDaoImpl implements SpielerDao {
         session.createSQLQuery("Update Spieler set maugerufen ="+String.valueOf(status)+" where s_id="+s_id).executeUpdate();
 
         //session.createSQLQuery("Update MauMauSpiel set runde ="+runde+" where spielid=0").executeUpdate();
-
     }
+
 
 }
