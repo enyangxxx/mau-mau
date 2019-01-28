@@ -37,7 +37,7 @@ public class ConfigServiceImpl {
      * @throws IdDuplikatException    - Wenn eine ID doppelt vergeben wird
      */
     public static void main(String[] args) throws KeinSpielerException, Exception, KarteNichtGezogenException, LeererStapelException {
-        Console.init(new Font(null, Font.BOLD,40));
+        Console.init(new Font(null, Font.BOLD,20));
 
         //controller = new Controller();
 

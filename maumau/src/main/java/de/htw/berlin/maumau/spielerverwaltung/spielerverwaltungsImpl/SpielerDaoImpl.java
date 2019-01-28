@@ -157,7 +157,7 @@ public class SpielerDaoImpl implements SpielerDao {
 
     public void updateHatMauGerufen(boolean status, int s_id){
         Session session = (Session) entityManager.getDelegate();
-        session.createSQLQuery("Update Spieler set \"hatMauGerufen\" ="+String.valueOf(status)+" where s_id="+s_id).executeUpdate();
+        session.createSQLQuery("Update Spieler set maugerufen ="+String.valueOf(status)+" where s_id="+s_id).executeUpdate();
 
         //session.createSQLQuery("Update MauMauSpiel set runde ="+runde+" where spielid=0").executeUpdate();
 
