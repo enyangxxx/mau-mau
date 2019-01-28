@@ -1,9 +1,8 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface;
 
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.*;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
-import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogenException;
-import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 
@@ -20,7 +19,7 @@ public interface ISpielverwaltung {
      * @param spielerliste - Die Liste der teilnehmenden Spieler
      * @return das MauMau Spiel
      */
-    void neuesSpielStarten(List<Spieler> spielerliste) throws KeinSpielerException, Exception;
+    void neuesSpielStarten(List<Spieler> spielerliste) throws KeinSpielerException, Exception, DaoCreateException, DaoFindException;
 
     /**
      * Eine neue Runde wird eingeleitet.
@@ -64,7 +63,8 @@ public interface ISpielverwaltung {
      *
      * @param gewaehlteKarte  - die Karte, die gelegt werden soll
      */
-    void karteLegen(Karte gewaehlteKarte) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception;
+
+    void karteLegen(Karte gewaehlteKarte) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException;
 
 
     /**
@@ -73,7 +73,7 @@ public interface ISpielverwaltung {
      //* @param ablagestapel - der Ablagestapel
      * @return die letzte Karte - die neueste Karte vom Ablagestapel
      */
-    Karte letzteKarteErmitteln();
+    Karte letzteKarteErmitteln() throws DaoFindException;
 
     /**
      * Es wird geprüft, ob der Spieler Mau gesagt hat.
@@ -90,7 +90,7 @@ public interface ISpielverwaltung {
      *
      //* @param spieler - der Spieler
      */
-    void maumauRufen() throws Exception;
+    void maumauRufen() throws Exception, DaoUpdateException, DaoFindException;
 
     /**
      * Der Wert der Hand des {@link Spieler}, der verloren hat, wird berechnet.

@@ -1,5 +1,8 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl;
 
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoCreateException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoRemoveException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
@@ -25,56 +28,37 @@ public class KarteDaoImpl implements KarteDao{
     }
 
 
-    public void create(Karte karte) throws Exception {
+    public void create(Karte karte) throws DaoCreateException {
         try {
             entityManager.persist(karte);
         } catch (PersistenceException e) {
-            //throw new DaoException(e);
-            throw new Exception(e.getMessage());
+            throw new DaoCreateException(e.toString());
         }
     }
 
-    public void createKartenstapel(List<Karte> kartenstapel) throws Exception {
+    public void createKartenstapel(List<Karte> kartenstapel) throws DaoCreateException {
         try {
             entityManager.persist(kartenstapel);
         } catch (PersistenceException e) {
-            //throw new DaoException(e);
-            throw new Exception(e.getMessage());
+            throw new DaoCreateException(e.toString());
         }
     }
 
-    public void remove(Karte karte) throws Exception {
+    public void remove(Karte karte) throws DaoRemoveException {
         try {
             entityManager.remove(karte);
         } catch (PersistenceException e) {
-            //throw new DaoException(e);
-            throw new Exception(e.getMessage());
+            throw new DaoRemoveException(e.toString());
         }
     }
 
-    public void update(Karte karte) throws Exception {
+    public void update(Karte karte) throws DaoUpdateException {
         try {
             entityManager.merge(karte);
         } catch (PersistenceException e) {
-            //throw new DaoException(e);
-            throw new Exception(e.getMessage());
+            throw new DaoUpdateException(e.toString());
         }
     }
-
-    public void insert_update(Karte karte) throws Exception {
-        try {
-            if(entityManager.contains(karte)){
-                entityManager.merge(karte);
-            }
-            else{
-               entityManager.persist(karte);
-            }
-        } catch (PersistenceException e) {
-            //throw new DaoException(e);
-            throw new Exception(e.getMessage());
-        }
-    }
-
 
     public Karte findByTypAndWert(Kartentyp typ, Kartenwert wert) {
 

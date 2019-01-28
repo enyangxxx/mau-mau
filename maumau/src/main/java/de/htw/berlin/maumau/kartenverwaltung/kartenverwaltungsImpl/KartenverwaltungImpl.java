@@ -1,10 +1,12 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl;
 
 
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
-import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.VerdaechtigerStapelException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.InkorrekterStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
@@ -43,7 +45,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      *
      * @return generierter Kartenstapel
      */
-    public void kartenstapelGenerieren() throws Exception {
+    public void kartenstapelGenerieren() throws DaoUpdateException, DaoFindException {
         ArrayList<Karte> kartenstapel = new ArrayList<Karte>();
         for (int i = 0; i < Kartentyp.values().length; i++) {
             for (int a = 0; a < Kartenwert.values().length; a++) {
@@ -64,13 +66,13 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      *
      * //@param kartenstapel - der aktuelle Kartenstapel
      */
-    public void kartenMischen() throws Exception {
+    public void kartenMischen() throws DaoUpdateException, DaoFindException {
         MauMauSpiel spiel = maumauSpielDao.findById(0);
         List<Karte> kartenstapel = maumauSpielDao.findKartenstapel();
         if(kartenstapel.isEmpty()){
             try {
-                throw new VerdaechtigerStapelException("Der Kartenstapel ist leer");
-            } catch (VerdaechtigerStapelException e) {
+                throw new InkorrekterStapelException("Der Kartenstapel ist leer");
+            } catch (InkorrekterStapelException e) {
                 log.error(e.toString());
             }
         }else {
@@ -95,8 +97,8 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
 
         if(!kartenstapel.isEmpty()){
             try {
-                throw new VerdaechtigerStapelException("Der Kartenstapel darf keine Karten haben.");
-            } catch (VerdaechtigerStapelException e) {
+                throw new InkorrekterStapelException("Der Kartenstapel darf keine Karten haben.");
+            } catch (InkorrekterStapelException e) {
             }
         }else{
             try{

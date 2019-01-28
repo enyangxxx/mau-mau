@@ -1,5 +1,7 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface;
 
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 
 import java.util.List;
@@ -13,13 +15,13 @@ public interface IKartenverwaltung {
      * Generiert einen Kartenstapel mit 32 Karten, wobei jede Karte einmal vorkommt.
      * @return generierter Kartenstapel
      */
-    void kartenstapelGenerieren() throws Exception;
+    void kartenstapelGenerieren() throws Exception, DaoUpdateException, DaoFindException;
 
     /**
      * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.
      * //@param kartenstapel - der aktuelle Kartenstapel
      */
-    void kartenMischen() throws Exception;
+    void kartenMischen() throws Exception, DaoUpdateException, DaoFindException;
 
 
     /**

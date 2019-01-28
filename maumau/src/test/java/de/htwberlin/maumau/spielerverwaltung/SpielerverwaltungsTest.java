@@ -1,32 +1,27 @@
 package de.htwberlin.maumau.spielerverwaltung;
 
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
-import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
+
+import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
-import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.junit.Before;
 import org.junit.Test;
-import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
 public class SpielerverwaltungsTest {
-/*
+
     private ISpielerverwaltung spielerverwaltung;
     private List<Spieler> spielerliste;
 
@@ -41,45 +36,7 @@ public class SpielerverwaltungsTest {
         spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
         spielerliste = new ArrayList<Spieler>();
         MockitoAnnotations.initMocks(this);
-        when(kartenverwaltung.kartenstapelGenerieren()).thenReturn(new ArrayList<Karte>() {{
-            add(new Karte(Kartentyp.HERZ, Kartenwert.SIEBEN));
-            add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
-            add(new Karte(Kartentyp.HERZ, Kartenwert.NEUN));
-            add(new Karte(Kartentyp.HERZ, Kartenwert.ZEHN));
-            add(new Karte(Kartentyp.HERZ, Kartenwert.BUBE));
-            add(new Karte(Kartentyp.HERZ, Kartenwert.DAME));
-            add(new Karte(Kartentyp.HERZ, Kartenwert.KOENIG));
-            add(new Karte(Kartentyp.HERZ, Kartenwert.ASS));
-
-            add(new Karte(Kartentyp.PIK, Kartenwert.SIEBEN));
-            add(new Karte(Kartentyp.PIK, Kartenwert.ACHT));
-            add(new Karte(Kartentyp.PIK, Kartenwert.NEUN));
-            add(new Karte(Kartentyp.PIK, Kartenwert.ZEHN));
-            add(new Karte(Kartentyp.PIK, Kartenwert.BUBE));
-            add(new Karte(Kartentyp.PIK, Kartenwert.DAME));
-            add(new Karte(Kartentyp.PIK, Kartenwert.KOENIG));
-            add(new Karte(Kartentyp.PIK, Kartenwert.ASS));
-
-            add(new Karte(Kartentyp.KREUZ, Kartenwert.SIEBEN));
-            add(new Karte(Kartentyp.KREUZ, Kartenwert.ACHT));
-            add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
-            add(new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN));
-            add(new Karte(Kartentyp.KREUZ, Kartenwert.BUBE));
-            add(new Karte(Kartentyp.KREUZ, Kartenwert.DAME));
-            add(new Karte(Kartentyp.KREUZ, Kartenwert.KOENIG));
-            add(new Karte(Kartentyp.KREUZ, Kartenwert.ASS));
-
-            add(new Karte(Kartentyp.KARO, Kartenwert.SIEBEN));
-            add(new Karte(Kartentyp.KARO, Kartenwert.ACHT));
-            add(new Karte(Kartentyp.KARO, Kartenwert.NEUN));
-            add(new Karte(Kartentyp.KARO, Kartenwert.ZEHN));
-            add(new Karte(Kartentyp.KARO, Kartenwert.BUBE));
-            add(new Karte(Kartentyp.KARO, Kartenwert.DAME));
-            add(new Karte(Kartentyp.KARO, Kartenwert.KOENIG));
-            add(new Karte(Kartentyp.KARO, Kartenwert.ASS));
-        }});
     }
-    */
 
     /**
      * Testet, ob ein Spieler mit Namen, Alter und als Computer generiert werden kann, der nicht Null ist.
@@ -94,32 +51,18 @@ public class SpielerverwaltungsTest {
 
 
     /**
-     * Testet, ob ein Spieler mit einer ID generiert werden kann, die bereits zu einem anderen Spieler gehört.
-     * Das erwartete Ergebnis ist eine IdDuplikatException.
-     */
-    //@Test (expected = IdDuplikatException.class)
-    //public void testAddSpielerZurListeIdBereitsVergeben() throws Exception {
-      //  Spieler otto = spielerverwaltung.spielerGenerieren( "Otto",  4,  true);
-        //spielerverwaltung.addSpielerZurListe(otto, spielerliste);
-       // Spieler hans = spielerverwaltung.spielerGenerieren( "Hans",  4,  false);
-        //spielerverwaltung.addSpielerZurListe(hans, spielerliste);
-    //}
 
-
-
-    /**
      * Testet, ob ein neuer Spieler zur Spielerliste hinzugefügt werden kann.
      * Das erwartete Ergebnis ist alteAnzahlSpielerInListe + 1 == neueAnzahlSpielerInListe
      */
-   /* @Test
-    public void testAddSpielerZurListe() throws IdDuplikatException{
+    @Test
+    public void testAddSpielerZurListe() throws DaoFindException {
         int alteAnzahlSpielerInListe = spielerliste.size();
         spielerverwaltung.addSpielerZurListe(caner, spielerliste);
 
         int neueAnzahlSpielerInListe = spielerliste.size();
         assertEquals("Zur Spielerliste muss ein Spieler hinzugefügt worden sein.", alteAnzahlSpielerInListe + 1,neueAnzahlSpielerInListe);
     }
-    */
 
 
     /**
@@ -159,24 +102,23 @@ public class SpielerverwaltungsTest {
      * Testet, ob ein existierender Spieler anhand seiner ID zurückgegeben werden kann.
      * Das erwartete Ergebnis ist der Spieler Caner
      */
-    /*@Test
-    public void testGetSpielerById() throws KeinSpielerException, IdDuplikatException {
+
+    @Test
+    public void testGetSpielerById() throws KeinSpielerException, DaoFindException {
         spielerverwaltung.addSpielerZurListe(caner, spielerliste);
         assertEquals("Der Spieler Caner mit der ID 9 muss zurückgegeben werden.", caner,  spielerverwaltung.getSpielerById(9, spielerliste));
     }
-    */
 
 
     /**
      * Testet, ob kein Spieler zu einer ID gefunden werden kann, die nicht vergeben ist.
      * Das erwartete Ergebnis ist KeinSpielerException.
      */
-    /*@Test(expected = KeinSpielerException.class)
-    public void testgetSpielerByIdIdNichtVergeben() throws KeinSpielerException, IdDuplikatException {
+    @Test(expected = KeinSpielerException.class)
+    public void testgetSpielerByIdIdNichtVergeben() throws KeinSpielerException, DaoFindException {
         spielerverwaltung.addSpielerZurListe(enyang, spielerliste);
         spielerverwaltung.getSpielerById(9, spielerliste);
     }
-    */
 
     /**
      * Testet, ob die Methode KartenAusteilen jedem Spieler aus der Spielerliste 5 Karten austeilt,
