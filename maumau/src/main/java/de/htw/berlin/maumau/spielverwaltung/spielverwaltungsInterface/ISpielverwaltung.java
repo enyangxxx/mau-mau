@@ -1,6 +1,6 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface;
 
-import de.htw.berlin.maumau.enumeration.Kartentyp;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogenException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
@@ -20,7 +20,7 @@ public interface ISpielverwaltung {
      * @param spielerliste - Die Liste der teilnehmenden Spieler
      * @return das MauMau Spiel
      */
-    MauMauSpiel neuesSpielStarten(List<Spieler> spielerliste) throws KeinSpielerException, Exception;
+    void neuesSpielStarten(List<Spieler> spielerliste) throws KeinSpielerException, Exception;
 
     /**
      * Eine neue Runde wird eingeleitet.
@@ -63,23 +63,21 @@ public interface ISpielverwaltung {
      * gelegt werden kann. Falls nicht, dann passiert gar nichts.
      *
      * @param gewaehlteKarte  - die Karte, die gelegt werden soll
-     * @param hand - die Hand des aktuellen Spielers
-     * @param spiel - das aktuelle MauMau-Spiel
      */
-    void karteLegen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException;
+    void karteLegen(Spieler aktuellerSpieler, Karte gewaehlteKarte) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception;
 
 
     /**
      * Ermittelt die letzte {@link Karte} auf dem Ablagestapel und gibt diese zurück.
      *
-     * @param ablagestapel - der Ablagestapel
+     //* @param ablagestapel - der Ablagestapel
      * @return die letzte Karte - die neueste Karte vom Ablagestapel
      */
-    Karte letzteKarteErmitteln(List<Karte> ablagestapel);
+    Karte letzteKarteErmitteln();
 
     /**
      * Es wird geprüft, ob der Spieler Mau gesagt hat.
-     * Wenn ja, muss er keinen Strafzug machen und die Variable hatMauGerufen wird wieder auf false gesetzt.
+     * Wenn ja, muss er keinen Strafzug machen und die Variable isMauGerufen wird wieder auf false gesetzt.
      * Wenn nein, muss er zwei Karten ziehen, indem die Methode karteZiehenMauNichtGerufen() aufgerufen wird.
      *
      * @param spieler  - der Spieler
@@ -88,11 +86,11 @@ public interface ISpielverwaltung {
     void maumauPruefen(Spieler spieler, MauMauSpiel spiel) throws KarteNichtGezogenException, LeererStapelException;
 
     /**
-     * Ein {@link Spieler} ruft Mau Mau und die Variable hatMauGerufen wird auf true gesetzt.
+     * Ein {@link Spieler} ruft Mau Mau und die Variable isMauGerufen wird auf true gesetzt.
      *
-     * @param spieler - der Spieler
+     //* @param spieler - der Spieler
      */
-    void maumauRufen(Spieler spieler);
+    void maumauRufen() throws Exception;
 
     /**
      * Der Wert der Hand des {@link Spieler}, der verloren hat, wird berechnet.

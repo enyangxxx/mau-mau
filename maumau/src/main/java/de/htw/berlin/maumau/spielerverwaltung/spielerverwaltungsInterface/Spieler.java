@@ -6,7 +6,6 @@ import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
@@ -20,7 +19,7 @@ public class Spieler {
     @ElementCollection
     @Embedded
     private List<Karte> hand = new ArrayList<Karte>();
-    private boolean hatMauGerufen;
+    private boolean mauGerufen;
     private boolean dran;
     private boolean istComputer;
     private Karte neueKarte;// Die nächste Karte, die gelegt werden soll
@@ -36,11 +35,11 @@ public class Spieler {
         this.s_id = s_id;
         this.istComputer = istComputer;
         dran = false;
+        mauGerufen = false;
     }
 
-    //@OneToOne
-    //@Column(nullable=true)
-    @Transient
+
+    @Column(nullable = false)
     public Karte getNeueKarte() {
         return neueKarte;
     }
@@ -82,18 +81,17 @@ public class Spieler {
         return dran;
     }
 
-    @Transient
     public void setDran(boolean dran) {
         this.dran = dran;
     }
 
-    @Transient
-    public boolean hatMauGerufen() {
-        return hatMauGerufen;
+    @Column(name = "mauGerufen")
+    public boolean isMauGerufen() {
+        return mauGerufen;
     }
 
-    public void setHatMauGerufen(boolean hatMauGerufen) {
-        this.hatMauGerufen = hatMauGerufen;
+    public void setMauGerufen(boolean mauGerufen) {
+        this.mauGerufen = mauGerufen;
     }
 
     @Column(nullable=true)
@@ -105,12 +103,13 @@ public class Spieler {
         this.punktestand = punktestand;
     }
 
-    //public boolean isIstComputer() {
-        //return istComputer;
-    //}
+    @Column(nullable = false)
+    public boolean isIstComputer() {
+        return istComputer;
+    }
 
-    //public void setIstComputer(boolean istComputer) {
-        //this.istComputer = istComputer;
-    //}
+    public void setIstComputer(boolean istComputer) {
+        this.istComputer = istComputer;
+    }
 
 }

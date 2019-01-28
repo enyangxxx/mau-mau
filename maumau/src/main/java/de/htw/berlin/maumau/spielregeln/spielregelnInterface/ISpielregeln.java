@@ -1,6 +1,6 @@
 package de.htw.berlin.maumau.spielregeln.spielregelnInterface;
 
-import de.htw.berlin.maumau.enumeration.Kartentyp;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 
 /**

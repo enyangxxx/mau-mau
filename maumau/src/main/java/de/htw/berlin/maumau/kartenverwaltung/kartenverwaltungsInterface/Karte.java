@@ -1,9 +1,5 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface;
 
-import de.htw.berlin.maumau.enumeration.Kartentyp;
-import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
-
 import javax.persistence.*;
 
 /**

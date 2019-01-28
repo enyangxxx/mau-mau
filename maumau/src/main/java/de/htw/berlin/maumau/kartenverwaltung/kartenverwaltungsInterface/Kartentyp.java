@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.htw.berlin.maumau.enumeration;
+package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
