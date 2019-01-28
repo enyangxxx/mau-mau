@@ -87,10 +87,13 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
     /**
      * Mischt die Karten des Ablagestapels in den Kartenstapel, außer die oberste Karte des Ablagestapels.
      *
-     * @param ablagestapel - der aktuelle Ablagestapel
-     * @param kartenstapel - der aktuelle Kartenstapel
+     //* @param ablagestapel - der aktuelle Ablagestapel
+     //* @param kartenstapel - der aktuelle Kartenstapel
      */
-    public void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) throws LeererStapelException{
+    public void ablagestapelWiederverwenden() throws LeererStapelException, Exception {
+        MauMauSpiel spiel = maumauSpielDao.findById(0);
+        List<Karte> kartenstapel = maumauSpielDao.findKartenstapel();
+        List<Karte> ablagestapel = maumauSpielDao.findAblagestapel();
 
         if(!kartenstapel.isEmpty()){
             try {
@@ -110,6 +113,9 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
             }
 
         }
+        spiel.setAblagestapel(ablagestapel);
+        spiel.setKartenstapel(kartenstapel);
+        maumauSpielDao.update(spiel);
 
     }
 

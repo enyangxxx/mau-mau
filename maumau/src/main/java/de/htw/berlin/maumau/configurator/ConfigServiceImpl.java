@@ -34,7 +34,9 @@ public class ConfigServiceImpl {
      * @param args
      * @throws KeinSpielerException  - falls keine Spieler vorhanden sind
      */
+
     public static void main(String[] args) throws KeinSpielerException, Exception, KarteNichtGezogenException, LeererStapelException, DaoUpdateException, DaoFindException, DaoCreateException {
+
 
 
         String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();

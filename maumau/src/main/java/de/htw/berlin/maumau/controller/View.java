@@ -150,10 +150,10 @@ public class View {
         return s.toUpperCase();
     }
 
-    public void printBerechneteMinuspunkte(MauMauSpiel spiel){
+    public void printBerechneteMinuspunkte(List<Spieler> spielerliste){
         Console.println();
         Console.println("|  Spielername  |  ID  |  Punktzahl |");
-        for(Spieler spieler : spiel.getSpielerListe()){
+        for(Spieler spieler : spielerliste){
             Console.println();
             Console.println("|  "+spieler.getName()+ "  |  "+ spieler.getS_id()+"  |  "+ spieler.getPunktestand() +"  |");
         }

@@ -26,8 +26,8 @@ public interface IKartenverwaltung {
 
     /**
      * Mischt die Karten des Ablagestapels in den Kartenstapel.
-     * @param ablagestapel - der aktuelle Ablagestapel
-     * @param kartenstapel - der aktuelle Kartenstapel
+     //* @param ablagestapel - der aktuelle Ablagestapel
+     //* @param kartenstapel - der aktuelle Kartenstapel
      */
-    void ablagestapelWiederverwenden(List<Karte> ablagestapel, List<Karte> kartenstapel) throws LeererStapelException;
+    void ablagestapelWiederverwenden() throws LeererStapelException, Exception;
 }

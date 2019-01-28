@@ -25,5 +25,11 @@ public interface SpielerDao {
 
     public Spieler findAktuellerSpieler() throws DaoFindException;
 
+
+    public int findAktuellerSpielerId();
+
+    public void updateHatMauGerufen(boolean status, int s_id);
+
     public void updateHatMauGerufen(boolean status, int s_id) throws DaoUpdateException;
+
     }
