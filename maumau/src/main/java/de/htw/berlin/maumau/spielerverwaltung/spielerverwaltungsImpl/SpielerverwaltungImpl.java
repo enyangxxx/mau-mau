@@ -1,6 +1,5 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl;
 
-import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
@@ -53,14 +52,8 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
      * Der Spieler wird der Spielerliste hinzugefügt.
      * @param spieler      - der neue Spieler
      * @param spielerliste - aktuelle Spielerliste
-     * @throws IdDuplikatException - Wenn eine ID doppelt vergeben wird
      */
-    public void addSpielerZurListe(Spieler spieler, List<Spieler> spielerliste) throws IdDuplikatException {
-        for (Spieler spielerx : spielerliste) {
-            if (spielerx.getS_id() == spieler.getS_id()) {
-                throw new IdDuplikatException("Die ID ist bereits vergeben");
-            }
-        }
+    public void addSpielerZurListe(Spieler spieler, List<Spieler> spielerliste){
 
         spielerliste.add(spielerDao.findBys_id(spieler.getS_id()));
         log.info("Spieler zur Liste hinzugefügt."+ "Name: "+spielerDao.findBys_id(spieler.getS_id()).getName() + "ID:"+spielerDao.findBys_id(spieler.getS_id()).getS_id());

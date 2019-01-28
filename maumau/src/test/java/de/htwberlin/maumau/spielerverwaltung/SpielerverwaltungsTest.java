@@ -2,7 +2,6 @@ package de.htwberlin.maumau.spielerverwaltung;
 
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
@@ -92,24 +91,11 @@ public class SpielerverwaltungsTest {
 
 
     /**
-     * Testet, ob ein Spieler mit einer ID generiert werden kann, die bereits zu einem anderen Spieler gehört.
-     * Das erwartete Ergebnis ist eine IdDuplikatException.
-     */
-    @Test (expected = IdDuplikatException.class)
-    public void testAddSpielerZurListeIdBereitsVergeben() throws Exception {
-        Spieler otto = spielerverwaltung.spielerGenerieren( "Otto",  4,  true);
-        spielerverwaltung.addSpielerZurListe(otto, spielerliste);
-        Spieler hans = spielerverwaltung.spielerGenerieren( "Hans",  4,  false);
-        spielerverwaltung.addSpielerZurListe(hans, spielerliste);
-    }
-
-
-    /**
      * Testet, ob ein neuer Spieler zur Spielerliste hinzugefügt werden kann.
      * Das erwartete Ergebnis ist alteAnzahlSpielerInListe + 1 == neueAnzahlSpielerInListe
      */
     @Test
-    public void testAddSpielerZurListe() throws IdDuplikatException{
+    public void testAddSpielerZurListe(){
         int alteAnzahlSpielerInListe = spielerliste.size();
         spielerverwaltung.addSpielerZurListe(caner, spielerliste);
 
@@ -154,7 +140,7 @@ public class SpielerverwaltungsTest {
      * Das erwartete Ergebnis ist der Spieler Caner
      */
     @Test
-    public void testGetSpielerById() throws KeinSpielerException, IdDuplikatException {
+    public void testGetSpielerById() throws KeinSpielerException{
         spielerverwaltung.addSpielerZurListe(caner, spielerliste);
         assertEquals("Der Spieler Caner mit der ID 9 muss zurückgegeben werden.", caner,  spielerverwaltung.getSpielerById(9, spielerliste));
     }
@@ -165,7 +151,7 @@ public class SpielerverwaltungsTest {
      * Das erwartete Ergebnis ist KeinSpielerException.
      */
     @Test(expected = KeinSpielerException.class)
-    public void testgetSpielerByIdIdNichtVergeben() throws KeinSpielerException, IdDuplikatException {
+    public void testgetSpielerByIdIdNichtVergeben() throws KeinSpielerException{
         spielerverwaltung.addSpielerZurListe(enyang, spielerliste);
         spielerverwaltung.getSpielerById(9, spielerliste);
     }

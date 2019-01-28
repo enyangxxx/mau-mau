@@ -3,7 +3,6 @@ package de.htw.berlin.maumau.controller;
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
-import de.htw.berlin.maumau.errorHandling.*;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.FalscherInputException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogenException;
@@ -63,9 +62,6 @@ public class Controller {
 
     /**
      * Registriert Spieler solange, bis mindestens 2 Spieler registriert sind. sodass eine Runde MauMau gespielt werden kann.
-     *
-     * @throws KeinSpielerException - falls keine Spieler vorhanden sind
-     * @throws IdDuplikatException   - Wenn eine ID doppelt vergeben wird
      */
     public void updateViewSpielerlisteBefuellen() throws Exception {
         view.printWillkommen();

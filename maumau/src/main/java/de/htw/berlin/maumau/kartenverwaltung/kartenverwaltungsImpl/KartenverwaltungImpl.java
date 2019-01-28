@@ -4,7 +4,7 @@ package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl;
 import de.htw.berlin.maumau.enumeration.Kartentyp;
 import de.htw.berlin.maumau.enumeration.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
-import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.VerdaechtigerStapelException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.InkorrekterStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import org.apache.commons.logging.Log;
@@ -61,8 +61,8 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
     public void kartenMischen(List<Karte> kartenstapel){
         if(kartenstapel.isEmpty()){
             try {
-                throw new VerdaechtigerStapelException("Der Kartenstapel ist leer");
-            } catch (VerdaechtigerStapelException e) {
+                throw new InkorrekterStapelException("Der Kartenstapel ist leer");
+            } catch (InkorrekterStapelException e) {
                 log.error(e.toString());
             }
         }else {
@@ -83,8 +83,8 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
 
         if(!kartenstapel.isEmpty()){
             try {
-                throw new VerdaechtigerStapelException("Der Kartenstapel darf keine Karten haben.");
-            } catch (VerdaechtigerStapelException e) {
+                throw new InkorrekterStapelException("Der Kartenstapel darf keine Karten haben.");
+            } catch (InkorrekterStapelException e) {
             }
         }else{
             try{
