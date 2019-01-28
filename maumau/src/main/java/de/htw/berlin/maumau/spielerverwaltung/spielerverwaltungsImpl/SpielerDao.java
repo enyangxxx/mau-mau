@@ -1,5 +1,9 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl;
 
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoCreateException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoRemoveException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 
@@ -7,21 +11,19 @@ import java.util.List;
 
 public interface SpielerDao {
 
-    void create(Spieler spieler) throws Exception;
+    void create(Spieler spieler) throws DaoCreateException;
 
-    void remove(Spieler spieler) throws Exception;
+    void remove(Spieler spieler) throws DaoRemoveException;
 
-    void update(Spieler spieler) throws Exception;
+    void update(Spieler spieler) throws DaoUpdateException;
 
-    void insert_update(Spieler spieler) throws Exception;
+    Spieler findBys_id(int s_id) throws DaoFindException;
 
-    Spieler findBys_id(int s_id);
+    List<Spieler> findAll() throws DaoFindException;
 
-    List<Spieler> findAll();
+    public List<Karte> findHand(int s_id) throws DaoFindException;
 
-    public List<Karte> findHand(int s_id);
+    public Spieler findAktuellerSpieler() throws DaoFindException;
 
-    public Spieler findAktuellerSpieler();
-
-    public void updateHatMauGerufen(boolean status, int s_id);
+    public void updateHatMauGerufen(boolean status, int s_id) throws DaoUpdateException;
     }

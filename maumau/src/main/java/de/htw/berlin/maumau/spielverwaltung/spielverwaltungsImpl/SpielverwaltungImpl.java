@@ -1,13 +1,12 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.*;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.IdNichtVorhandenException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.LeereInitialeSpielerlisteException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.InkorrekterStapelException;
-import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogenException;
-import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerDao;
@@ -61,7 +60,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * @return das MauMau Spiel
      * @throws Exception - Eine Exception kann geworfen werden
      */
-    public void neuesSpielStarten(List<Spieler> spielerliste) throws Exception {
+    public void neuesSpielStarten(List<Spieler> spielerliste) throws DaoCreateException, DaoFindException {
         if (spielerliste.isEmpty()) {
             try {
                 throw new LeereInitialeSpielerlisteException("Leere Spielerliste für das Mau Mau Spiel!");
@@ -205,7 +204,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * @param spiel          - das aktuelle MauMau-Spiel
      * @param id             - die Spieler ID des aktuellen Spielers
      */
-    private void regelwerkUmsetzen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel, int id) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException {
+    private void regelwerkUmsetzen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel, int id) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, DaoFindException {
         if (gewaehlteKarte.getWert().equals(Kartenwert.SIEBEN)) {
             spiel.setSonderregelSiebenAktiv(true);
             spiel.setAnzahlSonderregelKartenZiehen(spiel.getAnzahlSonderregelKartenZiehen() + 2);
@@ -223,7 +222,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      *
      * @return id - die Spieler ID
      */
-    private int aktuellerSpielerIdErmitteln() {
+    private int aktuellerSpielerIdErmitteln() throws DaoFindException {
         int id = 0;
 
         for (Spieler spieler : maumauspielDao.findSpielerlist()) {
@@ -250,7 +249,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      *
      * @param gewaehlteKarte - die Karte, die gelegt werden soll
      */
-    public void karteLegen(Spieler aktuellerSpieler, Karte gewaehlteKarte) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception {
+    public void karteLegen(Spieler aktuellerSpieler, Karte gewaehlteKarte) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException {
         List<Karte> hand = aktuellerSpieler.getHand();
         MauMauSpiel spiel = maumauspielDao.findById(0);
 
@@ -289,7 +288,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      //* @param ablagestapel - der Ablagestapel
      * @return die letzte Karte - die neueste Karte vom Ablagestapel
      */
-    public Karte letzteKarteErmitteln() {
+    public Karte letzteKarteErmitteln() throws DaoFindException {
         List<Karte> ablagestapel = maumauspielDao.findAblagestapel();
         Karte karte;
 
@@ -327,7 +326,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      *
      //* @param spieler - der Spieler
      */
-    public void maumauRufen() throws Exception {
+    public void maumauRufen() throws Exception, DaoUpdateException, DaoFindException {
         //spieler.setMauGerufen(true);
 
         for (Spieler spieler : maumauspielDao.findSpielerlist()) {

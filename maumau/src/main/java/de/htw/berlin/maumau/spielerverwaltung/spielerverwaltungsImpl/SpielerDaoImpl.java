@@ -1,6 +1,9 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl;
 
-import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoCreateException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoRemoveException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
@@ -8,15 +11,11 @@ import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spiele
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
 import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,55 +49,41 @@ public class SpielerDaoImpl implements SpielerDao {
         this.entityManager = entityManager;
     }
 
-    public void create(Spieler spieler) throws Exception {
+    public void create(Spieler spieler) throws DaoCreateException {
         try {
             entityManager.persist(spieler);
         } catch (PersistenceException e) {
-            //throw new DaoException(e);
-            throw new Exception(e.getMessage());
+            throw new DaoCreateException(e.toString());
         }
     }
 
-    public void remove(Spieler spieler) throws Exception {
+    public void remove(Spieler spieler) throws DaoRemoveException {
         try {
             entityManager.remove(spieler);
         } catch (PersistenceException e) {
-            //throw new DaoException(e);
-            throw new Exception(e.getMessage());
+            throw new DaoRemoveException(e.toString());
         }
     }
 
-    public void update(Spieler spieler) throws Exception {
+    public void update(Spieler spieler) throws DaoUpdateException {
         try {
             entityManager.merge(spieler);
         } catch (PersistenceException e) {
-            //throw new DaoException(e);
-            throw new Exception(e.getMessage());
+            throw new DaoUpdateException(e.toString());
         }
     }
 
-    public void insert_update(Spieler spieler) throws Exception {
+    public Spieler findBys_id(int s_id) throws DaoFindException {
+        Spieler spieler;
         try {
-            if(entityManager.contains(spieler)){
-                //entityManager.merge(spieler);
-                log.info("Spieler mit dieser ID bereits in der Datenbank vorhanden.");
-            }
-            else{
-                entityManager.persist(spieler);
-                log.info("Spieler erstellt und in die Datenbank eingefügt.");
-            }
-        } catch (PersistenceException e) {
-            //throw new DaoException(e);
-            throw new Exception(e.getMessage());
+            spieler = entityManager.find(Spieler.class, s_id);
+        }catch(PersistenceException e){
+            throw new DaoFindException(e.toString());
         }
+        return spieler;
     }
 
-    public Spieler findBys_id(int s_id)
-    {
-        return entityManager.find(Spieler.class,s_id);
-    }
-
-    public List<Spieler> findAll() {
+    public List<Spieler> findAll() throws DaoFindException {
         /*CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Spieler> cq = cb.createQuery(Spieler.class);
         Root<Spieler> rootEntry = cq.from(Spieler.class);
@@ -107,32 +92,51 @@ public class SpielerDaoImpl implements SpielerDao {
         //log.info(allQuery.getSingleResult().getName());
         //return allQuery.getResultList();
         */
+        List<Spieler> spielerliste;
 
-        entityManager.getTransaction().begin();
-        List<Spieler> spielerliste = entityManager.createQuery("Select t from Spieler t").getResultList();
-
-        entityManager.getTransaction().commit();
-        entityManager.close();
-        //log.info(spielerliste.get(0));
+        try {
+            entityManager.getTransaction().begin();
+            spielerliste = entityManager.createQuery("Select t from Spieler t").getResultList();
+            entityManager.getTransaction().commit();
+        }catch(PersistenceException e){
+            throw new DaoFindException(e.toString());
+        }finally {
+            entityManager.close();
+        }
 
         return spielerliste;
     }
 
-    public void createSpielerlisteTable(){
-        entityManager.createNativeQuery("Create table Spielerliste").executeUpdate();
+    public void createSpielerlisteTable() throws DaoCreateException {
+        try {
+            entityManager.createNativeQuery("Create table Spielerliste").executeUpdate();
+        } catch (PersistenceException e) {
+            throw new DaoCreateException(e.toString());
+        }
     }
 
-    public void addToTableSpielerliste(Spieler spieler){
-        entityManager.createNativeQuery("Insert into spielerliste "+spieler).executeUpdate();
+    public void addToTableSpielerliste(Spieler spieler) throws DaoUpdateException {
+        try {
+            entityManager.createNativeQuery("Insert into spielerliste "+spieler).executeUpdate();
+        } catch (PersistenceException e) {
+            throw new DaoUpdateException(e.toString());
+        }
     }
 
-    public List<Karte> findHand(int s_id){
+    public List<Karte> findHand(int s_id) throws DaoFindException {
         //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
         //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Session session = (Session) entityManager.getDelegate();
+        List<Integer> resultKartentyp;
+        List<Integer> resultKartenwert;
 
-        List<Integer> resultKartentyp = (List<Integer>) session.createSQLQuery("Select typ from Spieler_hand where spieler_s_id=" +s_id).list();
-        List<Integer> resultKartenwert = (List<Integer>) session.createSQLQuery("Select wert from Spieler_hand where spieler_s_id=" +s_id).list();
+        try {
+            resultKartentyp = (List<Integer>) session.createSQLQuery("Select typ from Spieler_hand where spieler_s_id=" +s_id).list();
+            resultKartenwert = (List<Integer>) session.createSQLQuery("Select wert from Spieler_hand where spieler_s_id=" +s_id).list();
+
+        } catch (PersistenceException e) {
+            throw new DaoFindException(e.toString());
+        }
 
         List<Karte> finalResult = new ArrayList<Karte>();
 
@@ -149,16 +153,26 @@ public class SpielerDaoImpl implements SpielerDao {
         return finalResult;
     }
 
-    public Spieler findAktuellerSpieler(){
+    public Spieler findAktuellerSpieler() throws DaoFindException {
         Session session = (Session) entityManager.getDelegate();
-        Spieler aktuellerSpieler = (Spieler) session.createSQLQuery("Select spieler from spieler where spieler_dran = true");
+        Spieler aktuellerSpieler;
+
+        try {
+            aktuellerSpieler = (Spieler) session.createSQLQuery("Select spieler from spieler where spieler_dran = true");
+        } catch (PersistenceException e) {
+            throw new DaoFindException(e.toString());
+        }
+
         return aktuellerSpieler;
     }
 
-    public void updateHatMauGerufen(boolean status, int s_id){
+    public void updateHatMauGerufen(boolean status, int s_id) throws DaoUpdateException {
         Session session = (Session) entityManager.getDelegate();
-        session.createSQLQuery("Update Spieler set maugerufen ="+String.valueOf(status)+" where s_id="+s_id).executeUpdate();
-
+        try {
+            session.createSQLQuery("Update Spieler set maugerufen ="+String.valueOf(status)+" where s_id="+s_id).executeUpdate();
+        } catch (PersistenceException e) {
+            throw new DaoUpdateException(e.toString());
+        }
         //session.createSQLQuery("Update MauMauSpiel set runde ="+runde+" where spielid=0").executeUpdate();
 
     }

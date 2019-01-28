@@ -1,6 +1,8 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl;
 
 
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
@@ -43,7 +45,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      *
      * @return generierter Kartenstapel
      */
-    public void kartenstapelGenerieren() throws Exception {
+    public void kartenstapelGenerieren() throws DaoUpdateException, DaoFindException {
         ArrayList<Karte> kartenstapel = new ArrayList<Karte>();
         for (int i = 0; i < Kartentyp.values().length; i++) {
             for (int a = 0; a < Kartenwert.values().length; a++) {
@@ -64,7 +66,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      *
      * //@param kartenstapel - der aktuelle Kartenstapel
      */
-    public void kartenMischen() throws Exception {
+    public void kartenMischen() throws DaoUpdateException, DaoFindException {
         MauMauSpiel spiel = maumauSpielDao.findById(0);
         List<Karte> kartenstapel = maumauSpielDao.findKartenstapel();
         if(kartenstapel.isEmpty()){

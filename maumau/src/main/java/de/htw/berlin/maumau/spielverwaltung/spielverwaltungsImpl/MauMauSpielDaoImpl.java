@@ -1,5 +1,9 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoCreateException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoRemoveException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
@@ -37,25 +41,23 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
         this.entityManager = entityManager;
     }
 
-    public void create(MauMauSpiel spiel) throws Exception {
+    public void create(MauMauSpiel spiel) throws DaoCreateException {
         try {
             entityManager.persist(spiel);
         } catch (PersistenceException e) {
-            //throw new DaoException(e);
-            throw new Exception(e.getMessage());
+            throw new DaoCreateException(e.getMessage());
         }
     }
 
-    public void remove(MauMauSpiel spiel) throws Exception {
+    public void remove(MauMauSpiel spiel) throws DaoRemoveException {
         try {
             entityManager.remove(spiel);
         } catch (PersistenceException e) {
-            //throw new DaoException(e);
-            throw new Exception(e.getMessage());
+            throw new DaoRemoveException(e.getMessage());
         }
     }
 
-    public void update(MauMauSpiel spiel) throws Exception {
+    public void update(MauMauSpiel spiel) throws DaoUpdateException {
         Session session = (Session) entityManager.getDelegate();
         //session.merge(spiel);
         try {
@@ -63,40 +65,37 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
             //session.update(spiel);
             entityManager.merge(spiel);
         } catch (PersistenceException e) {
-            //throw new DaoException(e);
-            throw new Exception(e.getMessage());
+            throw new DaoUpdateException(e.getMessage());
         }
     }
 
-    public void insert_update(MauMauSpiel spiel) throws Exception {
-        try {
-            if(entityManager.contains(spiel)){
-                entityManager.merge(spiel);
-            }
-            else{
-                entityManager.persist(spiel);
-            }
-        } catch (PersistenceException e) {
-            //throw new DaoException(e);
-            throw new Exception(e.getMessage());
-        }
-    }
-    public List<Spieler> findSpielerlist(){
+    public List<Spieler> findSpielerlist() throws DaoFindException {
         //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
         //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Session session = (Session) entityManager.getDelegate();
-        List<Spieler> result = (List<Spieler>) session.createQuery("from Spieler").list();
+        List<Spieler> result;
+        try {
+            result = (List<Spieler>) session.createQuery("from Spieler").list();
+        } catch (PersistenceException e) {
+            throw new DaoFindException(e.getMessage());
+        }
 
         return result;
     }
 
-    public List<Karte> findKartenstapel(){
+    public List<Karte> findKartenstapel() throws DaoFindException {
         //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
         //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Session session = (Session) entityManager.getDelegate();
+        List<Integer> resultKartentyp;
+        List<Integer> resultKartenwert;
 
-        List<Integer> resultKartentyp = (List<Integer>) session.createSQLQuery("Select typ from MauMauSpiel_kartenstapel").list();
-        List<Integer> resultKartenwert = (List<Integer>) session.createSQLQuery("Select wert from MauMauSpiel_kartenstapel").list();
+        try {
+            resultKartentyp = (List<Integer>) session.createSQLQuery("Select typ from MauMauSpiel_kartenstapel").list();
+            resultKartenwert = (List<Integer>) session.createSQLQuery("Select wert from MauMauSpiel_kartenstapel").list();
+        } catch (PersistenceException e) {
+            throw new DaoFindException(e.getMessage());
+        }
 
         List<Karte> finalResult = new ArrayList<Karte>();
 
@@ -113,13 +112,20 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
         return finalResult;
     }
 
-    public List<Karte> findAblagestapel(){
+    public List<Karte> findAblagestapel() throws DaoFindException {
         //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
         //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Session session = (Session) entityManager.getDelegate();
 
-        List<Integer> resultKartentyp = (List<Integer>) session.createSQLQuery("Select typ from MauMauSpiel_ablagestapel").list();
-        List<Integer> resultKartenwert = (List<Integer>) session.createSQLQuery("Select wert from MauMauSpiel_ablagestapel").list();
+        List<Integer> resultKartentyp;
+        List<Integer> resultKartenwert;
+
+        try {
+            resultKartentyp = (List<Integer>) session.createSQLQuery("Select typ from MauMauSpiel_ablagestapel").list();
+            resultKartenwert = (List<Integer>) session.createSQLQuery("Select wert from MauMauSpiel_ablagestapel").list();
+        } catch (PersistenceException e) {
+            throw new DaoFindException(e.getMessage());
+        }
 
         List<Karte> finalResult = new ArrayList<Karte>();
 
@@ -137,19 +143,27 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
     }
 
     ///////////////////////
-    public void updateRunde(int runde){
+    public void updateRunde(int runde) throws DaoUpdateException {
         Session session = (Session) entityManager.getDelegate();
-        session.createSQLQuery("Update MauMauSpiel set runde ="+runde+" where spielid=0").executeUpdate();
+        try {
+            session.createSQLQuery("Update MauMauSpiel set runde ="+runde+" where spielid=0").executeUpdate();
+        } catch (PersistenceException e) {
+            throw new DaoUpdateException(e.getMessage());
+        }
+
     }
 
     public void updateKartenstapel(List<Karte> kartenstapel){
 
     }
 
-
-
-    public MauMauSpiel findById(int spielId)
-    {
-        return entityManager.find(MauMauSpiel.class,spielId);
+    public MauMauSpiel findById(int spielId) throws DaoFindException {
+        MauMauSpiel mauMauSpiel;
+        try {
+            mauMauSpiel = entityManager.find(MauMauSpiel.class,spielId);
+        } catch (PersistenceException e) {
+            throw new DaoFindException(e.getMessage());
+        }
+        return mauMauSpiel;
     }
 }

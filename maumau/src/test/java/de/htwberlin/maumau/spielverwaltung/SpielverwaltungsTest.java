@@ -1,6 +1,8 @@
 package de.htwberlin.maumau.spielverwaltung;
 
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoCreateException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
@@ -85,7 +87,7 @@ public class SpielverwaltungsTest {
      * Das erwartete Ergebnis ist KeinSpielerException
      */
     @Test
-    public void testNeuesSpielStartenMitSpielerlisteOhneSpieler() throws KeinSpielerException, Exception {
+    public void testNeuesSpielStartenMitSpielerlisteOhneSpieler() throws KeinSpielerException, Exception, DaoCreateException, DaoFindException {
         exceptionRule.expect(KeinSpielerException.class);
         spielverwaltung.neuesSpielStarten(spielerliste);
     }
