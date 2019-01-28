@@ -29,5 +29,5 @@ public interface IKartenverwaltung {
      //* @param ablagestapel - der aktuelle Ablagestapel
      //* @param kartenstapel - der aktuelle Kartenstapel
      */
-    void ablagestapelWiederverwenden() throws LeererStapelException, Exception;
+    void ablagestapelWiederverwenden() throws LeererStapelException, Exception, DaoFindException, DaoUpdateException;
 }

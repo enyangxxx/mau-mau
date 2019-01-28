@@ -90,7 +90,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      //* @param ablagestapel - der aktuelle Ablagestapel
      //* @param kartenstapel - der aktuelle Kartenstapel
      */
-    public void ablagestapelWiederverwenden() throws LeererStapelException, Exception {
+    public void ablagestapelWiederverwenden() throws LeererStapelException, Exception, DaoFindException, DaoUpdateException {
         MauMauSpiel spiel = maumauSpielDao.findById(0);
         List<Karte> kartenstapel = maumauSpielDao.findKartenstapel();
         List<Karte> ablagestapel = maumauSpielDao.findAblagestapel();

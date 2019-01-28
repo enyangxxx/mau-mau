@@ -262,7 +262,7 @@ public class Controller {
      * @param anzahlKartenNeu - die Anzahl der Karten auf der Hand nach dem Aufruf der Servicemethode "Karte legen"
      * @return true - wenn er eine Karte gelegt hat ohne Mau zu rufen
      */
-    private boolean hatKarteGelegtOhneMauZuRufen(int anzahlKartenAlt, int anzahlKartenNeu) {
+    private boolean hatKarteGelegtOhneMauZuRufen(int anzahlKartenAlt, int anzahlKartenNeu) throws DaoFindException {
         if (anzahlKartenAlt == 2 && anzahlKartenNeu == 3) {
             //return !aktuellerSpieler.isMauGerufen();
             return !spielerDao.findBys_id(alterSpielerIdErmitteln()).isMauGerufen();
@@ -320,7 +320,7 @@ public class Controller {
      * Updated den View wenn eine Karte gezogen wurde bzw. wenn wegen einer 7 mehrere Karten gezogen werden mussten.
      *
      */
-    public void updateViewAktionKarteZiehen() throws KarteNichtGezogenException, LeererStapelException, Exception {
+    public void updateViewAktionKarteZiehen() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException {
         MauMauSpiel spiel = spielDao.findById(0);
         if (spiel.isSonderregelSiebenAktiv()) {
             view.printKartenGezogenSonderregel(spielerDao.findBys_id(spielerDao.findAktuellerSpielerId()), spiel);
@@ -335,7 +335,7 @@ public class Controller {
     /**
      * Berechnet die anzahl der Minuspunkte und gibt diese aus.
      */
-    public void updateViewMinuspunkte() throws Exception {
+    public void updateViewMinuspunkte() throws Exception, DaoFindException, DaoUpdateException {
         //MauMauSpiel spiel = spielDao.findById(0);
         Spieler spieler;
         /*for (Spieler player : spielDao.findSpielerlist()) {
@@ -372,7 +372,7 @@ public class Controller {
         return userInput.equalsIgnoreCase("ja");
     }
 
-    private int alterSpielerIdErmitteln(){
+    private int alterSpielerIdErmitteln() throws DaoFindException {
         int aktuellerSpielerID = spielerDao.findAktuellerSpielerId();
         if(spielDao.findSpielerlist().size()==aktuellerSpielerID){
             return 1;

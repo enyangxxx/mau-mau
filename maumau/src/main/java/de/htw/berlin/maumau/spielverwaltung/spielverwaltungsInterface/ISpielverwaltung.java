@@ -35,7 +35,7 @@ public interface ISpielverwaltung {
      //* @param spieler - der Spieler
      //* @param spiel - das aktuelle MauMau-Spiel
      */
-    void karteZiehen() throws KarteNichtGezogenException, LeererStapelException, Exception;
+    void karteZiehen() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException;
 
     /**
      * Ein {@link Spieler} zieht eine bestimmte Anzahl von {@link Karte} vom Kartenstapel.
@@ -45,7 +45,7 @@ public interface ISpielverwaltung {
      //* @param spieler - der Spieler
      //* @param spiel - das aktuelle MauMau-Spiel
      */
-    void karteZiehenSonderregel() throws KarteNichtGezogenException, LeererStapelException, Exception;
+    void karteZiehenSonderregel() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException;
 
     /**
      * Diese Merhode wird verwendet, wenn der {@link Spieler} nicht Mau gerufen hat. Er zieht zwei Karten als Strafe
@@ -54,7 +54,7 @@ public interface ISpielverwaltung {
      //* @param spieler  - der Spieler
      //* @param spiel - das aktuelle MauMau-Spiel
      */
-    void karteZiehenMauNichtGerufen() throws KarteNichtGezogenException, LeererStapelException, Exception;
+    void karteZiehenMauNichtGerufen() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException;
 
     /**
      * Es wird überprüft, ob die gewählte Karte legbar ist. Wenn dies der Fall ist, dann wird überprüft, ob für das Spiel
@@ -83,7 +83,7 @@ public interface ISpielverwaltung {
      //* @param spieler  - der Spieler
      //* @param spiel - das aktuelle MauMau-Spiel
      */
-    void maumauPruefen() throws KarteNichtGezogenException, LeererStapelException, Exception;
+    void maumauPruefen() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException;
 
     /**
      * Ein {@link Spieler} ruft Mau Mau und die Variable isMauGerufen wird auf true gesetzt.
@@ -107,5 +107,5 @@ public interface ISpielverwaltung {
      * @param wunschtyp - der zu setzende Wunschtyp
      //* @param spiel - das aktuelle Spiel
      */
-    void wunschtypFestlegen(Kartentyp wunschtyp) throws Exception;
+    void wunschtypFestlegen(Kartentyp wunschtyp) throws Exception, DaoFindException, DaoUpdateException;
 }

@@ -94,7 +94,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      //* @param spieler - der Spieler
      //* @param spiel   - das aktuelle MauMau-Spiel
      */
-    public void karteZiehen() throws KarteNichtGezogenException, LeererStapelException, Exception {
+    public void karteZiehen() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException {
         MauMauSpiel spiel = maumauspielDao.findById(0);
         Spieler aktuellerSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         List<Karte> ablagestapel = maumauspielDao.findAblagestapel();
@@ -132,7 +132,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      //* @param spieler - der Spieler
      //* @param spiel   - das aktuelle MauMau-Spiel
      */
-    public void karteZiehenMauNichtGerufen() throws KarteNichtGezogenException, LeererStapelException, Exception {
+    public void karteZiehenMauNichtGerufen() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException {
         MauMauSpiel spiel = maumauspielDao.findById(0);
         Spieler spieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         List<Karte> ablagestapel = maumauspielDao.findAblagestapel();
@@ -170,7 +170,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      //* @param spieler - der Spieler
      //* @param spiel   - das aktuelle MauMau-Spiel
      */
-    public void karteZiehenSonderregel() throws KarteNichtGezogenException, LeererStapelException, Exception {
+    public void karteZiehenSonderregel() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException {
         MauMauSpiel spiel = maumauspielDao.findById(0);
         Spieler aktuellerSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         List<Karte> ablagestapel = maumauspielDao.findAblagestapel();
@@ -210,7 +210,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      //* @param hand           - die Hand des aktuellen Spielers
      //* @param spiel          - das aktuelle MauMau-Spiel
      */
-    private void karteVonHandAufStapelLegen(Karte gewaehlteKarte) throws Exception {
+    private void karteVonHandAufStapelLegen(Karte gewaehlteKarte) throws Exception, DaoFindException, DaoUpdateException {
         Spieler aktuellerSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         List<Karte> hand = spielerDao.findHand(aktuellerSpieler.getS_id());
         aktuellerSpieler.setHand(hand);
@@ -258,7 +258,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * @param id             - die Spieler ID des aktuellen Spielers
      */
 
-    private void regelwerkUmsetzen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel, int id) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException {
+    private void regelwerkUmsetzen(Karte gewaehlteKarte, List<Karte> hand, MauMauSpiel spiel, int id) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException {
 
         if (gewaehlteKarte.getWert().equals(Kartenwert.SIEBEN)) {
             spiel.setSonderregelSiebenAktiv(true);
@@ -370,7 +370,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      //* @param spieler - der Spieler
      //* @param spiel   - das aktuelle MauMau-Spiel
      */
-    public void maumauPruefen() throws KarteNichtGezogenException, LeererStapelException, Exception {
+    public void maumauPruefen() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException {
         Spieler spieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         if (spieler.isMauGerufen()) {
             log.info(MAU_GERUFEN_MESSAGE);
@@ -457,7 +457,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * @param wunschtyp - der zu setzende Wunschtyp
      //* @param spiel     - das aktuelle Spiel
      */
-    public void wunschtypFestlegen(Kartentyp wunschtyp) throws Exception {
+    public void wunschtypFestlegen(Kartentyp wunschtyp) throws Exception, DaoFindException, DaoUpdateException {
         MauMauSpiel spiel = maumauspielDao.findById(0);
         spiel.setAktuellerWunschtyp(wunschtyp);
         maumauspielDao.update(spiel);

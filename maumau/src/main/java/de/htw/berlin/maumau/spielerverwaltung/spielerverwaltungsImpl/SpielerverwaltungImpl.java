@@ -70,7 +70,7 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
      * Der aktuelle Spieler ist nicht mehr dran, der nächste Spieler ist dran.
      //* @param spiel - das aktuelle MauMau-Spiel
      */
-    public void spielerWechseln() throws Exception {
+    public void spielerWechseln() throws Exception, DaoFindException, DaoUpdateException {
         MauMauSpiel spiel = maumauSpielDao.findById(0);
         List<Spieler> spielerliste = maumauSpielDao.findSpielerlist();
         Spieler alterSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
