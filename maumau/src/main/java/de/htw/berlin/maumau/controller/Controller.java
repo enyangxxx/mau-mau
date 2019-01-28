@@ -100,9 +100,6 @@ public class Controller {
 
     /**
      * Registriert Spieler solange, bis mindestens 2 Spieler registriert sind. sodass eine Runde MauMau gespielt werden kann.
-     *
-     * @throws KeinSpielerException - falls keine Spieler vorhanden sind
-     * @throws IdDuplikatException   - Wenn eine ID doppelt vergeben wird
      */
     public void updateViewSpielerlisteBefuellen() throws Exception {
         view.printWillkommen();

@@ -1,6 +1,5 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface;
 
-import de.htw.berlin.maumau.errorHandling.IdDuplikatException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
@@ -26,9 +25,8 @@ public interface ISpielerverwaltung {
      * Der Spieler wird der Spielerliste hinzugefügt.
      * @param spieler      - der neue Spieler
      * @param spielerliste - aktuelle Spielerliste
-     * @throws IdDuplikatException - Wenn eine ID doppelt vergeben wird
      */
-    void addSpielerZurListe(Spieler spieler, List<Spieler> spielerliste) throws IdDuplikatException;
+    void addSpielerZurListe(Spieler spieler, List<Spieler> spielerliste);
 
     /**
      * Der aktuelle Spieler ist nicht mehr dran, der nächste Spieler ist dran.

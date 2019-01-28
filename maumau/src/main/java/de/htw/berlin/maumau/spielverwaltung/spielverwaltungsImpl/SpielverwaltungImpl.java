@@ -5,7 +5,7 @@ import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwe
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.IdNichtVorhandenException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.LeereInitialeSpielerlisteException;
-import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.VerdaechtigerStapelException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.InkorrekterStapelException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogenException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
@@ -297,7 +297,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
             karte = ablagestapel.get(ablagestapel.size() - 1);
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new VerdaechtigerStapelException(ABLAGESTAPEL_LEER_MESSAGE);
+            throw new InkorrekterStapelException(ABLAGESTAPEL_LEER_MESSAGE);
         }
 
         return karte;
