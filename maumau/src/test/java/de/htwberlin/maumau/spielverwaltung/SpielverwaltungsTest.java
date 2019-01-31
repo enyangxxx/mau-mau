@@ -110,7 +110,7 @@ public class SpielverwaltungsTest {
      * Teste die Funktionalität, eine neue Karte zu ziehen.
      * Das erwartete Ergebnis ist alteAnzahlKartenInHand + 1 && alteKartenstapelMenge - 1
      */
-    @Test
+   /* @Test
     public void testKarteZiehen() throws KarteNichtGezogenException, LeererStapelException {
         spielerliste.add(hans);
         Spieler spieler = spielerliste.get(0);
@@ -130,12 +130,13 @@ public class SpielverwaltungsTest {
         assertEquals("Die Hand muss um 1 Karte erweitert sein", alteAnzahlKartenInHand + 1, neueAnzahlKartenInHand);
         assertEquals("Der Kartenstapel muss um 1 Karte verringert sein", alteKartenstapelMenge - 1, neueKartenstapelMenge);
     }
+    */
 
     /**
      * Teste die Funktionalität, zwei Karten zu ziehen.
      * Das erwartete Ergebnis ist alteAnzahlKartenInHand + 2 && alteKartenstapelMenge - 2
      */
-    @Test
+    /*@Test
     public void testZweiKartenZiehen() throws KarteNichtGezogenException, LeererStapelException {
         spielerliste.add(hans);
         Spieler spieler = spielerliste.get(0);
@@ -157,12 +158,13 @@ public class SpielverwaltungsTest {
         assertEquals("Der Kartenstapel muss um 2 Karten verringert sein", alteKartenstapelMenge - 2, neueKartenstapelMenge);
 
     }
+    */
 
     /**
      * Teste die Funktionalität, zwei Karten zu ziehen.
      * Das erwartete Ergebnis ist alteAnzahlKartenInHand + 2 && alteKartenstapelMenge - 2
      */
-    @Test
+    /*@Test
     public void testDreiKartenZiehen() throws KarteNichtGezogenException, LeererStapelException {
         spielerliste.add(hans);
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
@@ -183,7 +185,7 @@ public class SpielverwaltungsTest {
         assertEquals("Die Hand muss um 3 Karten erweitert sein", alteAnzahlKartenInHand + 3, neueAnzahlKartenInHand);
         assertEquals("Der Kartenstapel muss um 3 Karten verringert sein", alteKartenstapelMenge - 3, neueKartenstapelMenge);
 
-    }
+    }*/
 
     /**
      * Teste die Funktionalität, eine Karte zu ziehen, wenn der Kartenstapel leer ist.
@@ -191,7 +193,7 @@ public class SpielverwaltungsTest {
      * und somit nicht mehr leer ist. Nach dem Ziehen der Karte darf der Kartenstapel nur noch eine
      * Karte enthalten. Erwartet wird alteAnzahlKartenInHand + 1 und dass der ablagestapel nicht leer ist.
      */
-    @Test
+    /*@Test
     public void testKarteZiehenLeererStapel() throws KarteNichtGezogenException, LeererStapelException {
         List<Karte> kartenstapel = new ArrayList<Karte>();
         spielerliste.add(hans);
@@ -209,6 +211,7 @@ public class SpielverwaltungsTest {
         assertEquals("Die Hand muss um 1 Karte erweitert sein.", alteAnzahlKartenInHand + 1, spieler.getHand().size());
         assertTrue("Der Ablagestapel darf nicht leer sein.", !ablagestapel.isEmpty());
     }
+    */
 
     /**
      * Teste die Funktionalität, eine Karte nicht zu legen, weil diese nicht legbar ist.
@@ -279,7 +282,7 @@ public class SpielverwaltungsTest {
      * Teste die Funktionalität zu prüfen, ob ein Spieler MauMau gerufen hat und ob er zur Strafe 2 Karten gezogen hat.
      * Das erwartete Ergebnis ist ein unveränderter Kartenstapel, bedeutet dass Spieler keine Karten zur Strafe gezogen hat
      */
-    @Test
+   /* @Test
     public void testMauMauPruefenWennTrue() throws KarteNichtGezogenException, LeererStapelException {
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
         hans.setMauGerufen(true);
@@ -288,13 +291,13 @@ public class SpielverwaltungsTest {
         int neueKartenstapelMenge = ablagestapel.size();
 
         assertEquals("Der Kartenstapel soll sich nicht verrringert haben, wenn MauMau gerufen wurde", alteKartenstapelMenge, neueKartenstapelMenge);
-    }
+    }*/
 
     /**
      * Teste die Funktionalität zu prüfen, ob ein Spieler MauMau gerufen hat und ob er zur Strafe 2 Karten gezogen hat.
      * Das erwartete Ergebnis ist alteMengeInHand + 2 && alteKartenstapelMenge - 2
      */
-    @Test
+    /*@Test
     public void testMauMauPruefenWennFalse() throws KarteNichtGezogenException, LeererStapelException {
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
         spiel.setAblagestapel(ablagestapel);
@@ -312,7 +315,7 @@ public class SpielverwaltungsTest {
 
         assertEquals("Die Hand soll sich um 2 Karten erweitert haben, wenn MauMau nicht gerufen wurde", alteMengeInHand + 2, neueMengeInHand);
         assertEquals("Der Kartenstapel soll sich um 2 Karten verrringert haben, wenn MauMau nicht gerufen wurde", alteKartenstapelMenge - 2, neueKartenstapelMenge);
-    }
+    }*/
 
     /**
      * Teste die Funktionalität, MauMau zu rufen.

@@ -33,9 +33,9 @@ public interface ISpielerverwaltung {
 
     /**
      * Der aktuelle Spieler ist nicht mehr dran, der nächste Spieler ist dran.
-     * @param spiel - das aktuelle MauMau-Spiel
+     //* @param spiel - das aktuelle MauMau-Spiel
      */
-    void spielerWechseln(MauMauSpiel spiel);
+    void spielerWechseln() throws Exception, DaoFindException, DaoUpdateException;
 
     /**
      * Der Spieler wird durch die eindeutige ID ermittelt.

@@ -1,9 +1,11 @@
 package de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl;
 
+
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoCreateException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoRemoveException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
+
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
@@ -14,8 +16,10 @@ import org.hibernate.Session;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -153,6 +157,13 @@ public class SpielerDaoImpl implements SpielerDao {
         return finalResult;
     }
 
+
+    public int findAktuellerSpielerId(){
+        Session session = (Session) entityManager.getDelegate();
+        int aktuellerSpielerId = (Integer) session.createSQLQuery("Select s_id from Spieler where dran = true").uniqueResult();
+        return aktuellerSpielerId;
+    }
+      
     public Spieler findAktuellerSpieler() throws DaoFindException {
         Session session = (Session) entityManager.getDelegate();
         Spieler aktuellerSpieler;
@@ -164,6 +175,7 @@ public class SpielerDaoImpl implements SpielerDao {
         }
 
         return aktuellerSpieler;
+
     }
 
     public void updateHatMauGerufen(boolean status, int s_id) throws DaoUpdateException {
@@ -174,7 +186,7 @@ public class SpielerDaoImpl implements SpielerDao {
             throw new DaoUpdateException(e.toString());
         }
         //session.createSQLQuery("Update MauMauSpiel set runde ="+runde+" where spielid=0").executeUpdate();
-
     }
+
 
 }
