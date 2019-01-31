@@ -3,7 +3,7 @@ package de.htw.berlin.maumau.errorHandling.technischeExceptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class DaoUpdateException extends Throwable {
+public class DaoUpdateException extends Exception {
 
     private static final String DEFAULT_MESSAGE = "Update konnte nicht vollgezogen werden";
 

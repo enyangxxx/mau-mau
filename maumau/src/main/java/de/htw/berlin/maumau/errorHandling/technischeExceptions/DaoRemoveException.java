@@ -3,7 +3,7 @@ package de.htw.berlin.maumau.errorHandling.technischeExceptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class DaoRemoveException extends Throwable {
+public class DaoRemoveException extends Exception {
     private static final String DEFAULT_MESSAGE = "Remove konnte nicht vollgezogen werden";
 
     private Log log = LogFactory.getLog(DaoRemoveException.class);

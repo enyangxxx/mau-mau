@@ -3,7 +3,7 @@ package de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class LeereInitialeSpielerlisteException extends Throwable {
+public class LeereInitialeSpielerlisteException extends Exception {
 
     private static final String DEFAULT_MESSAGE = "Die Spielerliste darf nicht leer sein";
 

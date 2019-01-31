@@ -3,7 +3,7 @@ package de.htw.berlin.maumau.errorHandling.technischeExceptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class LeererStapelException extends Throwable {
+public class LeererStapelException extends Exception {
     private static final String DEFAULT_MESSAGE = "Der Stapel ist leer";
 
     private Log log = LogFactory.getLog(LeererStapelException.class);

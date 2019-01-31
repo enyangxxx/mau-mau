@@ -6,7 +6,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
-public class KeinSpielerException extends Throwable{
+public class KeinSpielerException extends Exception{
 
     private static final String DEFAULT_MESSAGE = "Kein Spieler konnte gefunden werden!";
 

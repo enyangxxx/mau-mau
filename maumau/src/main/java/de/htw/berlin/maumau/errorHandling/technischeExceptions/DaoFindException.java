@@ -3,7 +3,7 @@ package de.htw.berlin.maumau.errorHandling.technischeExceptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class DaoFindException extends Throwable {
+public class DaoFindException extends Exception {
     private static final String DEFAULT_MESSAGE = "Find konnte nicht vollgezogen werden";
 
     private Log log = LogFactory.getLog(DaoFindException.class);

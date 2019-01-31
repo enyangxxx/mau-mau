@@ -3,7 +3,7 @@ package de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class IdNichtVorhandenException extends Throwable {
+public class IdNichtVorhandenException extends Exception {
 
     private static final String DEFAULT_MESSAGE = "Die Id ist nicht vorhanden";
     private Log log = LogFactory.getLog(IdNichtVorhandenException.class);
