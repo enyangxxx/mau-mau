@@ -19,16 +19,12 @@ public interface SpielerDao {
 
     Spieler findBys_id(int s_id) throws DaoFindException;
 
-    List<Spieler> findAll() throws DaoFindException;
+    List<Karte> findHand(int s_id) throws DaoFindException;
 
-    public List<Karte> findHand(int s_id) throws DaoFindException;
+    int findAktuellerSpielerId();
 
-    public Spieler findAktuellerSpieler() throws DaoFindException;
+    void updateHatMauGerufen(boolean status, int s_id) throws DaoUpdateException;
 
-
-    public int findAktuellerSpielerId();
-
-
-    public void updateHatMauGerufen(boolean status, int s_id) throws DaoUpdateException;
+    void updateDran(boolean status, int s_id) throws DaoUpdateException;
 
     }
