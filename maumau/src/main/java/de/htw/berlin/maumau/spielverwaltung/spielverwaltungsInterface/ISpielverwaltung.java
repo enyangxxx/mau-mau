@@ -17,9 +17,10 @@ public interface ISpielverwaltung {
      * Der Punktestand der {@link Spieler} wird zurückgesetzt und ein neues Spiel wird eingeleitet.
      *
      * @param spielerliste - Die Liste der teilnehmenden Spieler
-     * @return das MauMau Spiel
+     * @throws DaoCreateException - beim fehlerhaften Erstellen in der Dao-Klasse
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
-    void neuesSpielStarten(List<Spieler> spielerliste) throws KeinSpielerException, Exception, DaoCreateException, DaoFindException;
+    void neuesSpielStarten(List<Spieler> spielerliste) throws DaoCreateException, DaoFindException;
 
     /**
      * Eine neue Runde wird eingeleitet.
@@ -32,29 +33,35 @@ public interface ISpielverwaltung {
      * Ein {@link Spieler} zieht eine Karte von dem Kartenstapel und fügt diese seiner Hand hinzu.
      * Wenn der Kartenstapel leer ist, wird die Methode ablagestapelWiederverwenden aufgerufen.
      *
-     //* @param spieler - der Spieler
-     //* @param spiel - das aktuelle MauMau-Spiel
+     * @throws KarteNichtGezogenException - Wenn Karte nicht gezogen werden kann
+     * @throws LeererStapelException - Wenn ein leerer Stapel nicht leer sein darf
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
-    void karteZiehen() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException;
+    void karteZiehen() throws KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException;
 
     /**
      * Ein {@link Spieler} zieht eine bestimmte Anzahl von {@link Karte} vom Kartenstapel.
      * Wenn der Kartenstapel leer ist, wird er neu erstellt. Nach dem Ziehen wird die Anzahl
      * der zu ziehenden Karten wieder auf den Standardwert 2 gesetzt und die Regel auf inaktiv gesetzt.
      *
-     //* @param spieler - der Spieler
-     //* @param spiel - das aktuelle MauMau-Spiel
+     * @throws KarteNichtGezogenException - Wenn Karte nicht gezogen werden kann
+     * @throws LeererStapelException - Wenn ein leerer Stapel nicht leer sein darf
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
-    void karteZiehenSonderregel() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException;
+    void karteZiehenSonderregel() throws KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException;
 
     /**
      * Diese Merhode wird verwendet, wenn der {@link Spieler} nicht Mau gerufen hat. Er zieht zwei Karten als Strafe
      * von dem Kartenstapel und fügt diese seiner Hand hinzu. Wenn der Kartenstapel leer ist, wird er neu erstellt.
      *
-     //* @param spieler  - der Spieler
-     //* @param spiel - das aktuelle MauMau-Spiel
+     * @throws KarteNichtGezogenException - Wenn Karte nicht gezogen werden kann
+     * @throws LeererStapelException - Wenn ein leerer Stapel nicht leer sein darf
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
-    void karteZiehenMauNichtGerufen() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException;
+    void karteZiehenMauNichtGerufen() throws KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException;
 
     /**
      * Es wird überprüft, ob die gewählte Karte legbar ist. Wenn dies der Fall ist, dann wird überprüft, ob für das Spiel
@@ -62,16 +69,19 @@ public interface ISpielverwaltung {
      * gelegt werden kann. Falls nicht, dann passiert gar nichts.
      *
      * @param gewaehlteKarte  - die Karte, die gelegt werden soll
+     * @throws KarteNichtGezogenException - Wenn Karte nicht gezogen werden kann
+     * @throws LeererStapelException - Wenn ein leerer Stapel nicht leer sein darf
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
-
-    void karteLegen(Karte gewaehlteKarte) throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException;
+    void karteLegen(Karte gewaehlteKarte) throws KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException;
 
 
     /**
      * Ermittelt die letzte {@link Karte} auf dem Ablagestapel und gibt diese zurück.
      *
-     //* @param ablagestapel - der Ablagestapel
      * @return die letzte Karte - die neueste Karte vom Ablagestapel
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
     Karte letzteKarteErmitteln() throws DaoFindException;
 
@@ -80,17 +90,20 @@ public interface ISpielverwaltung {
      * Wenn ja, muss er keinen Strafzug machen und die Variable isMauGerufen wird wieder auf false gesetzt.
      * Wenn nein, muss er zwei Karten ziehen, indem die Methode karteZiehenMauNichtGerufen() aufgerufen wird.
      *
-     //* @param spieler  - der Spieler
-     //* @param spiel - das aktuelle MauMau-Spiel
+     * @throws KarteNichtGezogenException - Wenn Karte nicht gezogen werden kann
+     * @throws LeererStapelException - Wenn ein leerer Stapel nicht leer sein darf
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
-    void maumauPruefen() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException;
+    void maumauPruefen() throws KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException;
 
     /**
      * Ein {@link Spieler} ruft Mau Mau und die Variable isMauGerufen wird auf true gesetzt.
      *
-     //* @param spieler - der Spieler
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
-    void maumauRufen() throws Exception, DaoUpdateException, DaoFindException;
+    void maumauRufen() throws DaoUpdateException, DaoFindException;
 
     /**
      * Der Wert der Hand des {@link Spieler}, der verloren hat, wird berechnet.
@@ -105,7 +118,8 @@ public interface ISpielverwaltung {
      * Der Wunschtyp des Spiels wird gesetzt. Nachdem dies getan wurde, wird der Spielzug des wünschenden Spielers beendet.
      *
      * @param wunschtyp - der zu setzende Wunschtyp
-     //* @param spiel - das aktuelle Spiel
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
-    void wunschtypFestlegen(Kartentyp wunschtyp) throws Exception, DaoFindException, DaoUpdateException;
+    void wunschtypFestlegen(Kartentyp wunschtyp) throws DaoFindException, DaoUpdateException;
 }
