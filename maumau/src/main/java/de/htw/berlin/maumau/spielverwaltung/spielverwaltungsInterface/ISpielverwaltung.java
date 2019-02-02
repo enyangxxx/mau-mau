@@ -25,9 +25,8 @@ public interface ISpielverwaltung {
     /**
      * Eine neue Runde wird eingeleitet.
      *
-     * @param spiel - das vorhandene Spiel
      */
-    void neueRundeStarten(MauMauSpiel spiel);
+    void neueRundeStarten() throws DaoUpdateException, DaoFindException;
 
     /**
      * Ein {@link Spieler} zieht eine Karte von dem Kartenstapel und fügt diese seiner Hand hinzu.

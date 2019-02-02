@@ -30,7 +30,6 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
 
 
     public SpielerverwaltungImpl(final SpielerDao spielerDaoImpl, final MauMauSpielDao maumauSpielDao) {
-        log.info("SpielerverwaltungsImpl Konstruktor called");
         this.spielerDao = spielerDaoImpl;
         this.maumauSpielDao = maumauSpielDao;
     }
@@ -69,14 +68,11 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
      * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
     public void spielerWechseln() throws DaoFindException, DaoUpdateException {
-        MauMauSpiel spiel = maumauSpielDao.findById(0);
+        MauMauSpiel spiel = maumauSpielDao.findSpiel();
         List<Spieler> spielerliste = maumauSpielDao.findSpielerlist();
         Spieler alterSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         Spieler neuerSpieler;
         int alterSpielerId = alterSpieler.getS_id();
-        log.info("Alter Spieler ID: "+alterSpielerId);
-        log.info("Alter Spieler ID aus Objekgt: "+alterSpieler.getS_id());
-
 
         alterSpieler.setDran(false);
         spielerDao.update(alterSpieler);
@@ -92,12 +88,16 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
             neuerSpieler.setDran(true);
             spielerDao.update(neuerSpieler);
         }
-        log.info("Neuer Spieler ID: "+neuerSpieler.getS_id());
-
-        if(spiel.isSonderregelAssAktiv()){
-            spiel.setSonderregelAssAktiv(false);
-            maumauSpielDao.update(spiel);
-            spielerWechseln();
+        if(maumauSpielDao.findAssAktivStatus()){
+            maumauSpielDao.updateAssAktiv(false);
+            int aktuellerSpielerId = spielerDao.findAktuellerSpielerId();
+            spielerDao.updateDran(false,aktuellerSpielerId);
+            if(aktuellerSpielerId==maumauSpielDao.findSpielerlist().size()){
+                spielerDao.updateDran(true, 1);
+            }
+            else{
+                spielerDao.updateDran(true, aktuellerSpielerId+1);
+            }
         }
     }
 
@@ -143,7 +143,7 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
 
         for (Spieler spieler : spielerliste) {
             List<Karte> hand = new ArrayList<Karte>();
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 2; i++) {
                 try {
                     hand.add(kartenstapel.get(i));
                     kartenstapel.remove(kartenstapel.get(i));
@@ -154,9 +154,6 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
             log.info(SPIELER_HAND_GESETZT + spieler.getName());
             spieler.setHand(hand);
             spielerDao.update(spieler);
-            //log.info("SpielerDao Hand size: "+spielerDao.findBys_id(0).getHand().getClass());
-            log.info("SpielerDao Hand size: "+spielerDao.findHand(spieler.getS_id()).size());
-
         }
         log.info(KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE);
         try {

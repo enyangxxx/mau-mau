@@ -339,7 +339,7 @@ public class Controller {
      * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
     public void updateViewAktionKarteZiehen() throws KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException {
-        MauMauSpiel spiel = spielDao.findById(0);
+        MauMauSpiel spiel = spielDao.findSpiel();
 
         if (spiel.isSonderregelSiebenAktiv()) {
             view.printKartenGezogenSonderregel(spielerDao.findBys_id(spielerDao.findAktuellerSpielerId()), spiel);
