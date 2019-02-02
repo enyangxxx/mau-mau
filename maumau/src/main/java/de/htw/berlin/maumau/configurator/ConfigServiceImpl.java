@@ -11,6 +11,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.awt.*;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -32,12 +34,16 @@ public class ConfigServiceImpl {
      * Startet das Spiel mit run.
      *
      * @param args
-     * @throws KeinSpielerException  - falls keine Spieler vorhanden sind
+     * @throws IOException - fehlerhafte Kommunikation mit der Property-Datei
+     * @throws LeererStapelException - Wenn ein leerer Stapel nicht leer sein darf
+     * @throws DaoCreateException - beim fehlerhaften Erstellen in der Dao-Klasse
+     * @throws KeinSpielerException - wenn kein Spieler vorhanden ist
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws KarteNichtGezogenException - Wenn Karte auf fehlerhafter Weise nicht gezogen werden konnte
      */
 
-    public static void main(String[] args) throws KeinSpielerException, Exception, KarteNichtGezogenException, LeererStapelException, DaoUpdateException, DaoFindException, DaoCreateException {
-
-
+    public static void main(String[] args) throws IOException, DaoCreateException, DaoFindException, LeererStapelException, KarteNichtGezogenException, KeinSpielerException, DaoUpdateException {
 
         String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
         String appConfigPath = rootPath + PROPERTY_FILENAME;

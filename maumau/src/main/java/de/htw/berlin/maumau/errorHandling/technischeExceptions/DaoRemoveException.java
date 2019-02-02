@@ -3,6 +3,9 @@ package de.htw.berlin.maumau.errorHandling.technischeExceptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * @author Enyang Wang, Steve Engel, Theo Radig
+ */
 public class DaoRemoveException extends Exception {
     private static final String DEFAULT_MESSAGE = "Remove konnte nicht vollgezogen werden";
 
@@ -13,6 +16,12 @@ public class DaoRemoveException extends Exception {
         log.error(this.toString());
     }
 
+    /**
+     * Die Fehlermeldung wird bestimmt
+     *
+     * @param message - eigene Fehlermeldung
+     * @return message - Default oder eigene Fehlermeldung
+     */
     public static String bestimmeMessage(String message){
         if(message.isEmpty()){
             return DEFAULT_MESSAGE;

@@ -17,42 +17,50 @@ public interface ISpielerverwaltung {
 
     /**
      * Ein Spieler wird generiert.
+     *
      * @param name        - Name des Spielers
      * @param id          - ID des Spielers
      * @param istComputer - true wenn Computer-Spieler
-     * @return spieler - der generierte Spieler
+     * @throws DaoCreateException - beim fehlerhaften Erstellen in der Dao-Klasse
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
-    void spielerGenerieren(String name, int id, boolean istComputer) throws Exception, DaoCreateException, DaoFindException;
+    void spielerGenerieren(String name, int id, boolean istComputer) throws DaoCreateException, DaoFindException;
 
     /**
      * Der Spieler wird der Spielerliste hinzugefügt.
+     *
      * @param spieler      - der neue Spieler
      * @param spielerliste - aktuelle Spielerliste
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
     void addSpielerZurListe(Spieler spieler, List<Spieler> spielerliste) throws DaoFindException;
 
     /**
      * Der aktuelle Spieler ist nicht mehr dran, der nächste Spieler ist dran.
-     //* @param spiel - das aktuelle MauMau-Spiel
+     *
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
-    void spielerWechseln() throws Exception, DaoFindException, DaoUpdateException;
+    void spielerWechseln() throws DaoFindException, DaoUpdateException;
 
     /**
      * Der Spieler wird durch die eindeutige ID ermittelt.
+     *
      * @param id           - ID des Spielers
      * @param spielerliste - aktuelle Spielerliste
      * @return gefundenerSpieler - der gesuchte Spieler mit der ID
      * @throws KeinSpielerException - Wenn kein Spieler mit der ID gefunden wurde
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
     Spieler getSpielerById(int id, List<Spieler> spielerliste) throws KeinSpielerException, DaoFindException;
 
     /**
      * Alle {@link Spieler} bekommen je 5 {@link Karte} aus dem Kartenstapel und es wird eine Anfangskarte aufgedeckt.
      *
-     * //@param spielerliste - die aktuelle Spielerliste
-     * //@param kartenstapel - der aktuelle Kartenstapel
-     * //@param ablagestapel - der aktuelle Ablagestapel
+     * @throws LeererStapelException - Wenn ein leerer Stapel nicht leer sein darf
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
-    void kartenAusteilen() throws LeererStapelException, Exception, DaoUpdateException, DaoFindException;
+    void kartenAusteilen() throws LeererStapelException, DaoUpdateException, DaoFindException;
 
 }

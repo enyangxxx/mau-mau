@@ -36,7 +36,8 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
     /**
      * Generiert einen Kartenstapel mit 32 Karten, wobei jede Karte einmal vorkommt.
      *
-     * @return generierter Kartenstapel
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
     public void kartenstapelGenerieren() throws DaoUpdateException, DaoFindException {
         ArrayList<Karte> kartenstapel = new ArrayList<Karte>();
@@ -53,8 +54,8 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
 
     /**
      * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.
-     * <p>
-     * //@param kartenstapel - der aktuelle Kartenstapel
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
     public void kartenMischen() throws DaoUpdateException, DaoFindException {
         MauMauSpiel spiel = maumauSpielDao.findSpiel();
@@ -76,12 +77,12 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
 
     /**
      * Mischt die Karten des Ablagestapels in den Kartenstapel, außer die oberste Karte des Ablagestapels.
-     * <p>
-     * //* @param ablagestapel - der aktuelle Ablagestapel
-     * //* @param kartenstapel - der aktuelle Kartenstapel
+     * @throws LeererStapelException - Der leerer Stapel darf nicht leer sein.
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
-    public void ablagestapelWiederverwenden() throws LeererStapelException, Exception, DaoFindException, DaoUpdateException {
-        MauMauSpiel spiel = maumauSpielDao.findSpiel();
+    public void ablagestapelWiederverwenden() throws LeererStapelException, DaoFindException, DaoUpdateException {
+        MauMauSpiel spiel = maumauSpielDao.findById(0);
         List<Karte> kartenstapel = maumauSpielDao.findKartenstapel();
         List<Karte> ablagestapel = maumauSpielDao.findAblagestapel();
 

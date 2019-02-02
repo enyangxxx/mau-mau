@@ -14,21 +14,27 @@ public interface IKartenverwaltung {
 
     /**
      * Generiert einen Kartenstapel mit 32 Karten, wobei jede Karte einmal vorkommt.
-     * @return generierter Kartenstapel
+     *
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
-    void kartenstapelGenerieren() throws Exception, DaoUpdateException, DaoFindException;
+    void kartenstapelGenerieren() throws DaoUpdateException, DaoFindException;
 
     /**
      * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.
-     * //@param kartenstapel - der aktuelle Kartenstapel
+     *
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
-    void kartenMischen() throws Exception, DaoUpdateException, DaoFindException;
+    void kartenMischen() throws DaoUpdateException, DaoFindException;
 
 
     /**
      * Mischt die Karten des Ablagestapels in den Kartenstapel.
-     //* @param ablagestapel - der aktuelle Ablagestapel
-     //* @param kartenstapel - der aktuelle Kartenstapel
+     *
+     * @throws LeererStapelException - Der leerer Stapel darf nicht leer sein.
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
-    void ablagestapelWiederverwenden() throws LeererStapelException, Exception, DaoFindException, DaoUpdateException;
+    void ablagestapelWiederverwenden() throws LeererStapelException, DaoFindException, DaoUpdateException;
 }

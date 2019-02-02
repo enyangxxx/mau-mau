@@ -37,10 +37,12 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
 
     /**
      * Ein Spieler wird generiert.
+     *
      * @param name        - Name des Spielers
      * @param id          - ID des Spielers
      * @param istComputer - true wenn Computer-Spieler
-     * @return spieler - der generierte Spieler
+     * @throws DaoCreateException - beim fehlerhaften Erstellen in der Dao-Klasse
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
     public void spielerGenerieren(String name, int id, boolean istComputer) throws DaoCreateException, DaoFindException {
         Spieler spieler = new Spieler(name, id, istComputer);
@@ -50,8 +52,10 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
 
     /**
      * Der Spieler wird der Spielerliste hinzugefügt.
+     *
      * @param spieler      - der neue Spieler
      * @param spielerliste - aktuelle Spielerliste
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
     public void addSpielerZurListe(Spieler spieler, List<Spieler> spielerliste) throws DaoFindException {
         spielerliste.add(spielerDao.findBys_id(spieler.getS_id()));
@@ -60,10 +64,13 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
 
     /**
      * Der aktuelle Spieler ist nicht mehr dran, der nächste Spieler ist dran.
-     //* @param spiel - das aktuelle MauMau-Spiel
+     *
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
-    public void spielerWechseln() throws Exception, DaoFindException, DaoUpdateException {
-        MauMauSpiel spiel = maumauSpielDao.findSpiel();
+    public void spielerWechseln() throws DaoFindException, DaoUpdateException {
+        MauMauSpiel spiel = maumauSpielDao.findById(0);
+        List<Spieler> spielerliste = maumauSpielDao.findSpielerlist();
         Spieler alterSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         Spieler neuerSpieler;
         int alterSpielerId = alterSpieler.getS_id();
@@ -96,12 +103,13 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
 
 
     /**
-     * BRAUCHEN WIR EVTL. NICHT MEHR
      * Der Spieler wird durch die eindeutige ID ermittelt.
+     *
      * @param id           - ID des Spielers
      * @param spielerliste - aktuelle Spielerliste
      * @return gefundenerSpieler - der gesuchte Spieler mit der ID
      * @throws KeinSpielerException - Wenn kein Spieler mit der ID gefunden wurde
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
     public Spieler getSpielerById(int id, List<Spieler> spielerliste) throws DaoFindException {
         Spieler gefundenerSpieler = null;
@@ -123,9 +131,9 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
     /**
      * Alle {@link Spieler} bekommen je 5 {@link Karte} aus dem Kartenstapel und es wird eine Anfangskarte aufgedeckt.
      *
-     * //@param spielerliste - die aktuelle Spielerliste
-     * //@param kartenstapel - der aktuelle Kartenstapel
-     * //@param ablagestapel - der aktuelle Ablagestapel
+     * @throws LeererStapelException - Wenn ein leerer Stapel nicht leer sein darf
+     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
     public void kartenAusteilen() throws LeererStapelException, DaoUpdateException, DaoFindException {
         MauMauSpiel spiel = maumauSpielDao.findSpiel();
