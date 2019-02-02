@@ -353,7 +353,22 @@ public class Controller {
         if (anzahlKartenAlt - 1 == anzahlKartenNeu) {
             view.printKarteGelegt(spielerverwaltung.getSpielerById(alterSpielerId, spielDao.findSpielerlist()), gewaehlteKarte);
             if ((gewaehlteKarte.getWert() == Kartenwert.BUBE)) {
-                spielverwaltung.wunschtypFestlegen(Kartentyp.valueOf(view.userInputWunschtypFestlegen()));
+                boolean wunschtypGesetzt;
+                String wunschtyp;
+                do {
+                    wunschtyp = view.userInputWunschtypFestlegen();
+                    if(!(wunschtyp.equalsIgnoreCase("Kreuz")||wunschtyp.equalsIgnoreCase("Pik")||wunschtyp.equalsIgnoreCase("Herz")||wunschtyp.equalsIgnoreCase("Karo"))){
+                        try{
+                            throw new FalscherInputException("Bitte einen validen Wunschtyp aussuchen!");
+                        }catch(FalscherInputException e){
+                            view.fehlermeldungAusgabe(e.getMessage());
+                            wunschtypGesetzt = true;
+                        }
+                    }else{
+                        wunschtypGesetzt = false;
+                    }
+                }while(wunschtypGesetzt);
+                spielverwaltung.wunschtypFestlegen(Kartentyp.valueOf(wunschtyp));
             }
         } else if (hatKarteGelegtOhneMauZuRufen(anzahlKartenAlt, anzahlKartenNeu)) {
             view.printKarteGelegt(spielerDao.findBys_id(alterSpielerId), gewaehlteKarte);

@@ -217,13 +217,8 @@ public class View {
         Console.println();
         Console.println("Wunschtyp festlegen: \n"+Kartentyp.KREUZ+"\n"+Kartentyp.HERZ+"\n"+Kartentyp.KARO+"\n"+Kartentyp.PIK);
         Console.println();
-        String input = Console.readLine();;
+        String input = Console.readLine();
 
-        while(!(input.equalsIgnoreCase("Kreuz")||input.equalsIgnoreCase("Pik")||input.equalsIgnoreCase("Herz")||input.equalsIgnoreCase("Karo"))){
-            Console.println("validen Wunschtyp eingeben: \n"+Kartentyp.KREUZ+"\n"+Kartentyp.HERZ+"\n"+Kartentyp.KARO+"\n"+Kartentyp.PIK);
-            Console.println();
-            input = Console.readLine();
-        }
         return input.toUpperCase();
     }
 
