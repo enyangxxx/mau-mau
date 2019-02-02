@@ -28,4 +28,16 @@ public interface MauMauSpielDao {
 
     MauMauSpiel findSpiel() throws DaoFindException;
 
+    void updateAssAktiv(boolean status) throws DaoUpdateException;
+
+    boolean findAssAktivStatus() throws DaoFindException;
+
+    void updateSiebenAktiv(boolean status) throws DaoUpdateException;
+
+    boolean findSiebenAktivStatus() throws DaoFindException;
+
+    void updateanzahlSonderregelKartenZiehen(int anzahl) throws DaoUpdateException;
+
+    int findAnzahlSonderregelKartenZiehen() throws DaoFindException;
+
 }

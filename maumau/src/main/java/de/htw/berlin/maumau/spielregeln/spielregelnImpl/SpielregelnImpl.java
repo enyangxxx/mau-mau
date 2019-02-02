@@ -12,11 +12,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class SpielregelnImpl implements ISpielregeln {
 
-    private Log log = LogFactory.getLog(SpielregelnImpl.class);
-
-
     public SpielregelnImpl() {
-        log.info("SpielregelnImpl Konstruktor called");
     }
 
 
@@ -28,7 +24,6 @@ public class SpielregelnImpl implements ISpielregeln {
      * @return true, wenn  die neue Karte legbar ist.
      */
     public boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp){
-
         return neueKarte.getTyp().equals(wunschtyp);
     }
 
