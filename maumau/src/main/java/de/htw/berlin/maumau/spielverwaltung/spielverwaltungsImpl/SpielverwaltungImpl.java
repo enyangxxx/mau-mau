@@ -71,7 +71,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
         log.info(spiel.getRunde());
         maumauspielDao.create(spiel);
-        log.info("maumauspielDao.create -> " + "SpielID: " + maumauspielDao.findById(spiel.getSpielId()));
+        log.info("maumauspielDao.create -> " + "SpielID: " + maumauspielDao.findSpiel());
         log.info(NEUES_SPIEL_MESSAGE);
     }
 
@@ -90,12 +90,12 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     /**
      * Ein {@link Spieler} zieht eine Karte von dem Kartenstapel und fügt diese seiner Hand hinzu.
      * Wenn der Kartenstapel leer ist, wird die Methode ablagestapelWiederverwenden aufgerufen.
-     *
-     //* @param spieler - der Spieler
-     //* @param spiel   - das aktuelle MauMau-Spiel
+     * <p>
+     * //* @param spieler - der Spieler
+     * //* @param spiel   - das aktuelle MauMau-Spiel
      */
     public void karteZiehen() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException {
-        MauMauSpiel spiel = maumauspielDao.findById(0);
+        MauMauSpiel spiel = maumauspielDao.findSpiel();
         Spieler aktuellerSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         List<Karte> ablagestapel = maumauspielDao.findAblagestapel();
         List<Karte> kartenstapel = maumauspielDao.findKartenstapel();
@@ -105,8 +105,8 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
             kartenverwaltung.ablagestapelWiederverwenden();
             kartenstapel = maumauspielDao.findKartenstapel();
             ablagestapel = maumauspielDao.findAblagestapel();
-        }
 
+        }
         try {
             hand.add(kartenstapel.get(0));
             aktuellerSpieler.setHand(hand);
@@ -114,6 +114,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         } catch (Exception e) {
             throw new KarteNichtGezogenException("Karte konnte nicht gezogen werden, weil Kartenstapel leer ist");
         }
+
 
         spielerDao.update(aktuellerSpieler);
         spiel.setKartenstapel(kartenstapel);
@@ -128,12 +129,12 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     /**
      * Diese Merhode wird verwendet, wenn der {@link Spieler} nicht Mau gerufen hat. Er zieht zwei Karten als Strafe
      * von dem Kartenstapel und fügt diese seiner Hand hinzu. Wenn der Kartenstapel leer ist, wird er neu erstellt.
-     *
-     //* @param spieler - der Spieler
-     //* @param spiel   - das aktuelle MauMau-Spiel
+     * <p>
+     * //* @param spieler - der Spieler
+     * //* @param spiel   - das aktuelle MauMau-Spiel
      */
     public void karteZiehenMauNichtGerufen() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException {
-        MauMauSpiel spiel = maumauspielDao.findById(0);
+        MauMauSpiel spiel = maumauspielDao.findSpiel();
         Spieler spieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         List<Karte> ablagestapel = maumauspielDao.findAblagestapel();
         List<Karte> kartenstapel = maumauspielDao.findKartenstapel();
@@ -145,7 +146,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
                 kartenstapel = maumauspielDao.findKartenstapel();
                 ablagestapel = maumauspielDao.findAblagestapel();
             }
-            try{
+            try {
                 hand.add(kartenstapel.get(0));
                 kartenstapel.remove(0);
                 log.info(KARTE_ZIEHEN_MESSAGE);
@@ -166,12 +167,12 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * Ein {@link Spieler} zieht eine bestimmte Anzahl von {@link Karte} vom Kartenstapel.
      * Wenn der Kartenstapel leer ist, wird er neu erstellt. Nach dem Ziehen wird die Anzahl
      * der zu ziehenden Karten wieder auf 0 gesetzt und die Regel auf inaktiv gesetzt.
-     *
-     //* @param spieler - der Spieler
-     //* @param spiel   - das aktuelle MauMau-Spiel
+     * <p>
+     * //* @param spieler - der Spieler
+     * //* @param spiel   - das aktuelle MauMau-Spiel
      */
     public void karteZiehenSonderregel() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException {
-        MauMauSpiel spiel = maumauspielDao.findById(0);
+        MauMauSpiel spiel = maumauspielDao.findSpiel();
         Spieler aktuellerSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         List<Karte> ablagestapel = maumauspielDao.findAblagestapel();
         List<Karte> kartenstapel = maumauspielDao.findKartenstapel();
@@ -185,7 +186,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
                 ablagestapel = maumauspielDao.findAblagestapel();
             }
 
-            try{
+            try {
                 hand.add(kartenstapel.get(0));
                 kartenstapel.remove(0);
             } catch (Exception e) {
@@ -207,39 +208,39 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * Die gewählte Karte wird von der Hand des Spielers auf den Ablagestapel gelegt.
      *
      * @param gewaehlteKarte - die Karte, die gelegt werden soll
-     //* @param hand           - die Hand des aktuellen Spielers
-     //* @param spiel          - das aktuelle MauMau-Spiel
+     *                       //* @param hand           - die Hand des aktuellen Spielers
+     *                       //* @param spiel          - das aktuelle MauMau-Spiel
      */
     private void karteVonHandAufStapelLegen(Karte gewaehlteKarte) throws Exception, DaoFindException, DaoUpdateException {
         Spieler aktuellerSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         List<Karte> hand = spielerDao.findHand(aktuellerSpieler.getS_id());
         aktuellerSpieler.setHand(hand);
 
-        MauMauSpiel spiel = maumauspielDao.findById(0);
+        MauMauSpiel spiel = maumauspielDao.findSpiel();
         spiel.setAblagestapel(maumauspielDao.findAblagestapel());
 
-        log.info("Hand size aus DB vor remove: "+spielerDao.findHand(aktuellerSpieler.getS_id()).size());
-        log.info("Hand size Objekt vor remove: "+hand.size());
+        log.info("Hand size aus DB vor remove: " + spielerDao.findHand(aktuellerSpieler.getS_id()).size());
+        log.info("Hand size Objekt vor remove: " + hand.size());
 
         //hand.remove(gewaehlteKarte);
-        removeKarte(hand,gewaehlteKarte);
+        removeKarte(hand, gewaehlteKarte);
 
-        log.info("Hand size nach Objekt remove: "+hand.size());
-        log.info("Hand size aus DB nach remove: "+spielerDao.findHand(aktuellerSpieler.getS_id()).size());
+        log.info("Hand size nach Objekt remove: " + hand.size());
+        log.info("Hand size aus DB nach remove: " + spielerDao.findHand(aktuellerSpieler.getS_id()).size());
 
 
         spiel.getAblagestapel().add(gewaehlteKarte);
 
         maumauspielDao.update(spiel);
         spielerDao.update(aktuellerSpieler);
-        log.info("karteVonHandAufStapel Spieler ID: "+aktuellerSpieler.getS_id());
-        log.info("Hand size nach update: "+spielerDao.findHand(aktuellerSpieler.getS_id()).size());
+        log.info("karteVonHandAufStapel Spieler ID: " + aktuellerSpieler.getS_id());
+        log.info("Hand size nach update: " + spielerDao.findHand(aktuellerSpieler.getS_id()).size());
         log.info(KARTE_ABLEGEN_MESSAGE);
     }
 
-    private void removeKarte(List<Karte> hand, Karte gewaehlteKarte){
-        for(int i=0;i<hand.size();i++){
-            if(hand.get(i).getTyp().equals(gewaehlteKarte.getTyp())&&hand.get(i).getWert().equals(gewaehlteKarte.getWert())){
+    private void removeKarte(List<Karte> hand, Karte gewaehlteKarte) {
+        for (int i = 0; i < hand.size(); i++) {
+            if (hand.get(i).getTyp().equals(gewaehlteKarte.getTyp()) && hand.get(i).getWert().equals(gewaehlteKarte.getWert())) {
                 log.info("gleiche Karte gefunden.");
                 hand.remove(hand.get(i));
             }
@@ -266,11 +267,13 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
             spiel.setAnzahlSonderregelKartenZiehen(spiel.getAnzahlSonderregelKartenZiehen() + 2);
         }
         if (gewaehlteKarte.getWert().equals(Kartenwert.ASS)) {
+            log.info("AssAktiv wird gesetzt");
             spiel.setSonderregelAssAktiv(true);
         }
         if (hand.size() == 2) {
             maumauPruefen();
         }
+        maumauspielDao.update(spiel);
     }
 
     /**
@@ -311,7 +314,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         List<Karte> hand = spielerDao.findHand(aktuellerSpieler.getS_id());
         aktuellerSpieler.setHand(hand);
 
-        MauMauSpiel spiel = maumauspielDao.findById(0);
+        MauMauSpiel spiel = maumauspielDao.findSpiel();
 
         Karte letzteKarte = maumauspielDao.findAblagestapel().get(maumauspielDao.findAblagestapel().size() - 1);
         //Karte letzteKarte = spiel.getAblagestapel().get(spiel.getAblagestapel().size() - 1);
@@ -344,8 +347,9 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
     /**
      * Ermittelt die letzte {@link Karte} auf dem Ablagestapel und gibt diese zurück.
+     * <p>
+     * //* @param ablagestapel - der Ablagestapel
      *
-     //* @param ablagestapel - der Ablagestapel
      * @return die letzte Karte - die neueste Karte vom Ablagestapel
      */
     public Karte letzteKarteErmitteln() throws DaoFindException {
@@ -367,9 +371,9 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * Es wird geprüft, ob der Spieler Mau gesagt hat.
      * Wenn ja, muss er keinen Strafzug machen und die Variable isMauGerufen wird wieder auf false gesetzt.
      * Wenn nein, muss er zwei Karten ziehen, indem die Methode karteZiehenMauNichtGerufen() aufgerufen wird.
-     *
-     //* @param spieler - der Spieler
-     //* @param spiel   - das aktuelle MauMau-Spiel
+     * <p>
+     * //* @param spieler - der Spieler
+     * //* @param spiel   - das aktuelle MauMau-Spiel
      */
     public void maumauPruefen() throws KarteNichtGezogenException, LeererStapelException, Exception, DaoFindException, DaoUpdateException {
         Spieler spieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
@@ -385,8 +389,8 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
     /**
      * Ein {@link Spieler} ruft Mau Mau und die Variable isMauGerufen wird auf true gesetzt.
-     *
-     //* @param spieler - der Spieler
+     * <p>
+     * //* @param spieler - der Spieler
      */
     public void maumauRufen() throws Exception, DaoUpdateException, DaoFindException {
         //spieler.setMauGerufen(true);
@@ -397,9 +401,9 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
                 //aktuellerSpieler.setMauGerufen(true);
                 //spielerDao.update(aktuellerSpieler);
 
-                spielerDao.updateHatMauGerufen(true,spieler.getS_id());
+                spielerDao.updateHatMauGerufen(true, spieler.getS_id());
 
-                log.info(spielerDao.findBys_id(spieler.getS_id()).getName()+" Hat Mau gerufen: "+spielerDao.findBys_id(spieler.getS_id()).isMauGerufen());
+                log.info(spielerDao.findBys_id(spieler.getS_id()).getName() + " Hat Mau gerufen: " + spielerDao.findBys_id(spieler.getS_id()).isMauGerufen());
             }
         }
 
@@ -456,10 +460,10 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * Der Wunschtyp des Spiels wird gesetzt. Nachdem dies getan wurde, wird der Spielzug des wünschenden Spielers beendet.
      *
      * @param wunschtyp - der zu setzende Wunschtyp
-     //* @param spiel     - das aktuelle Spiel
+     *                  //* @param spiel     - das aktuelle Spiel
      */
     public void wunschtypFestlegen(Kartentyp wunschtyp) throws Exception, DaoFindException, DaoUpdateException {
-        MauMauSpiel spiel = maumauspielDao.findById(0);
+        MauMauSpiel spiel = maumauspielDao.findSpiel();
         spiel.setAktuellerWunschtyp(wunschtyp);
         maumauspielDao.update(spiel);
         spielerverwaltung.spielerWechseln();

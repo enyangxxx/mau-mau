@@ -26,6 +26,6 @@ public interface MauMauSpielDao {
 
     void updateRunde(int runde) throws DaoUpdateException;
 
-    MauMauSpiel findById(int spielId) throws DaoFindException;
+    MauMauSpiel findSpiel() throws DaoFindException;
 
 }

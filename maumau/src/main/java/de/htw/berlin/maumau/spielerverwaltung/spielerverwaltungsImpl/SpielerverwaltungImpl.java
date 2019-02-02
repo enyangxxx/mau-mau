@@ -22,22 +22,17 @@ import java.util.List;
 public class SpielerverwaltungImpl implements ISpielerverwaltung {
 
     private Log log = LogFactory.getLog(SpielerverwaltungImpl.class);
-
     private static final String SPIELER_HAND_GESETZT = "Die Hand wurde gesetzt für Spieler: ";
     private static final String KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE = "Karte auf Ablagestapel gelegt!";
-
+    private static final String SPIELER_GENERIERT = "Ein neuer Spieler wurde generiert";
     private SpielerDao spielerDao;
     private MauMauSpielDao maumauSpielDao;
-
-    //= (SpielerDao) ConfigServiceImpl.context.getBean("spielerdaoimpl");
-    //private  SpielerDao spielerDao = new SpielerDaoImpl();
 
 
     public SpielerverwaltungImpl(final SpielerDao spielerDaoImpl, final MauMauSpielDao maumauSpielDao) {
         log.info("SpielerverwaltungsImpl Konstruktor called");
         this.spielerDao = spielerDaoImpl;
         this.maumauSpielDao = maumauSpielDao;
-        //private SpielerDao spielerDao = (SpielerDao) ConfigServiceImpl.context.getBean("spielerdaoimpl");
     }
 
     /**
@@ -50,8 +45,7 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
     public void spielerGenerieren(String name, int id, boolean istComputer) throws DaoCreateException, DaoFindException {
         Spieler spieler = new Spieler(name, id, istComputer);
         spielerDao.create(spieler);
-        log.info("spielerDao.create -> Name: "+spielerDao.findBys_id(id).getName()+" ID: "+spielerDao.findBys_id(id).getS_id());
-        //return spieler;
+        log.info(SPIELER_GENERIERT);
     }
 
     /**
@@ -60,9 +54,7 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
      * @param spielerliste - aktuelle Spielerliste
      */
     public void addSpielerZurListe(Spieler spieler, List<Spieler> spielerliste) throws DaoFindException {
-
         spielerliste.add(spielerDao.findBys_id(spieler.getS_id()));
-        log.info("Spieler zur Liste hinzugefügt."+ "Name: "+spielerDao.findBys_id(spieler.getS_id()).getName() + "ID:"+spielerDao.findBys_id(spieler.getS_id()).getS_id());
     }
 
 
@@ -71,13 +63,14 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
      //* @param spiel - das aktuelle MauMau-Spiel
      */
     public void spielerWechseln() throws Exception, DaoFindException, DaoUpdateException {
-        MauMauSpiel spiel = maumauSpielDao.findById(0);
-        List<Spieler> spielerliste = maumauSpielDao.findSpielerlist();
+        MauMauSpiel spiel = maumauSpielDao.findSpiel();
         Spieler alterSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         Spieler neuerSpieler;
-
         int alterSpielerId = alterSpieler.getS_id();
-        log.info("alterSpieler ID: "+alterSpielerId);
+        log.info("Alter Spieler ID: "+alterSpielerId);
+        log.info("Alter Spieler ID aus Objekgt: "+alterSpieler.getS_id());
+
+
         alterSpieler.setDran(false);
         spielerDao.update(alterSpieler);
 
@@ -92,13 +85,13 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
             neuerSpieler.setDran(true);
             spielerDao.update(neuerSpieler);
         }
+        log.info("Neuer Spieler ID: "+neuerSpieler.getS_id());
 
         if(spiel.isSonderregelAssAktiv()){
             spiel.setSonderregelAssAktiv(false);
             maumauSpielDao.update(spiel);
             spielerWechseln();
         }
-        maumauSpielDao.update(spiel);
     }
 
 
@@ -135,14 +128,14 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
      * //@param ablagestapel - der aktuelle Ablagestapel
      */
     public void kartenAusteilen() throws LeererStapelException, DaoUpdateException, DaoFindException {
-        MauMauSpiel spiel = maumauSpielDao.findById(0);
+        MauMauSpiel spiel = maumauSpielDao.findSpiel();
         List<Spieler> spielerliste = maumauSpielDao.findSpielerlist();
         List<Karte> kartenstapel = maumauSpielDao.findKartenstapel();
         List<Karte> ablagestapel = maumauSpielDao.findAblagestapel();
 
         for (Spieler spieler : spielerliste) {
             List<Karte> hand = new ArrayList<Karte>();
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 5; i++) {
                 try {
                     hand.add(kartenstapel.get(i));
                     kartenstapel.remove(kartenstapel.get(i));
@@ -158,8 +151,6 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
 
         }
         log.info(KARTE_ZUM_ABLAGESTAPEL_HINZUGEFUEGT_MESSAGE);
-        //MauMauSpiel spiel = maumauSpielDao.findById(0);
-        //List<Karte> kartenstapel = maumauSpielDao.findKartenstapel();
         try {
             ablagestapel.add(kartenstapel.get(kartenstapel.size() - 1));
             kartenstapel.remove(kartenstapel.get(kartenstapel.size() - 1));

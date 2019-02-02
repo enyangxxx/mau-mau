@@ -21,16 +21,9 @@ import java.util.List;
 @Transactional
 public class MauMauSpielDaoImpl implements MauMauSpielDao {
 
-    private Log log = LogFactory.getLog(MauMauSpielDaoImpl.class);
-
-    //EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("managerHsqldb");
-
-    //private EntityManager entityManager = entityManagerFactory.createEntityManager();
-
     @PersistenceContext
     private EntityManager entityManager;
-
-    //private EntityManager entityManager = (EntityManager) ConfigServiceImpl.context.getBean("myEmf");
+    final int spielId = 0;
 
 
     public MauMauSpielDaoImpl() {
@@ -58,11 +51,7 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
     }
 
     public void update(MauMauSpiel spiel) throws DaoUpdateException {
-        Session session = (Session) entityManager.getDelegate();
-        //session.merge(spiel);
         try {
-            //session.merge(spiel);
-            //session.update(spiel);
             entityManager.merge(spiel);
         } catch (PersistenceException e) {
             throw new DaoUpdateException(e.getMessage());
@@ -70,8 +59,6 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
     }
 
     public List<Spieler> findSpielerlist() throws DaoFindException {
-        //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
-        //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Session session = (Session) entityManager.getDelegate();
         List<Spieler> result;
         try {
@@ -84,8 +71,6 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
     }
 
     public List<Karte> findKartenstapel() throws DaoFindException {
-        //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
-        //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Session session = (Session) entityManager.getDelegate();
         List<Integer> resultKartentyp;
         List<Integer> resultKartenwert;
@@ -100,23 +85,15 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
         List<Karte> finalResult = new ArrayList<Karte>();
 
         for(int i=0;i<resultKartentyp.size();i++){
-            //log.info("Typ aus findMethode: "+Kartentyp.getName(resultKartentyp.get(i)));
-            //log.info("Wert aus findMethode: "+Kartenwert.getName(resultKartenwert.get(i)));
-
             Karte karte = new Karte(Kartentyp.getName(resultKartentyp.get(i)),Kartenwert.getName(resultKartenwert.get(i)));
             finalResult.add(karte);
         }
-
-        //List<Karte> result = (List<Karte>) session.createSQLQuery("Select * from MauMauSpiel_kartenstapel").list();
 
         return finalResult;
     }
 
     public List<Karte> findAblagestapel() throws DaoFindException {
-        //TypedQuery<Spieler> q = entityManager.createQuery("SELECT s FROM MauMauSpiel_Spieler s",Spieler.class);
-        //Session session = HibernateUtil.getSessionFactory().getCurrentSession();
         Session session = (Session) entityManager.getDelegate();
-
         List<Integer> resultKartentyp;
         List<Integer> resultKartenwert;
 
@@ -130,19 +107,13 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
         List<Karte> finalResult = new ArrayList<Karte>();
 
         for(int i=0;i<resultKartentyp.size();i++){
-            //log.info("Typ aus findMethode: "+Kartentyp.getName(resultKartentyp.get(i)));
-            //log.info("Wert aus findMethode: "+Kartenwert.getName(resultKartenwert.get(i)));
-
             Karte karte = new Karte(Kartentyp.getName(resultKartentyp.get(i)),Kartenwert.getName(resultKartenwert.get(i)));
             finalResult.add(karte);
         }
 
-        //List<Karte> result = (List<Karte>) session.createSQLQuery("Select * from MauMauSpiel_kartenstapel").list();
-
         return finalResult;
     }
 
-    ///////////////////////
     public void updateRunde(int runde) throws DaoUpdateException {
         Session session = (Session) entityManager.getDelegate();
         try {
@@ -150,14 +121,10 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
         } catch (PersistenceException e) {
             throw new DaoUpdateException(e.getMessage());
         }
-
     }
 
-    public void updateKartenstapel(List<Karte> kartenstapel){
 
-    }
-
-    public MauMauSpiel findById(int spielId) throws DaoFindException {
+    public MauMauSpiel findSpiel() throws DaoFindException {
         MauMauSpiel mauMauSpiel;
         try {
             mauMauSpiel = entityManager.find(MauMauSpiel.class,spielId);
