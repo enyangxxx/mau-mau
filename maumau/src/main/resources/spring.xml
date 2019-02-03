@@ -28,7 +28,6 @@
     <bean id="spielerdaoimpl" class="de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerDaoImpl">
     </bean>
 
-
     <bean id="maumauspieldaoimpl" class="de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDaoImpl">
     </bean>
 
@@ -62,11 +61,19 @@
         <constructor-arg ref="spielverwaltungimpl"/>
         <constructor-arg ref="maumauspieldaoimpl"/>
         <constructor-arg ref="spielerdaoimpl"/>
+        <constructor-arg ref="virtuellerspielerverwaltungimpl"/>
     </bean>
 
     <bean id="configserviceimpl" class="de.htw.berlin.maumau.configurator.ConfigServiceImpl">
     </bean>
 
+    <bean id="virtuellerspielerverwaltungimpl" class="de.htw.berlin.maumau.virtuellerSpielerverwaltung.virtuellerSpielerverwaltungImpl.VirtuellerSpielerverwaltungImpl">
+        <constructor-arg ref="maumauspieldaoimpl"/>
+        <constructor-arg ref="spielregelnimpl"/>
+        <constructor-arg ref="spielverwaltungimpl"/>
+        <constructor-arg ref="spielerverwaltungimpl"/>
+        <constructor-arg ref="spielerdaoimpl"/>
+    </bean>
 
 
 

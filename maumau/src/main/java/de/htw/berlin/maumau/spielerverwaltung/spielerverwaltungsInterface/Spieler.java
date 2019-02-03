@@ -21,9 +21,9 @@ public class Spieler {
     private List<Karte> hand = new ArrayList<Karte>();
     private boolean mauGerufen;
     private boolean dran;
-    private boolean istComputer;
     private Karte neueKarte;// Die nächste Karte, die gelegt werden soll
     private int punktestand;
+    private boolean istComputer;
 
     public Spieler(){
 
@@ -33,9 +33,9 @@ public class Spieler {
     public Spieler(String name, int s_id, boolean istComputer) {
         this.name = name;
         this.s_id = s_id;
-        this.istComputer = istComputer;
         dran = false;
         mauGerufen = false;
+        this.istComputer = istComputer;
     }
 
 
@@ -103,7 +103,7 @@ public class Spieler {
         this.punktestand = punktestand;
     }
 
-    @Column(nullable = false)
+    @Column(nullable=true)
     public boolean isIstComputer() {
         return istComputer;
     }
@@ -111,5 +111,4 @@ public class Spieler {
     public void setIstComputer(boolean istComputer) {
         this.istComputer = istComputer;
     }
-
 }

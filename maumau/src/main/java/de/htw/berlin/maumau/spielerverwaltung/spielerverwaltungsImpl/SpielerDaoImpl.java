@@ -98,7 +98,12 @@ public class SpielerDaoImpl implements SpielerDao {
 
     public int findAktuellerSpielerId() {
         Session session = (Session) entityManager.getDelegate();
-        int aktuellerSpielerId = (Integer) session.createSQLQuery("Select s_id from Spieler where dran = true").uniqueResult();
+        int aktuellerSpielerId = 0;
+        aktuellerSpielerId= (Integer) session.createSQLQuery("Select s_id from Spieler where dran = true").uniqueResult();
+
+        if(aktuellerSpielerId==0){
+            aktuellerSpielerId = (Integer) session.createSQLQuery("Select s_id from VirtuellerSpieler where dran = true").uniqueResult();
+        }
         return aktuellerSpielerId;
     }
 
@@ -119,4 +124,36 @@ public class SpielerDaoImpl implements SpielerDao {
             throw new DaoUpdateException(e.toString());
         }
     }
+
+    public boolean isVirtuellerSpieler(int s_id) throws DaoUpdateException {
+        if(s_id>findMaxId()){
+            return true;
+        }
+        return false;
+    }
+
+    private int findMaxId() throws DaoUpdateException {
+        Session session = (Session) entityManager.getDelegate();
+        int maxId;
+        try {
+            maxId = (Integer) session.createSQLQuery("Select max(s_id) from Spieler").uniqueResult();
+        } catch (PersistenceException e) {
+            throw new DaoUpdateException(e.toString());
+        }
+        return maxId;
+    }
+
+    public boolean findIsIstComputer(int s_id) throws DaoFindException {
+        Session session = (Session) entityManager.getDelegate();
+        boolean status;
+
+        try {
+            status = (Boolean) session.createSQLQuery("Select istComputer from Spieler where s_id="+s_id).uniqueResult();
+        } catch (PersistenceException e) {
+            throw new DaoFindException(e.getMessage());
+        }
+        return status;
+    }
+
+
 }

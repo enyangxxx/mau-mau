@@ -210,7 +210,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * @throws DaoFindException   - beim fehlerhaften Lesen in der Dao-Klasse
      * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
-    private void karteVonHandAufStapelLegen(Karte gewaehlteKarte) throws DaoFindException, DaoUpdateException {
+    public void karteVonHandAufStapelLegen(Karte gewaehlteKarte) throws DaoFindException, DaoUpdateException {
         Spieler aktuellerSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         List<Karte> hand = spielerDao.findHand(aktuellerSpieler.getS_id());
         aktuellerSpieler.setHand(hand);
@@ -248,7 +248,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * @throws DaoUpdateException         - beim fehlerhaften Updaten in der Dao-Klasse
      */
 
-    private void regelwerkUmsetzen(Karte gewaehlteKarte, List<Karte> hand) throws KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException {
+    public void regelwerkUmsetzen(Karte gewaehlteKarte, List<Karte> hand) throws KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException {
         if (gewaehlteKarte.getWert().equals(Kartenwert.SIEBEN)) {
             maumauspielDao.updateSiebenAktiv(true);
             maumauspielDao.updateanzahlSonderregelKartenZiehen(maumauspielDao.findAnzahlSonderregelKartenZiehen() + 2);
@@ -378,11 +378,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
     public void maumauRufen() throws DaoUpdateException, DaoFindException {
-        for (Spieler spieler : maumauspielDao.findSpielerlist()) {
-            if (spielerDao.findBys_id(spieler.getS_id()).isDran()) {
-                spielerDao.updateHatMauGerufen(true, spieler.getS_id());
-            }
-        }
+        spielerDao.updateHatMauGerufen(true, spielerDao.findAktuellerSpielerId());
         log.info(MAU_RUFEN_MESSAGE);
     }
 

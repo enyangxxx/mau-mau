@@ -27,4 +27,8 @@ public interface SpielerDao {
 
     void updateDran(boolean status, int s_id) throws DaoUpdateException;
 
+    boolean isVirtuellerSpieler(int s_id) throws DaoUpdateException;
+
+    public boolean findIsIstComputer(int s_id) throws DaoFindException;
+
     }

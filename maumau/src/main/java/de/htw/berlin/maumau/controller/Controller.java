@@ -14,6 +14,8 @@ import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spiele
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
+import de.htw.berlin.maumau.virtuellerSpielerverwaltung.virtuellerSpielerverwaltungImpl.VirtuellerSpielerverwaltungImpl;
+import de.htw.berlin.maumau.virtuellerSpielerverwaltung.virtuellerSpielerverwaltungInterface.IVirtuellerSpielerverwaltung;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -36,16 +38,18 @@ public class Controller {
     private ISpielverwaltung spielverwaltung;
     private MauMauSpielDao spielDao;
     private SpielerDao spielerDao;
+    private IVirtuellerSpielerverwaltung virtuellerSpielerverwaltung;
     private View view = new View();
     private List<Spieler> spielerliste = new ArrayList<Spieler>();
 
 
-    public Controller(final IKartenverwaltung kartenverwaltung, final ISpielerverwaltung spielerverwaltung, final ISpielverwaltung spielverwaltung, final MauMauSpielDao spielDao, final SpielerDao spielerDao) {
+    public Controller(final IKartenverwaltung kartenverwaltung, final ISpielerverwaltung spielerverwaltung, final ISpielverwaltung spielverwaltung, final MauMauSpielDao spielDao, final SpielerDao spielerDao, final IVirtuellerSpielerverwaltung virtuellerSpielerverwaltungimpl) {
         this.kartenverwaltung = kartenverwaltung;
         this.spielerverwaltung = spielerverwaltung;
         this.spielverwaltung = spielverwaltung;
         this.spielDao = spielDao;
         this.spielerDao = spielerDao;
+        this.virtuellerSpielerverwaltung = virtuellerSpielerverwaltungimpl;
     }
 
 
@@ -98,8 +102,20 @@ public class Controller {
      */
     public void updateViewSpielerlisteBefuellen() throws DaoFindException, DaoCreateException {
         view.printWillkommen();
+        String userInputMitOderOhneComputer = view.userInputMitOderOhneComputer();
 
         int spielerID = 0;
+
+        if(userInputMitOderOhneComputer.equalsIgnoreCase("Ja")){
+            int userInputWievieleComputer = view.userInputWievieleComputer();
+            for(int i=0;i<userInputWievieleComputer;i++){
+                spielerID++;
+                spielerverwaltung.spielerGenerieren("Computer"+spielerID, spielerID, true);
+                spielerverwaltung.addSpielerZurListe(spielerDao.findBys_id(spielerID), spielerliste);
+                log.info("Spielerliste.size: "+spielerliste.size());
+            }
+        }
+
         while (spielerliste.size() <= 3) {
             String userInput = view.userInputNeuerSpielerErstellen(spielerliste.size());
             if (userInput.equalsIgnoreCase("Ja")) {
@@ -201,7 +217,10 @@ public class Controller {
     public void updateViewNaechsterSpielzugStarten() throws DaoFindException {
         view.printSpielerGewechselt(spielerDao.findBys_id(spielerDao.findAktuellerSpielerId()).getName());
 
-        view.printHandAnzeigen(spielerDao.findHand(spielerDao.findAktuellerSpielerId()));
+        if(!spielerDao.findBys_id(spielerDao.findAktuellerSpielerId()).isIstComputer()){
+            view.printHandAnzeigen(spielerDao.findHand(spielerDao.findAktuellerSpielerId()));
+        }
+        //view.printHandAnzeigen(spielerDao.findHand(spielerDao.findAktuellerSpielerId()));
 
         view.printLetzteKarteAblagestapel(spielverwaltung.letzteKarteErmitteln());
     }
@@ -217,30 +236,58 @@ public class Controller {
      * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
     public void updateViewSpielzugDurchfuehren() throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException {
-        String gewaehlteAktion = view.userInputAktionWaehlenMitMau();
+        if(spielerDao.findIsIstComputer(spielerDao.findAktuellerSpielerId())){
+            int anzahlKartenHandAlt = spielerDao.findHand(spielerDao.findAktuellerSpielerId()).size();
+            MauMauSpiel spiel = spielDao.findSpiel();
+            Kartentyp wunschtypAlt = spiel.getAktuellerWunschtyp();
+            int alterSpielerId = spielerDao.findAktuellerSpielerId();
 
-        while (!(gewaehlteAktion.equalsIgnoreCase("legen") ||
-                gewaehlteAktion.equalsIgnoreCase("ziehen") ||
-                gewaehlteAktion.equalsIgnoreCase("Mau"))) {
-            try{
-                throw new FalscherInputException("Schreibe entweder Legen oder Ziehen oder Mau!");
-            }catch(FalscherInputException e){
-                view.fehlermeldungAusgabe(e.getMessage());
-                gewaehlteAktion = view.userInputAktionWaehlenMitMau();
+            virtuellerSpielerverwaltung.spielzugDurchfuehren();
+
+            int anzahlKartenHandNeu = spielerDao.findHand(alterSpielerId).size();
+            spiel = spielDao.findSpiel();
+            Kartentyp wunschtypNeu = spiel.getAktuellerWunschtyp();
+
+            if(anzahlKartenHandAlt>anzahlKartenHandNeu){
+                view.printKarteGelegt(spielerDao.findBys_id(alterSpielerId),spielverwaltung.letzteKarteErmitteln());
+
+                if(wunschtypAlt!=wunschtypNeu&&wunschtypNeu!=null){
+                    view.printComputerLegtWunschtypFest(spielerDao.findBys_id(alterSpielerId),spiel.getAktuellerWunschtyp().toString());
+                }
+            }else if(anzahlKartenHandAlt==anzahlKartenHandNeu-1){
+                view.printEineKarteGezogen(spielerDao.findBys_id(alterSpielerId));
+            }else if(anzahlKartenHandAlt<anzahlKartenHandNeu){
+                view.printKartenGezogenSonderregel(spielerDao.findBys_id(alterSpielerId),spiel);
             }
-        }
 
-        if (gewaehlteAktion.equalsIgnoreCase("Mau")) {
-            spielverwaltung.maumauRufen();
+        }
+        else {
+
+            String gewaehlteAktion = view.userInputAktionWaehlenMitMau();
+
             while (!(gewaehlteAktion.equalsIgnoreCase("legen") ||
-                    gewaehlteAktion.equalsIgnoreCase("ziehen"))) {
-                gewaehlteAktion = view.userInputAktionWaehlenOhneMau();
+                    gewaehlteAktion.equalsIgnoreCase("ziehen") ||
+                    gewaehlteAktion.equalsIgnoreCase("Mau"))) {
+                try {
+                    throw new FalscherInputException("Schreibe entweder Legen oder Ziehen oder Mau!");
+                } catch (FalscherInputException e) {
+                    view.fehlermeldungAusgabe(e.getMessage());
+                    gewaehlteAktion = view.userInputAktionWaehlenMitMau();
+                }
             }
-        }
-        if (gewaehlteAktion.equalsIgnoreCase("legen")) {
-            updateViewAktionKarteLegen();
-        } else if (gewaehlteAktion.equalsIgnoreCase("ziehen")) {
-            updateViewAktionKarteZiehen();
+
+            if (gewaehlteAktion.equalsIgnoreCase("Mau")) {
+                spielverwaltung.maumauRufen();
+                while (!(gewaehlteAktion.equalsIgnoreCase("legen") ||
+                        gewaehlteAktion.equalsIgnoreCase("ziehen"))) {
+                    gewaehlteAktion = view.userInputAktionWaehlenOhneMau();
+                }
+            }
+            if (gewaehlteAktion.equalsIgnoreCase("legen")) {
+                updateViewAktionKarteLegen();
+            } else if (gewaehlteAktion.equalsIgnoreCase("ziehen")) {
+                updateViewAktionKarteZiehen();
+            }
         }
     }
 

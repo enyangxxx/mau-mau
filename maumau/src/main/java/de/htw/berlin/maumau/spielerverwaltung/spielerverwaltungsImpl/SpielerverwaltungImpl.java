@@ -39,7 +39,6 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
      *
      * @param name        - Name des Spielers
      * @param id          - ID des Spielers
-     * @param istComputer - true wenn Computer-Spieler
      * @throws DaoCreateException - beim fehlerhaften Erstellen in der Dao-Klasse
      * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
@@ -70,6 +69,8 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
     public void spielerWechseln() throws DaoFindException, DaoUpdateException {
         MauMauSpiel spiel = maumauSpielDao.findSpiel();
         List<Spieler> spielerliste = maumauSpielDao.findSpielerlist();
+
+
         Spieler alterSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         Spieler neuerSpieler;
         int alterSpielerId = alterSpieler.getS_id();
@@ -143,7 +144,7 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
 
         for (Spieler spieler : spielerliste) {
             List<Karte> hand = new ArrayList<Karte>();
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 5; i++) {
                 try {
                     hand.add(kartenstapel.get(i));
                     kartenstapel.remove(kartenstapel.get(i));
@@ -166,4 +167,6 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
             throw new LeererStapelException("Es konnte keine Karte konnte nicht vom Kartenstapel auf Ablagestapel gelegt werden");
         }
     }
+
+
 }
