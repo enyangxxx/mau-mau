@@ -121,4 +121,10 @@ public interface ISpielverwaltung {
      * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
     void wunschtypFestlegen(Kartentyp wunschtyp) throws DaoFindException, DaoUpdateException;
+
+
+    void karteVonHandAufStapelLegen(Karte gewaehlteKarte) throws DaoFindException, DaoUpdateException;
+
+
+    void regelwerkUmsetzen(Karte gewaehlteKarte, List<Karte> hand) throws KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException;
 }

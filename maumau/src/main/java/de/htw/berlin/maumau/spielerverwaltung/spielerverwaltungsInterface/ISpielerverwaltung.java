@@ -20,7 +20,6 @@ public interface ISpielerverwaltung {
      *
      * @param name        - Name des Spielers
      * @param id          - ID des Spielers
-     * @param istComputer - true wenn Computer-Spieler
      * @throws DaoCreateException - beim fehlerhaften Erstellen in der Dao-Klasse
      * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */

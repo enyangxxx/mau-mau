@@ -57,7 +57,6 @@ public class View {
      * @return input - Name des Spielers
      */
     public String userInputNeuerSpielerName(){
-        Console.println();
         Console.println("Name des Spielers eingeben:");
         String input = Console.readLine();
         Console.println();
@@ -255,5 +254,39 @@ public class View {
      */
     public void fehlermeldungAusgabe(String fehlerausgabe) {
         Console.println(fehlerausgabe);
+    }
+
+
+    /**
+     * User-Abfrage ob er ein neue Runde starten möchte
+     *
+     * @return input - Die Antwort auf die Frage
+     */
+    public String userInputMitOderOhneComputer(){
+        Console.println("Möchtest du virtuelle Spieler integrieren? (Ja/Nein)");
+        String input = Console.readLine();
+
+        return input;
+    }
+
+
+    /**
+     * User-Abfrage ob er ein neue Runde starten möchte
+     *
+     * @return input - Die Antwort auf die Frage
+     */
+    public int userInputWievieleComputer(){
+        Console.println();
+        Console.println("Wie viele virtuelle Spieler möchtest du integrieren? (Max.3)");
+        int input = Console.readInt();
+        Console.println();
+
+        return input;
+    }
+
+
+    public void printComputerLegtWunschtypFest(Spieler spieler, String wunschtyp){
+        Console.println();
+        Console.println("Der Spieler "+spieler.getName()+" hat als Wunschtyp "+wunschtyp+" festgelegt.");
     }
 }

@@ -22,8 +22,8 @@ public class SpielregelnTest {
 
     private ISpielregeln spielregeln;
 
-    private Spieler theo = new Spieler("Theo", 1, false);
-    private Spieler enyang = new Spieler("Enyang", 2, false);
+    private Spieler theo = new Spieler("Theo", 1,false);
+    private Spieler enyang = new Spieler("Enyang", 2,false);
 
     List<Spieler> spielerliste = new ArrayList<Spieler>() {{
         add(enyang);
