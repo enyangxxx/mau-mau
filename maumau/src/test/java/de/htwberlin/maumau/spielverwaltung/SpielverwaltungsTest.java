@@ -1,6 +1,7 @@
 package de.htwberlin.maumau.spielverwaltung;
 
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.LeereInitialeSpielerlisteException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.*;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
@@ -105,26 +106,11 @@ public class SpielverwaltungsTest {
      * Testet die Funktionalität, ein neues Spiel zu starten, indem eine leere Spielerliste übergeben wird.
      * Das erwartete Ergebnis ist KeinSpielerException
      */
-    @Test
-    public void testNeuesSpielStartenMitSpielerlisteOhneSpieler() throws KeinSpielerException, Exception, DaoCreateException, DaoFindException {
-        exceptionRule.expect(KeinSpielerException.class);
-        spielverwaltung.neuesSpielStarten(spielerliste);
-    }
-
-    /**
-     * Teste die Funktionalität, eine neue Runde im Spiel zu starten, angefangen mit der 1. Runde.
-     * Das erwartete Ergebnis ist alteRunde + 1 == neueRunde
-     */
     /*@Test
-    public void testNeueRundeStarten() {
-        spielerliste.add(hans);
-        MauMauSpiel spiel = new MauMauSpiel(spielerliste);
-        int alteRunde = spiel.getRunde();
-        spielverwaltung.neueRundeStarten(spiel);
-        int neueRunde = spiel.getRunde();
-        assertEquals("Neue Runde muss um 1 größer sein als die alte Runde", alteRunde + 1, neueRunde);
-    }
-    */
+    public void testNeuesSpielStartenMitSpielerlisteOhneSpieler() throws KeinSpielerException, Exception, DaoCreateException, DaoFindException {
+        exceptionRule.expect(LeereInitialeSpielerlisteException.class);
+        spielverwaltung.neuesSpielStarten(spielerliste);
+    }*/
 
     /**
      * Teste die Funktionalität, eine neue Karte zu ziehen.
