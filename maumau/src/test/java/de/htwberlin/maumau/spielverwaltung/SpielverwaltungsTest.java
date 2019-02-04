@@ -1,15 +1,16 @@
 package de.htwberlin.maumau.spielverwaltung;
 
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
-import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoCreateException;
-import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.*;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,6 +30,7 @@ public class SpielverwaltungsTest {
 
     private ISpielverwaltung spielverwaltung;
     private ISpielerverwaltung spielerverwaltung;
+    private MauMauSpielDao maumauspielDao;
 
     private static final Spieler hans = new Spieler("hans", 1, false);
     private static final Spieler enyang = new Spieler("Enyang", 2, false);
@@ -61,9 +63,29 @@ public class SpielverwaltungsTest {
     public void setUp() {
         spielverwaltung = (ISpielverwaltung) ConfigServiceImpl.context.getBean("spielverwaltungimpl");
         spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
+        maumauspielDao = (MauMauSpielDao) ConfigServiceImpl.context.getBean("maumauspieldaoimpl");
         spielerliste = new ArrayList<Spieler>();
 
     }
+
+    /*@Test
+    public void testAblagestapelWiederverwendenInSonderregelKartenZiehen() throws LeererStapelException, KarteNichtGezogenException, DaoFindException, DaoUpdateException, DaoCreateException {
+        enyang.setHand(hand);
+        hans.setHand(hand);
+        enyang.setDran(true);
+
+        spielerliste.add(enyang);
+        spielerliste.add(hans);
+        MauMauSpiel spiel = new MauMauSpiel(spielerliste);
+        spiel.setKartenstapel(kartenstapel);
+        spiel.setAblagestapel(ablagestapel);
+
+        maumauspielDao.create(spiel);
+        maumauspielDao.updateanzahlSonderregelKartenZiehen(6);
+
+        spielverwaltung.karteLegen();
+
+    }*/
 
     /**
      * Testet die Funktionalität, ein neues Spiel zu starten, indem eine Spielerliste mit 2 Spielern übergeben wird.

@@ -53,6 +53,7 @@
     </bean>
 
     <bean id="spielregelnimpl" class="de.htw.berlin.maumau.spielregeln.spielregelnImpl.SpielregelnImpl">
+        <constructor-arg ref="maumauspieldaoimpl"/>
     </bean>
 
     <bean id="controller" class="de.htw.berlin.maumau.controller.Controller">

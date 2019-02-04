@@ -6,6 +6,7 @@ import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerDao;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
@@ -13,6 +14,8 @@ import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import de.htw.berlin.maumau.virtuellerSpielerverwaltung.virtuellerSpielerverwaltungInterface.IVirtuellerSpielerverwaltung;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.List;
 import java.util.Random;
@@ -24,6 +27,9 @@ public class VirtuellerSpielerverwaltungImpl implements IVirtuellerSpielerverwal
     private ISpielverwaltung spielverwaltung;
     private ISpielerverwaltung spielerverwaltung;
     private SpielerDao spielerdao;
+
+    private Log log = LogFactory.getLog(VirtuellerSpielerverwaltungImpl.class);
+
 
 
     public VirtuellerSpielerverwaltungImpl(final MauMauSpielDao maumauspielDaoimpl, final ISpielregeln spielregelnImpl, final ISpielverwaltung spielverwaltungImpl, final ISpielerverwaltung spielerverwaltungImpl, final SpielerDao spielerdaoimpl){
@@ -43,7 +49,8 @@ public class VirtuellerSpielerverwaltungImpl implements IVirtuellerSpielerverwal
         List<Karte> hand = spielerdao.findHand(spielerdao.findAktuellerSpielerId());
 
         if(!karteLegen(spiel, letzteKarte, hand)){
-            if (spiel.isSonderregelSiebenAktiv()) {
+            if (maumauspielDao.findSiebenAktivStatus()) {
+                log.info("Er muss jetzt wegen der Sieben "+maumauspielDao.findAnzahlSonderregelKartenZiehen()+ " Karten ziehen.");
                 spielverwaltung.karteZiehenSonderregel();
             } else {
                 spielverwaltung.karteZiehen();
@@ -52,15 +59,22 @@ public class VirtuellerSpielerverwaltungImpl implements IVirtuellerSpielerverwal
 
     }
 
+    //Karte legen klappt nicht, wenn im Spiel ein Wunschtyp gesetzt ist
     @Override
     public boolean karteLegen(MauMauSpiel spiel, Karte letzteKarte, List<Karte> hand) throws DaoUpdateException, DaoFindException, LeererStapelException, KarteNichtGezogenException {
 
         boolean tmp = false;
 
+        log.info("Der Spieler "+spielerdao.findBys_id(spielerdao.findAktuellerSpielerId()).getName()+" ist dran");
         for(Karte karte : hand){
+            log.info("Bedingung 1: "+spielregeln.sonderregelEingehaltenSieben(karte, letzteKarte));
+            log.info("Bedingugn 2: "+!maumauspielDao.findSiebenAktivStatus());
+            log.info("Bedingung 3: "+spielregeln.sonderregelEingehaltenBube(letzteKarte, letzteKarte));
             if (((spielregeln.sonderregelEingehaltenSieben(karte, letzteKarte)) ||
-                    (!spiel.isSonderregelSiebenAktiv())) && spielregeln.sonderregelEingehaltenBube(letzteKarte, letzteKarte)) {
-                if (spiel.getAktuellerWunschtyp() != null) {
+                    (!maumauspielDao.findSiebenAktivStatus())) && spielregeln.sonderregelEingehaltenBube(karte, letzteKarte)) {
+                log.info("wunschtyp ist: "+maumauspielDao.findAktuellerWunschtyp());
+                if (maumauspielDao.findAktuellerWunschtyp() != null) {
+                    log.info("wunschtyp ist nicht null");
                     if(karteLegenWennWunschtypVorhanden(spiel, karte, hand)){
                         tmp = true;
                         break;
@@ -97,7 +111,8 @@ public class VirtuellerSpielerverwaltungImpl implements IVirtuellerSpielerverwal
             spielverwaltung.karteVonHandAufStapelLegen(karte);
             spielverwaltung.regelwerkUmsetzen(karte, hand);
             spielerverwaltung.spielerWechseln();
-            spiel.setAktuellerWunschtyp(null);
+            //spiel.setAktuellerWunschtyp(null);
+            maumauspielDao.updateAktuellerWunschtyp(null);
             return true;
         }
         return false;

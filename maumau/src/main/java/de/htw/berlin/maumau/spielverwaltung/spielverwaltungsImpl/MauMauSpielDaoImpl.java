@@ -192,4 +192,27 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
         }
         return anzahl;
     }
+
+    public Kartentyp findAktuellerWunschtyp() throws DaoFindException {
+        Session session = (Session) entityManager.getDelegate();
+        int wunschtyp;
+
+        try {
+            wunschtyp = (Integer) session.createSQLQuery("Select aktuellerWunschtyp from MauMauSpiel where spielid=0").uniqueResult();
+        } catch (PersistenceException e) {
+            throw new DaoFindException(e.getMessage());
+        } catch (NullPointerException e){
+            return null;
+        }
+        return Kartentyp.getName(wunschtyp);
+    }
+
+    public void updateAktuellerWunschtyp(Kartentyp wunschtyp) throws DaoUpdateException {
+        Session session = (Session) entityManager.getDelegate();
+        try {
+            session.createSQLQuery("Update MauMauSpiel set aktuellerWunschtyp =" + wunschtyp + " where spielid=0").executeUpdate();
+        } catch (PersistenceException e) {
+            throw new DaoUpdateException(e.getMessage());
+        }
+    }
 }

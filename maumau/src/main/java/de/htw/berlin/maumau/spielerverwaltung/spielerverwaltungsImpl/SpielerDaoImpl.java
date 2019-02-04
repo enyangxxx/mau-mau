@@ -100,10 +100,6 @@ public class SpielerDaoImpl implements SpielerDao {
         Session session = (Session) entityManager.getDelegate();
         int aktuellerSpielerId = 0;
         aktuellerSpielerId= (Integer) session.createSQLQuery("Select s_id from Spieler where dran = true").uniqueResult();
-
-        if(aktuellerSpielerId==0){
-            aktuellerSpielerId = (Integer) session.createSQLQuery("Select s_id from VirtuellerSpieler where dran = true").uniqueResult();
-        }
         return aktuellerSpielerId;
     }
 
