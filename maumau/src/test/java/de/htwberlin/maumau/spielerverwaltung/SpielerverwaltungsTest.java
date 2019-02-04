@@ -1,73 +1,57 @@
 package de.htwberlin.maumau.spielerverwaltung;
 
-
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerDao;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDaoImpl;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.mockito.Matchers.*;
-
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
-
-@RunWith(value = BlockJUnit4ClassRunner.class)
+@RunWith(value = MockitoJUnitRunner.class)
 public class SpielerverwaltungsTest {
-
-    private ISpielerverwaltung spielerverwaltung;
-    private List<Spieler> spielerliste;
 
     @Mock
     MauMauSpielDao mauMauSpielDao;
 
     @Mock
-    private SpielerDao spielerDao;
+    SpielerDao spielerDao;
 
-    @Rule
-    public ExpectedException expected = ExpectedException.none();
+    @InjectMocks
+    ISpielerverwaltung spielerverwaltung = new SpielerverwaltungImpl(spielerDao,mauMauSpielDao);
 
     private Spieler caner = new Spieler( "Caner",9,false);
     private Spieler enyang = new Spieler( "Enyang",10,false);
+    private List<Spieler> spielerliste;
 
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
         spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
         spielerliste = new ArrayList<Spieler>();
-        spielerverwaltung.setMaumauSpielDao(mauMauSpielDao);
-        spielerverwaltung.setSpielerDao(spielerDao);
-
+        spielerverwaltung = new SpielerverwaltungImpl(spielerDao,mauMauSpielDao);
     }
 
     /**
-
      * Testet, ob ein neuer Spieler zur Spielerliste hinzugefügt werden kann.
      * Das erwartete Ergebnis ist alteAnzahlSpielerInListe + 1 == neueAnzahlSpielerInListe
      */
@@ -79,7 +63,6 @@ public class SpielerverwaltungsTest {
         int neueAnzahlSpielerInListe = spielerliste.size();
         assertEquals("Zur Spielerliste muss ein Spieler hinzugefügt worden sein.", alteAnzahlSpielerInListe + 1,neueAnzahlSpielerInListe);
     }
-
 
     /**
      * Testet, ob gewechselt werden kann, welcher Spieler gerade am Zug ist.
@@ -102,7 +85,6 @@ public class SpielerverwaltungsTest {
      * Testet, ob ein existierender Spieler anhand seiner ID zurückgegeben werden kann.
      * Das erwartete Ergebnis ist der Spieler Caner
      */
-
     @Test
     public void testGetSpielerById() throws KeinSpielerException, DaoFindException {
         when(spielerDao.findBys_id(anyInt())).thenReturn(caner);
@@ -114,7 +96,6 @@ public class SpielerverwaltungsTest {
         verify(spielerDao, times(2)).findBys_id(anyInt());
         verify(mauMauSpielDao,times(1)).findSpielerlist();
     }
-
 
     /**
      * Testet, ob kein Spieler zu einer ID gefunden werden kann, die nicht vergeben ist.
@@ -134,6 +115,7 @@ public class SpielerverwaltungsTest {
     private boolean throwKeinSpielerException() throws KeinSpielerException {
         throw new KeinSpielerException("Kein Spieler konnte gefunden werden");
     }
+
 
     /**
      * Testet, ob die Methode KartenAusteilen jedem Spieler aus der Spielerliste 5 Karten austeilt,

@@ -64,7 +64,4 @@ public interface ISpielerverwaltung {
      */
     void kartenAusteilen() throws LeererStapelException, DaoUpdateException, DaoFindException;
 
-    void setMaumauSpielDao(MauMauSpielDao mauMauSpielDao);
-
-    void setSpielerDao(SpielerDao spielerDao);
 }
