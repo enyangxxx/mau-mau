@@ -76,6 +76,7 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
         int alterSpielerId = alterSpieler.getS_id();
 
         alterSpieler.setDran(false);
+        alterSpieler.setMauGerufen(false);
         spielerDao.update(alterSpieler);
 
 

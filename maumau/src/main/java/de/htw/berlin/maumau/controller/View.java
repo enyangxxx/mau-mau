@@ -190,11 +190,11 @@ public class View {
      * Karte wird aufgrund einer zutreffenden Sonderregel gezogen
      *
      * @param spieler - der Spieler der die Karte zieht
-     * @param spiel - das aktuelle Maumau Spiel
+     * @param anzahl - Anzahl der zu ziehenden Karten
      */
-    public void printKartenGezogenSonderregel(Spieler spieler, MauMauSpiel spiel){
+    public void printKartenGezogenSonderregel(Spieler spieler, int anzahl){
         Console.println();
-        Console.println(spieler.getName() + " zieht " + spiel.getAnzahlSonderregelKartenZiehen() + " Karten.");
+        Console.println(spieler.getName() + " zieht " + anzahl + " Karten.");
     }
 
     /**

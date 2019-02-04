@@ -5,6 +5,7 @@ import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoRemoveException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 
@@ -39,5 +40,9 @@ public interface MauMauSpielDao {
     void updateanzahlSonderregelKartenZiehen(int anzahl) throws DaoUpdateException;
 
     int findAnzahlSonderregelKartenZiehen() throws DaoFindException;
+
+    public Kartentyp findAktuellerWunschtyp() throws DaoFindException;
+
+    public void updateAktuellerWunschtyp(Kartentyp wunschtyp) throws DaoUpdateException;
 
 }

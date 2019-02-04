@@ -176,7 +176,7 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         List<Karte> ablagestapel = maumauspielDao.findAblagestapel();
         List<Karte> kartenstapel = maumauspielDao.findKartenstapel();
         List<Karte> hand = spielerDao.findHand(aktuellerSpieler.getS_id());
-        int anzahl = spiel.getAnzahlSonderregelKartenZiehen();
+        int anzahl = maumauspielDao.findAnzahlSonderregelKartenZiehen();
 
         for (int i = 0; i < anzahl; i++) {
             if (kartenstapel.isEmpty()) {
@@ -188,6 +188,9 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
             try {
                 hand.add(kartenstapel.get(0));
                 kartenstapel.remove(0);
+                spiel.setKartenstapel(kartenstapel);
+                maumauspielDao.update(spiel);
+
             } catch (Exception e) {
                 throw new KarteNichtGezogenException("Karte konnte nicht gezogen werden, weil Kartenstapel leer ist");
             }
@@ -251,7 +254,10 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
     public void regelwerkUmsetzen(Karte gewaehlteKarte, List<Karte> hand) throws KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException {
         if (gewaehlteKarte.getWert().equals(Kartenwert.SIEBEN)) {
             maumauspielDao.updateSiebenAktiv(true);
+            log.info("MaumauspielDao Sieben aktiv status: "+maumauspielDao.findSiebenAktivStatus());
+            log.info("findAnzahlSonderregelKartenZiehen davor: "+maumauspielDao.findAnzahlSonderregelKartenZiehen());
             maumauspielDao.updateanzahlSonderregelKartenZiehen(maumauspielDao.findAnzahlSonderregelKartenZiehen() + 2);
+            log.info("findAnzahlSonderregelKartenZiehen danach: "+maumauspielDao.findAnzahlSonderregelKartenZiehen());
         }
         if (gewaehlteKarte.getWert().equals(Kartenwert.ASS)) {
             maumauspielDao.updateAssAktiv(true);
@@ -300,18 +306,18 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
         Spieler aktuellerSpieler = spielerDao.findBys_id(spielerDao.findAktuellerSpielerId());
         List<Karte> hand = spielerDao.findHand(aktuellerSpieler.getS_id());
         aktuellerSpieler.setHand(hand);
-        MauMauSpiel spiel = maumauspielDao.findSpiel();
         Karte letzteKarte = maumauspielDao.findAblagestapel().get(maumauspielDao.findAblagestapel().size() - 1);
-        Kartentyp aktuellerWunschtyp = spiel.getAktuellerWunschtyp();
+        Kartentyp aktuellerWunschtyp = maumauspielDao.findAktuellerWunschtyp();
 
         if (((spielregeln.sonderregelEingehaltenSieben(gewaehlteKarte, letzteKarte)) ||
-                (!spiel.isSonderregelSiebenAktiv())) && spielregeln.sonderregelEingehaltenBube(gewaehlteKarte, letzteKarte)) {
+                (!maumauspielDao.findSiebenAktivStatus())) && spielregeln.sonderregelEingehaltenBube(gewaehlteKarte, letzteKarte)) {
             if (aktuellerWunschtyp != null) {
                 if (spielregeln.istLegbar(gewaehlteKarte, aktuellerWunschtyp)) {
                     karteVonHandAufStapelLegen(gewaehlteKarte);
                     regelwerkUmsetzen(gewaehlteKarte, hand);
                     spielerverwaltung.spielerWechseln();
-                    spiel.setAktuellerWunschtyp(null);
+                    //spiel.setAktuellerWunschtyp(null);
+                    maumauspielDao.updateAktuellerWunschtyp(null);
                 }
             } else {
                 if (spielregeln.istLegbar(letzteKarte, gewaehlteKarte)) {
@@ -323,7 +329,6 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
                 }
             }
         }
-        maumauspielDao.update(spiel);
     }
 
 

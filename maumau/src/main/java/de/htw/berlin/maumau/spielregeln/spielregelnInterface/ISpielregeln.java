@@ -1,5 +1,6 @@
 package de.htw.berlin.maumau.spielregeln.spielregelnInterface;
 
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 
@@ -40,7 +41,7 @@ public interface ISpielregeln {
      * @param  neueKarte - die neue Karte die gelegt werden soll
      * @return true - wenn versucht wird einen Buben auf einen Buben zu legen.
      */
-    boolean sonderregelEingehaltenBube(Karte neueKarte, Karte letzteKarte);
+    boolean sonderregelEingehaltenBube(Karte neueKarte, Karte letzteKarte) throws DaoFindException;
 
 
 
