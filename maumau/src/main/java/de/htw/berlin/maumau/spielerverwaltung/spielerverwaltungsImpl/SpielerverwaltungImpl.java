@@ -169,13 +169,4 @@ public class SpielerverwaltungImpl implements ISpielerverwaltung {
         }
     }
 
-    public void setMaumauSpielDao(MauMauSpielDao mauMauSpielDao) {
-        this.maumauSpielDao = mauMauSpielDao;
-    }
-
-    public void setSpielerDao(SpielerDao spielerDao) {
-        this.spielerDao = spielerDao;
-    }
-
-
 }
