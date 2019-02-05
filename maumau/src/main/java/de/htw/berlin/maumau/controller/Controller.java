@@ -14,7 +14,6 @@ import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spiele
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
-import de.htw.berlin.maumau.virtuellerSpielerverwaltung.virtuellerSpielerverwaltungImpl.VirtuellerSpielerverwaltungImpl;
 import de.htw.berlin.maumau.virtuellerSpielerverwaltung.virtuellerSpielerverwaltungInterface.IVirtuellerSpielerverwaltung;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -237,7 +236,7 @@ public class Controller {
      * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
     public void updateViewSpielzugDurchfuehren() throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException {
-        if(spielerDao.findIsIstComputer(spielerDao.findAktuellerSpielerId())){
+        if(spielerDao.istComputer(spielerDao.findAktuellerSpielerId())){
            spielzugDurchfuehrenComputer();
         }
         else {

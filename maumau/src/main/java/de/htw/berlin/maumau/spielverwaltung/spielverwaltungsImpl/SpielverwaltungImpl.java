@@ -180,9 +180,18 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
         for (int i = 0; i < anzahl; i++) {
             if (kartenstapel.isEmpty()) {
+                log.info("Er ist reingegangen");
+                log.info("Ablagestapel size vor wiederverwenden: "+ablagestapel.size());
+                log.info("Kartenstapel size vor wiederverwenden: "+kartenstapel.size());
+
                 kartenverwaltung.ablagestapelWiederverwenden();
+
                 kartenstapel = maumauspielDao.findKartenstapel();
                 ablagestapel = maumauspielDao.findAblagestapel();
+
+                log.info("Ablagestapel size nach wiederverwenden: "+ablagestapel.size());
+                log.info("Kartenstapel size nach wiederverwenden: "+kartenstapel.size());
+
             }
 
             try {

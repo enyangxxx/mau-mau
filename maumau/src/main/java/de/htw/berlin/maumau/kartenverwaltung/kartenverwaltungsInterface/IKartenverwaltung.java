@@ -21,7 +21,7 @@ public interface IKartenverwaltung {
     void kartenstapelGenerieren() throws DaoUpdateException, DaoFindException;
 
     /**
-     * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.
+     * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufaellig ist.
      *
      * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse

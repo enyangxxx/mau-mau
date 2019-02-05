@@ -46,9 +46,7 @@ public class SpielerverwaltungsTest {
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
-        spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
         spielerliste = new ArrayList<Spieler>();
-        spielerverwaltung = new SpielerverwaltungImpl(spielerDao,mauMauSpielDao);
     }
 
     /**
