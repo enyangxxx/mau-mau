@@ -3,19 +3,32 @@ package de.htwberlin.maumau.spielverwaltung;
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.LeereInitialeSpielerlisteException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.*;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.KartenverwaltungImpl;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerDao;
+import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
+import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
+import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.SpielverwaltungImpl;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,17 +39,42 @@ import static org.junit.Assert.*;
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
 
-
+@RunWith(value = MockitoJUnitRunner.class)
 public class SpielverwaltungsTest {
 
-    private ISpielverwaltung spielverwaltung;
+    //private ISpielverwaltung spielverwaltung;
+    //@Mock
+    //private IKartenverwaltung kartenverwaltung;
+    @Mock
+    private ISpielregeln spielregeln;
+    @Mock
     private ISpielerverwaltung spielerverwaltung;
+    @Mock
     private MauMauSpielDao maumauspielDao;
+    @Mock
+    private SpielerDao spielerDao;
+
+    @InjectMocks
+    IKartenverwaltung kartenverwaltung = new KartenverwaltungImpl(maumauspielDao);
+
+    @InjectMocks
+    ISpielverwaltung spielverwaltung = new SpielverwaltungImpl(kartenverwaltung,spielregeln,spielerverwaltung,maumauspielDao,spielerDao);
+
+
+
+    //private ISpielerverwaltung spielerverwaltung;
+    //private MauMauSpielDao maumauspielDao;
 
     private static final Spieler hans = new Spieler("hans", 1, false);
     private static final Spieler enyang = new Spieler("Enyang", 2, false);
 
     private ArrayList<Karte> ablagestapel = new ArrayList<Karte>() {{
+        add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
+        add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
+        add(new Karte(Kartentyp.PIK, Kartenwert.SIEBEN));
+        add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
+        add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
+        add(new Karte(Kartentyp.PIK, Kartenwert.SIEBEN));
         add(new Karte(Kartentyp.HERZ, Kartenwert.ACHT));
         add(new Karte(Kartentyp.KREUZ, Kartenwert.NEUN));
         add(new Karte(Kartentyp.PIK, Kartenwert.SIEBEN));
@@ -62,14 +100,20 @@ public class SpielverwaltungsTest {
 
     @Before
     public void setUp() {
-        spielverwaltung = (ISpielverwaltung) ConfigServiceImpl.context.getBean("spielverwaltungimpl");
-        spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
-        maumauspielDao = (MauMauSpielDao) ConfigServiceImpl.context.getBean("maumauspieldaoimpl");
+        //spielverwaltung = (ISpielverwaltung) ConfigServiceImpl.context.getBean("spielverwaltungimpl");
+        //spielerverwaltung = (ISpielerverwaltung) ConfigServiceImpl.context.getBean("spielerverwaltungimpl");
+        //maumauspielDao = (MauMauSpielDao) ConfigServiceImpl.context.getBean("maumauspieldaoimpl");
+        MockitoAnnotations.initMocks(this);
         spielerliste = new ArrayList<Spieler>();
 
     }
 
-    /*@Test
+
+    /**
+     * Testet, ob der Ablagestapel wiederverwendet wird, wenn die Anzahl der zu ziehenden Karten größer ist, als die Anzahl
+     * der Karten im Kartenstapel.
+     */
+    @Test
     public void testAblagestapelWiederverwendenInSonderregelKartenZiehen() throws LeererStapelException, KarteNichtGezogenException, DaoFindException, DaoUpdateException, DaoCreateException {
         enyang.setHand(hand);
         hans.setHand(hand);
@@ -77,16 +121,28 @@ public class SpielverwaltungsTest {
 
         spielerliste.add(enyang);
         spielerliste.add(hans);
+
         MauMauSpiel spiel = new MauMauSpiel(spielerliste);
+
         spiel.setKartenstapel(kartenstapel);
         spiel.setAblagestapel(ablagestapel);
 
-        maumauspielDao.create(spiel);
-        maumauspielDao.updateanzahlSonderregelKartenZiehen(6);
+        Mockito.when(maumauspielDao.findSpiel()).thenReturn(spiel);
+        Mockito.when(spielerDao.findBys_id(Mockito.anyInt())).thenReturn(enyang);
+        Mockito.when(spielerDao.findAktuellerSpielerId()).thenReturn(enyang.getS_id());
+        Mockito.when(maumauspielDao.findAblagestapel()).thenReturn(spiel.getAblagestapel());
+        Mockito.when(maumauspielDao.findKartenstapel()).thenReturn(spiel.getKartenstapel());
+        Mockito.when(spielerDao.findHand(Mockito.anyInt())).thenReturn(enyang.getHand());
+        Mockito.when(maumauspielDao.findAnzahlSonderregelKartenZiehen()).thenReturn(6);
 
-        spielverwaltung.karteLegen();
 
-    }*/
+        spielverwaltung.karteZiehenSonderregel();
+
+        assertEquals(9,enyang.getHand().size());
+        assertEquals(5,spiel.getKartenstapel().size());
+
+
+    }
 
     /**
      * Testet die Funktionalität, ein neues Spiel zu starten, indem eine Spielerliste mit 2 Spielern übergeben wird.

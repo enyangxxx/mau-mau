@@ -139,7 +139,7 @@ public class SpielerDaoImpl implements SpielerDao {
         return maxId;
     }
 
-    public boolean findIsIstComputer(int s_id) throws DaoFindException {
+    public boolean istComputer(int s_id) throws DaoFindException {
         Session session = (Session) entityManager.getDelegate();
         boolean status;
 
