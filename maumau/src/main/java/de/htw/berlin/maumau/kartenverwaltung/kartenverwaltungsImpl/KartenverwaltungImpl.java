@@ -1,14 +1,14 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl;
 
 
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.InkorrekterStapelException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
-import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.InkorrekterStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 import org.apache.commons.logging.Log;
@@ -37,7 +37,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
      * Generiert einen Kartenstapel mit 32 Karten, wobei jede Karte einmal vorkommt.
      *
      * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
-     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoFindException   - beim fehlerhaften Lesen in der Dao-Klasse
      */
     public void kartenstapelGenerieren() throws DaoUpdateException, DaoFindException {
         ArrayList<Karte> kartenstapel = new ArrayList<Karte>();
@@ -54,8 +54,9 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
 
     /**
      * Mischt den Kartenstapel, sodass die Reihenfolge der Karten zufällig ist.
+     *
      * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
-     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoFindException   - beim fehlerhaften Lesen in der Dao-Klasse
      */
     public void kartenMischen() throws DaoUpdateException, DaoFindException {
         MauMauSpiel spiel = maumauSpielDao.findSpiel();
@@ -77,9 +78,10 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
 
     /**
      * Mischt die Karten des Ablagestapels in den Kartenstapel, außer die oberste Karte des Ablagestapels.
+     *
      * @throws LeererStapelException - Der leerer Stapel darf nicht leer sein.
-     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
-     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws DaoFindException      - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException    - beim fehlerhaften Updaten in der Dao-Klasse
      */
     public void ablagestapelWiederverwenden() throws LeererStapelException, DaoFindException, DaoUpdateException {
         MauMauSpiel spiel = maumauSpielDao.findSpiel();
@@ -93,7 +95,7 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
             }
         } else {
             try {
-                if(ablagestapel.size()==1){
+                if (ablagestapel.size() == 1) {
                     log.info("Spiel beendet, da der Wille zum spielen nicht erkannt wurde!");
                     System.exit(0);
                 }
@@ -111,7 +113,6 @@ public class KartenverwaltungImpl implements IKartenverwaltung {
         spiel.setKartenstapel(kartenstapel);
         maumauSpielDao.update(spiel);
     }
-
 
 
 }

@@ -1,10 +1,9 @@
 package de.htw.berlin.maumau.controller;
 
 import ch.aplu.util.Console;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
-import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
 
 import java.util.List;
 
@@ -263,7 +262,7 @@ public class View {
      * @return input - Die Antwort auf die Frage
      */
     public String userInputMitOderOhneComputer(){
-        Console.println("Möchtest du virtuelle Spieler integrieren? (Ja/Nein)");
+        Console.println("Moechtest du virtuelle Spieler integrieren? (Ja/Nein)");
         String input = Console.readLine();
 
         return input;
@@ -277,7 +276,7 @@ public class View {
      */
     public int userInputWievieleComputer(){
         Console.println();
-        Console.println("Wie viele virtuelle Spieler möchtest du integrieren? (Max.3)");
+        Console.println("Wie viele virtuelle Spieler moechtest du integrieren? (Max.3)");
         int input = Console.readInt();
         Console.println();
 

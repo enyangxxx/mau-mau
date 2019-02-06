@@ -1,16 +1,12 @@
 package de.htwberlin.maumau.spielverwaltung;
 
-import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
-import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.LeereInitialeSpielerlisteException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.*;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsImpl.KartenverwaltungImpl;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
-import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerDao;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
@@ -28,12 +24,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
@@ -58,8 +53,7 @@ public class SpielverwaltungsTest {
     IKartenverwaltung kartenverwaltung = new KartenverwaltungImpl(maumauspielDao);
 
     @InjectMocks
-    ISpielverwaltung spielverwaltung = new SpielverwaltungImpl(kartenverwaltung,spielregeln,spielerverwaltung,maumauspielDao,spielerDao);
-
+    ISpielverwaltung spielverwaltung = new SpielverwaltungImpl(kartenverwaltung, spielregeln, spielerverwaltung, maumauspielDao, spielerDao);
 
 
     //private ISpielerverwaltung spielerverwaltung;
@@ -138,8 +132,8 @@ public class SpielverwaltungsTest {
 
         spielverwaltung.karteZiehenSonderregel();
 
-        assertEquals(9,enyang.getHand().size());
-        assertEquals(5,spiel.getKartenstapel().size());
+        assertEquals(9, enyang.getHand().size());
+        assertEquals(5, spiel.getKartenstapel().size());
 
 
     }
@@ -336,8 +330,8 @@ public class SpielverwaltungsTest {
      */
     //@Test
     //public void testLetzteKarteVomAblagestapelErmitteln() {
-      //  Karte letzteKarte = spielverwaltung.letzteKarteErmitteln(ablagestapel);
-        //assertEquals("Die letzte Karte soll PIK/BUBE sein", letzteKarte, ablagestapel.get(ablagestapel.size() - 1));
+    //  Karte letzteKarte = spielverwaltung.letzteKarteErmitteln(ablagestapel);
+    //assertEquals("Die letzte Karte soll PIK/BUBE sein", letzteKarte, ablagestapel.get(ablagestapel.size() - 1));
     //}
 
     /**
@@ -385,10 +379,10 @@ public class SpielverwaltungsTest {
      */
     //@Test
     //public void testMauMauRufen() {
-      //  hans.setMauGerufen(false);
-        //spielverwaltung.maumauRufen(hans);
+    //  hans.setMauGerufen(false);
+    //spielverwaltung.maumauRufen(hans);
 
-        //assertTrue("MauMauGerufen soll true sein", hans.isMauGerufen());
+    //assertTrue("MauMauGerufen soll true sein", hans.isMauGerufen());
     //}
 
     /**

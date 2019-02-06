@@ -25,7 +25,7 @@ public class Spieler {
     private int punktestand;
     private boolean istComputer;
 
-    public Spieler(){
+    public Spieler() {
 
     }
 
@@ -48,7 +48,7 @@ public class Spieler {
         this.neueKarte = neueKarte;
     }
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     public String getName() {
         return name;
     }
@@ -76,7 +76,7 @@ public class Spieler {
         this.hand = hand;
     }
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     public boolean isDran() {
         return dran;
     }
@@ -94,7 +94,7 @@ public class Spieler {
         this.mauGerufen = mauGerufen;
     }
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     public int getPunktestand() {
         return punktestand;
     }
@@ -103,7 +103,7 @@ public class Spieler {
         this.punktestand = punktestand;
     }
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     public boolean isIstComputer() {
         return istComputer;
     }

@@ -1,13 +1,11 @@
 package de.htw.berlin.maumau.spielregeln.spielregelnImpl;
 
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
@@ -28,7 +26,7 @@ public class SpielregelnImpl implements ISpielregeln {
      * @param wunschtyp - der Wunschtyp
      * @return true, wenn  die neue Karte legbar ist.
      */
-    public boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp){
+    public boolean istLegbar(Karte neueKarte, Kartentyp wunschtyp) {
         return neueKarte.getTyp().equals(wunschtyp);
     }
 
@@ -70,7 +68,7 @@ public class SpielregelnImpl implements ISpielregeln {
      * @return true - wenn versucht wird einen Buben auf einen Buben zu legen.
      */
     public boolean sonderregelEingehaltenBube(Karte neueKarte, Karte letzteKarte) throws DaoFindException {
-        if(mauMauSpielDao.findAblagestapel().size()==1){
+        if (mauMauSpielDao.findAblagestapel().size() == 1) {
             return true;
         }
         switch (letzteKarte.getWert()) {

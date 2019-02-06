@@ -1,12 +1,12 @@
 package de.htw.berlin.maumau.controller;
 
-import de.htw.berlin.maumau.errorHandling.technischeExceptions.*;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.FalscherInputException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.*;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerDao;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
@@ -18,7 +18,8 @@ import de.htw.berlin.maumau.virtuellerSpielerverwaltung.virtuellerSpielerverwalt
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,12 +56,11 @@ public class Controller {
     /**
      * Realisiert das MauMau spiel innerhalb einer Schleife, solange bis ein Spieler gewonnen hat.
      *
-
-     * @throws LeererStapelException - Wenn ein leerer Stapel nicht leer sein darf
-     * @throws DaoCreateException - beim fehlerhaften Erstellen in der Dao-Klasse
-     * @throws KeinSpielerException - wenn kein Spieler vorhanden ist
-     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
-     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws LeererStapelException      - Wenn ein leerer Stapel nicht leer sein darf
+     * @throws DaoCreateException         - beim fehlerhaften Erstellen in der Dao-Klasse
+     * @throws KeinSpielerException       - wenn kein Spieler vorhanden ist
+     * @throws DaoUpdateException         - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws DaoFindException           - beim fehlerhaften Lesen in der Dao-Klasse
      * @throws KarteNichtGezogenException - Wenn Karte auf fehlerhafter Weise nicht gezogen werden konnte
      */
     public void run() throws LeererStapelException, DaoCreateException, KeinSpielerException, DaoUpdateException, DaoFindException, KarteNichtGezogenException {
@@ -92,27 +92,69 @@ public class Controller {
         return false;
     }
 
+    /**
+     * Registriert so viele Computerspieler, wie der Anwender hinzufuegen moechte. Die maximale Anzahl an Computerspielern
+     * betraegt 3, damit die Option offen bleibt, noch einen menschlichen Spieler hinzuzufuegen.
+     *
+     * @throws DaoCreateException - beim fehlerhaften Erstellen in der Dao-Klasse
+     * @throws DaoFindException   - beim fehlerhaften Lesen in der Dao-Klasse
+     */
+    public void updateViewSpielerlisteBefuellenComputer() throws DaoCreateException, DaoFindException {
+        view.printWillkommen();
+        String userInputMitOderOhneComputer = "";
+
+        while (userInputMitOderOhneComputer.isEmpty() || (!userInputMitOderOhneComputer.equalsIgnoreCase("Ja") && !userInputMitOderOhneComputer.equalsIgnoreCase("Nein"))) {
+            userInputMitOderOhneComputer = view.userInputMitOderOhneComputer();
+            if (userInputMitOderOhneComputer.isEmpty() || (!userInputMitOderOhneComputer.equalsIgnoreCase("Ja") && !userInputMitOderOhneComputer.equalsIgnoreCase("Nein"))) {
+                try {
+                    throw new FalscherInputException("\nEingabe fehlerhaft!");
+                } catch (FalscherInputException e) {
+                    view.fehlermeldungAusgabe(e.getMessage());
+                }
+            }
+        }
+
+        int spielerID = 0;
+
+        if (userInputMitOderOhneComputer.equalsIgnoreCase("Ja")) {
+            int userInputWievieleComputer = -1;
+            while(userInputWievieleComputer==-1){
+                try {
+                    userInputWievieleComputer = view.userInputWievieleComputer();
+                } catch (NumberFormatException e) {
+                    view.fehlermeldungAusgabe("\nBitte gebe eine Zahl ein.");
+                }
+            }
+
+            while (!(userInputWievieleComputer >= 0 && userInputWievieleComputer <= 3)) {
+                try {
+                    throw new FalscherInputException("Bitte gebe eine Zahl zwischen 0 - 3 ein.");
+                } catch (FalscherInputException e) {
+                    view.fehlermeldungAusgabe(e.getMessage());
+                    userInputWievieleComputer = view.userInputWievieleComputer();
+                }
+            }
+
+            for (int i = 0; i < userInputWievieleComputer; i++) {
+                spielerID++;
+                spielerverwaltung.spielerGenerieren("Computer" + spielerID, spielerID, true);
+                spielerverwaltung.addSpielerZurListe(spielerDao.findBys_id(spielerID), spielerliste);
+            }
+        }
+    }
+
 
     /**
      * Registriert Spieler solange, bis mindestens 2 Spieler registriert sind. sodass eine Runde MauMau gespielt werden kann.
      *
-     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoFindException   - beim fehlerhaften Lesen in der Dao-Klasse
      * @throws DaoCreateException - beim fehlerhaften Erstellen in der Dao-Klasse
      */
-    public void updateViewSpielerlisteBefuellen() throws DaoFindException, DaoCreateException {
-        view.printWillkommen();
-        String userInputMitOderOhneComputer = view.userInputMitOderOhneComputer();
-
+    public void updateViewSpielerlisteBefuellenMenschlich() throws DaoFindException, DaoCreateException, DaoUpdateException {
         int spielerID = 0;
 
-        if(userInputMitOderOhneComputer.equalsIgnoreCase("Ja")){
-            int userInputWievieleComputer = view.userInputWievieleComputer();
-            for(int i=0;i<userInputWievieleComputer;i++){
-                spielerID++;
-                spielerverwaltung.spielerGenerieren("Computer"+spielerID, spielerID, true);
-                spielerverwaltung.addSpielerZurListe(spielerDao.findBys_id(spielerID), spielerliste);
-                log.info("Spielerliste.size: "+spielerliste.size());
-            }
+        if (!spielerliste.isEmpty()) {
+            spielerID = spielerliste.get(spielerliste.size() - 1).getS_id();
         }
 
         while (spielerliste.size() <= 3) {
@@ -146,7 +188,7 @@ public class Controller {
      *
      * @return name - valider Spielername
      */
-    public String spielernamenEintragen(){
+    public String spielernamenEintragen() {
         String name = "";
         while (name.isEmpty()) {
             name = view.userInputNeuerSpielerName();
@@ -165,11 +207,11 @@ public class Controller {
     /**
      * Startet ein neues Spiel, wenn es die erste Runde ist, oder startet eine neue Runde für ein bereits vorhandenes Spiel.
      *
-     * @throws KeinSpielerException - falls keine Spieler vorhanden sind
+     * @throws KeinSpielerException  - falls keine Spieler vorhanden sind
      * @throws LeererStapelException - wenn ein leerer Stapel nicht leer sein darf
-     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
-     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
-     * @throws DaoCreateException - beim fehlerhaften Erstellen in der Dao-Klasse
+     * @throws DaoUpdateException    - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws DaoFindException      - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoCreateException    - beim fehlerhaften Erstellen in der Dao-Klasse
      */
     public void updateViewSpielStarten() throws KeinSpielerException, LeererStapelException, DaoUpdateException, DaoFindException, DaoCreateException {
 
@@ -179,7 +221,7 @@ public class Controller {
         }
         if (spielDao.findSpiel().getRunde() > 1) {
             kartenResetten();
-            spielerDao.updateDran(false,spielerDao.findAktuellerSpielerId());
+            spielerDao.updateDran(false, spielerDao.findAktuellerSpielerId());
         }
 
         spielDao.updateRunde(spielDao.findSpiel().getRunde() + 1);
@@ -217,10 +259,9 @@ public class Controller {
     public void updateViewNaechsterSpielzugStarten() throws DaoFindException {
         view.printSpielerGewechselt(spielerDao.findBys_id(spielerDao.findAktuellerSpielerId()).getName());
 
-        if(!spielerDao.findBys_id(spielerDao.findAktuellerSpielerId()).isIstComputer()){
+        if (!spielerDao.findBys_id(spielerDao.findAktuellerSpielerId()).isIstComputer()) {
             view.printHandAnzeigen(spielerDao.findHand(spielerDao.findAktuellerSpielerId()));
         }
-        //view.printHandAnzeigen(spielerDao.findHand(spielerDao.findAktuellerSpielerId()));
 
         view.printLetzteKarteAblagestapel(spielverwaltung.letzteKarteErmitteln());
     }
@@ -229,17 +270,17 @@ public class Controller {
     /**
      * Prüft den Userinput auf Validität und anschließen wird die Update View Aktion für "legen", "ziehen" oder "Mau"
      * eingeleitet.
-     * @throws KeinSpielerException  - falls keine Spieler vorhanden sind
+     *
+     * @throws KeinSpielerException       - falls keine Spieler vorhanden sind
      * @throws KarteNichtGezogenException - wenn der Spieler keine Karte ziehen konnte
-     * @throws LeererStapelException - wenn ein leerer Stapel nicht leer sein darf
-     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
-     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws LeererStapelException      - wenn ein leerer Stapel nicht leer sein darf
+     * @throws DaoFindException           - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException         - beim fehlerhaften Updaten in der Dao-Klasse
      */
     public void updateViewSpielzugDurchfuehren() throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException {
-        if(spielerDao.istComputer(spielerDao.findAktuellerSpielerId())){
-           spielzugDurchfuehrenComputer();
-        }
-        else {
+        if (spielerDao.istComputer(spielerDao.findAktuellerSpielerId())) {
+            spielzugDurchfuehrenComputer();
+        } else {
             spielzugDurchfuehren();
         }
     }
@@ -251,7 +292,6 @@ public class Controller {
      * @param anzahlKartenAlt - die Anzahl der Karten auf der Hand vor dem Aufruf der Servicemethode "Karte legen"
      * @param anzahlKartenNeu - die Anzahl der Karten auf der Hand nach dem Aufruf der Servicemethode "Karte legen"
      * @return true - wenn er eine Karte gelegt hat ohne Mau zu rufen
-     *
      * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
      */
     private boolean hatKarteGelegtOhneMauZuRufen(int anzahlKartenAlt, int anzahlKartenNeu) throws DaoFindException {
@@ -265,34 +305,35 @@ public class Controller {
     /**
      * Updated den View wenn eine Karte gelegt wurde. Prüft dabei, ob ein Wunschtyp festgelegt werden muss oder die Karte nicht
      * legbar ist
-     * @throws KeinSpielerException  - falls keine Spieler vorhanden sind
+     *
+     * @throws KeinSpielerException       - falls keine Spieler vorhanden sind
      * @throws KarteNichtGezogenException - wenn der Spieler keine Karte ziehen konnte
-     * @throws LeererStapelException - wenn ein leerer Stapel nicht leer sein darf
-     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
-     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws LeererStapelException      - wenn ein leerer Stapel nicht leer sein darf
+     * @throws DaoFindException           - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException         - beim fehlerhaften Updaten in der Dao-Klasse
      */
 
     public void updateViewAktionKarteLegen() throws KeinSpielerException, KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException {
         int anzahlKartenAlt = spielerDao.findHand(spielerDao.findAktuellerSpielerId()).size();
         int gewaehlteKarteIndex;
         boolean falscherIndex;
-        do{
+        do {
             try {
                 gewaehlteKarteIndex = view.userInputKarteWaehlen();
-            }catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 view.fehlermeldungAusgabe("Du Trottel!");
                 gewaehlteKarteIndex = -1;
             }
 
-            falscherIndex = (gewaehlteKarteIndex >= spielerDao.findHand(spielerDao.findAktuellerSpielerId()).size()) || (gewaehlteKarteIndex<0);
-            if(falscherIndex){
-                try{
+            falscherIndex = (gewaehlteKarteIndex >= spielerDao.findHand(spielerDao.findAktuellerSpielerId()).size()) || (gewaehlteKarteIndex < 0);
+            if (falscherIndex) {
+                try {
                     throw new FalscherInputException("Karte mit eingegebenem Index existiert nicht.");
-                }catch(FalscherInputException e){
+                } catch (FalscherInputException e) {
                     view.fehlermeldungAusgabe(e.getMessage());
                 }
             }
-        }while(falscherIndex);
+        } while (falscherIndex);
 
 
         int alterSpielerId = spielerDao.findAktuellerSpielerId();
@@ -309,17 +350,17 @@ public class Controller {
                 String wunschtyp;
                 do {
                     wunschtyp = view.userInputWunschtypFestlegen();
-                    if(!(wunschtyp.equalsIgnoreCase("Kreuz")||wunschtyp.equalsIgnoreCase("Pik")||wunschtyp.equalsIgnoreCase("Herz")||wunschtyp.equalsIgnoreCase("Karo"))){
-                        try{
+                    if (!(wunschtyp.equalsIgnoreCase("Kreuz") || wunschtyp.equalsIgnoreCase("Pik") || wunschtyp.equalsIgnoreCase("Herz") || wunschtyp.equalsIgnoreCase("Karo"))) {
+                        try {
                             throw new FalscherInputException("Bitte einen validen Wunschtyp aussuchen!");
-                        }catch(FalscherInputException e){
+                        } catch (FalscherInputException e) {
                             view.fehlermeldungAusgabe(e.getMessage());
                             wunschtypGesetzt = true;
                         }
-                    }else{
+                    } else {
                         wunschtypGesetzt = false;
                     }
-                }while(wunschtypGesetzt);
+                } while (wunschtypGesetzt);
                 spielverwaltung.wunschtypFestlegen(Kartentyp.valueOf(wunschtyp));
             }
         } else if (hatKarteGelegtOhneMauZuRufen(anzahlKartenAlt, anzahlKartenNeu)) {
@@ -333,10 +374,11 @@ public class Controller {
 
     /**
      * Updated den View wenn eine Karte gezogen wurde bzw. wenn wegen einer 7 mehrere Karten gezogen werden mussten.
+     *
      * @throws KarteNichtGezogenException - wenn der Spieler keine Karte ziehen konnte
-     * @throws LeererStapelException - wenn ein leerer Stapel nicht leer sein darf
-     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
-     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws LeererStapelException      - wenn ein leerer Stapel nicht leer sein darf
+     * @throws DaoFindException           - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoUpdateException         - beim fehlerhaften Updaten in der Dao-Klasse
      */
     public void updateViewAktionKarteZiehen() throws KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException {
         MauMauSpiel spiel = spielDao.findSpiel();
@@ -354,7 +396,7 @@ public class Controller {
     /**
      * Berechnet die anzahl der Minuspunkte und gibt diese aus.
      *
-     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws DaoFindException   - beim fehlerhaften Lesen in der Dao-Klasse
      * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
      */
 
@@ -396,11 +438,10 @@ public class Controller {
     private int alterSpielerIdErmitteln() throws DaoFindException {
         int aktuellerSpielerID = spielerDao.findAktuellerSpielerId();
 
-        if(aktuellerSpielerID==1){
+        if (aktuellerSpielerID == 1) {
             return spielDao.findSpielerlist().size();
-        }
-        else{
-            return aktuellerSpielerID-1;
+        } else {
+            return aktuellerSpielerID - 1;
         }
     }
 
@@ -418,19 +459,17 @@ public class Controller {
         spiel = spielDao.findSpiel();
         Kartentyp wunschtypNeu = spiel.getAktuellerWunschtyp();
 
-        if(anzahlKartenHandAlt>anzahlKartenHandNeu){
-            view.printKarteGelegt(spielerDao.findBys_id(alterSpielerId),spielverwaltung.letzteKarteErmitteln());
+        if (anzahlKartenHandAlt > anzahlKartenHandNeu) {
+            view.printKarteGelegt(spielerDao.findBys_id(alterSpielerId), spielverwaltung.letzteKarteErmitteln());
 
-            if(wunschtypAlt!=wunschtypNeu&&wunschtypNeu!=null){
-                view.printComputerLegtWunschtypFest(spielerDao.findBys_id(alterSpielerId),spiel.getAktuellerWunschtyp().toString());
+            if (wunschtypAlt != wunschtypNeu && wunschtypNeu != null) {
+                view.printComputerLegtWunschtypFest(spielerDao.findBys_id(alterSpielerId), spiel.getAktuellerWunschtyp().toString());
             }
-        }else if(anzahlKartenHandAlt==anzahlKartenHandNeu-1){
+        } else if (anzahlKartenHandAlt == anzahlKartenHandNeu - 1) {
             view.printEineKarteGezogen(spielerDao.findBys_id(alterSpielerId));
-        }else if(anzahlKartenHandAlt<anzahlKartenHandNeu){
-            view.printKartenGezogenSonderregel(spielerDao.findBys_id(alterSpielerId),alteAnzahlSonderregelKartenZiehen);
+        } else if (anzahlKartenHandAlt < anzahlKartenHandNeu) {
+            view.printKartenGezogenSonderregel(spielerDao.findBys_id(alterSpielerId), alteAnzahlSonderregelKartenZiehen);
         }
-
-        view.printHandAnzeigen(spielerDao.findHand(alterSpielerId));
     }
 
     private void spielzugDurchfuehren() throws DaoUpdateException, DaoFindException, KeinSpielerException, KarteNichtGezogenException, LeererStapelException {

@@ -1,57 +1,44 @@
 package de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
  */
 
 @Embeddable
-public class Karte{
+public class Karte {
 
-	@Column(name="typ")
-	private Kartentyp typ;
+    @Column(name = "typ")
+    private Kartentyp typ;
 
-	@Column(name="wert")
-	private Kartenwert wert;
-	//private MauMauSpiel maumauspiel;
+    @Column(name = "wert")
+    private Kartenwert wert;
 
-	public Karte(){
+    public Karte() {
 
-	}
+    }
 
-	public Karte(Kartentyp typ, Kartenwert wert) {
-		this.typ = typ;
-		this.wert = wert;
-	}
+    public Karte(Kartentyp typ, Kartenwert wert) {
+        this.typ = typ;
+        this.wert = wert;
+    }
 
-	/*
-	@ManyToOne
-	public MauMauSpiel getMaumauspiel() {
-		return maumauspiel;
-	}
+    public Kartentyp getTyp() {
+        return typ;
+    }
 
-	public void setMaumauspiel(MauMauSpiel maumauspiel) {
-		this.maumauspiel = maumauspiel;
-	}
-	*/
+    public void setTyp(Kartentyp typ) {
+        this.typ = typ;
+    }
 
-	//@Column(nullable=false)
-	public Kartentyp getTyp() {
-		return typ;
-	}
+    public Kartenwert getWert() {
+        return wert;
+    }
 
-	public void setTyp(Kartentyp typ) {
-		this.typ = typ;
-	}
-
-	//@Column(nullable=false)
-	public Kartenwert getWert() {
-		return wert;
-	}
-
-	public void setWert(Kartenwert wert) {
-		this.wert = wert;
-	}
+    public void setWert(Kartenwert wert) {
+        this.wert = wert;
+    }
 
 }

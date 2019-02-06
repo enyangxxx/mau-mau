@@ -1,7 +1,7 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface;
 
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 
 import javax.persistence.*;
@@ -15,7 +15,6 @@ import java.util.List;
 @Entity
 public class MauMauSpiel {
 
-    //@ElementCollection
     private List<Spieler> spielerliste;
     private int runde;
     @ElementCollection
@@ -30,7 +29,7 @@ public class MauMauSpiel {
     private int anzahlSonderregelKartenZiehen;
     private int spielId;
 
-    public MauMauSpiel(){
+    public MauMauSpiel() {
 
     }
 
@@ -53,7 +52,6 @@ public class MauMauSpiel {
         this.spielId = spielId;
     }
 
-    //@ElementCollection
     @OneToMany
     public List<Spieler> getSpielerListe() {
         return spielerliste;
@@ -63,7 +61,7 @@ public class MauMauSpiel {
         this.spielerliste = spielerliste;
     }
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     public int getAnzahlSonderregelKartenZiehen() {
         return anzahlSonderregelKartenZiehen;
     }
@@ -72,7 +70,7 @@ public class MauMauSpiel {
         this.anzahlSonderregelKartenZiehen = anzahlSonderregelKartenZiehen;
     }
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     public int getRunde() {
         return runde;
     }
@@ -101,7 +99,7 @@ public class MauMauSpiel {
         this.kartenstapel = kartenstapel;
     }
 
-    @Column(nullable=true)
+    @Column(nullable = true)
     public Kartentyp getAktuellerWunschtyp() {
         return aktuellerWunschtyp;
     }
@@ -111,7 +109,7 @@ public class MauMauSpiel {
     }
 
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     public boolean isSonderregelSiebenAktiv() {
         return sonderregelSiebenAktiv;
     }
@@ -120,7 +118,7 @@ public class MauMauSpiel {
         this.sonderregelSiebenAktiv = sonderregelSiebenAktiv;
     }
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     public boolean isSonderregelAssAktiv() {
         return sonderregelAssAktiv;
     }

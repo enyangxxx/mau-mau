@@ -1,6 +1,5 @@
 package de.htwberlin.maumau.spielerverwaltung;
 
-import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
@@ -37,14 +36,14 @@ public class SpielerverwaltungsTest {
     SpielerDao spielerDao;
 
     @InjectMocks
-    ISpielerverwaltung spielerverwaltung = new SpielerverwaltungImpl(spielerDao,mauMauSpielDao);
+    ISpielerverwaltung spielerverwaltung = new SpielerverwaltungImpl(spielerDao, mauMauSpielDao);
 
-    private Spieler caner = new Spieler( "Caner",9,false);
-    private Spieler enyang = new Spieler( "Enyang",10,false);
+    private Spieler caner = new Spieler("Caner", 9, false);
+    private Spieler enyang = new Spieler("Enyang", 10, false);
     private List<Spieler> spielerliste;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         spielerliste = new ArrayList<Spieler>();
     }
@@ -59,7 +58,7 @@ public class SpielerverwaltungsTest {
         spielerverwaltung.addSpielerZurListe(caner, spielerliste);
 
         int neueAnzahlSpielerInListe = spielerliste.size();
-        assertEquals("Zur Spielerliste muss ein Spieler hinzugefügt worden sein.", alteAnzahlSpielerInListe + 1,neueAnzahlSpielerInListe);
+        assertEquals("Zur Spielerliste muss ein Spieler hinzugefügt worden sein.", alteAnzahlSpielerInListe + 1, neueAnzahlSpielerInListe);
     }
 
     /**
@@ -68,7 +67,10 @@ public class SpielerverwaltungsTest {
      */
     @Test
     public void testSpielerWechseln() throws DaoUpdateException, DaoFindException {
-        when(mauMauSpielDao.findSpielerlist()).thenReturn(new ArrayList<Spieler>(){{add(caner);add(enyang);}});
+        when(mauMauSpielDao.findSpielerlist()).thenReturn(new ArrayList<Spieler>() {{
+            add(caner);
+            add(enyang);
+        }});
         when(spielerDao.findAktuellerSpielerId()).thenReturn(9);
         when(spielerDao.findBys_id(9)).thenReturn(caner);
         when(mauMauSpielDao.findAssAktivStatus()).thenReturn(false);
@@ -86,13 +88,15 @@ public class SpielerverwaltungsTest {
     @Test
     public void testGetSpielerById() throws KeinSpielerException, DaoFindException {
         when(spielerDao.findBys_id(anyInt())).thenReturn(caner);
-        when(mauMauSpielDao.findSpielerlist()).thenReturn(new ArrayList<Spieler>(){{add(caner);}});
+        when(mauMauSpielDao.findSpielerlist()).thenReturn(new ArrayList<Spieler>() {{
+            add(caner);
+        }});
 
         spielerverwaltung.addSpielerZurListe(caner, spielerliste);
-        assertEquals("Der Spieler Caner mit der ID 9 muss zurückgegeben werden.", caner,  spielerverwaltung.getSpielerById(9, spielerliste));
+        assertEquals("Der Spieler Caner mit der ID 9 muss zurückgegeben werden.", caner, spielerverwaltung.getSpielerById(9, spielerliste));
 
         verify(spielerDao, times(2)).findBys_id(anyInt());
-        verify(mauMauSpielDao,times(1)).findSpielerlist();
+        verify(mauMauSpielDao, times(1)).findSpielerlist();
     }
 
     /**
@@ -102,7 +106,9 @@ public class SpielerverwaltungsTest {
     @Test(expected = KeinSpielerException.class)
     public void testgetSpielerByIdIdNichtVergeben() throws KeinSpielerException, DaoFindException {
         when(spielerDao.findBys_id(anyInt())).thenReturn(enyang);
-        when(mauMauSpielDao.findSpielerlist()).thenReturn(new ArrayList<Spieler>(){{add(enyang);}});
+        when(mauMauSpielDao.findSpielerlist()).thenReturn(new ArrayList<Spieler>() {{
+            add(enyang);
+        }});
 
         spielerverwaltung.addSpielerZurListe(enyang, spielerliste);
         spielerverwaltung.getSpielerById(9, spielerliste);
