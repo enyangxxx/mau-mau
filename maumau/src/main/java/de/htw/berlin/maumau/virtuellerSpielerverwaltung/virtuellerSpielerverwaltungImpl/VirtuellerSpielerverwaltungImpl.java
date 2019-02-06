@@ -1,14 +1,14 @@
 package de.htw.berlin.maumau.virtuellerSpielerverwaltung.virtuellerSpielerverwaltungImpl;
 
-import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
-import de.htw.berlin.maumau.errorHandling.technischeExceptions.*;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.KarteNichtGezogenException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.LeererStapelException;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerDao;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerverwaltungImpl;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl.MauMauSpielDao;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.ISpielverwaltung;
@@ -31,8 +31,7 @@ public class VirtuellerSpielerverwaltungImpl implements IVirtuellerSpielerverwal
     private Log log = LogFactory.getLog(VirtuellerSpielerverwaltungImpl.class);
 
 
-
-    public VirtuellerSpielerverwaltungImpl(final MauMauSpielDao maumauspielDaoimpl, final ISpielregeln spielregelnImpl, final ISpielverwaltung spielverwaltungImpl, final ISpielerverwaltung spielerverwaltungImpl, final SpielerDao spielerdaoimpl){
+    public VirtuellerSpielerverwaltungImpl(final MauMauSpielDao maumauspielDaoimpl, final ISpielregeln spielregelnImpl, final ISpielverwaltung spielverwaltungImpl, final ISpielerverwaltung spielerverwaltungImpl, final SpielerDao spielerdaoimpl) {
         this.maumauspielDao = maumauspielDaoimpl;
         this.spielregeln = spielregelnImpl;
         this.spielverwaltung = spielverwaltungImpl;
@@ -45,12 +44,11 @@ public class VirtuellerSpielerverwaltungImpl implements IVirtuellerSpielerverwal
     public void spielzugDurchfuehren() throws DaoFindException, LeererStapelException, KarteNichtGezogenException, DaoUpdateException {
         MauMauSpiel spiel = maumauspielDao.findSpiel();
         List<Karte> ablagestapel = maumauspielDao.findAblagestapel();
-        Karte letzteKarte = ablagestapel.get(ablagestapel.size()-1);
+        Karte letzteKarte = ablagestapel.get(ablagestapel.size() - 1);
         List<Karte> hand = spielerdao.findHand(spielerdao.findAktuellerSpielerId());
 
-        if(!karteLegen(spiel, letzteKarte, hand)){
+        if (!karteLegen(spiel, letzteKarte, hand)) {
             if (maumauspielDao.findSiebenAktivStatus()) {
-                log.info("Er muss jetzt wegen der Sieben "+maumauspielDao.findAnzahlSonderregelKartenZiehen()+ " Karten ziehen.");
                 spielverwaltung.karteZiehenSonderregel();
             } else {
                 spielverwaltung.karteZiehen();
@@ -59,28 +57,21 @@ public class VirtuellerSpielerverwaltungImpl implements IVirtuellerSpielerverwal
 
     }
 
-    //Karte legen klappt nicht, wenn im Spiel ein Wunschtyp gesetzt ist
     @Override
     public boolean karteLegen(MauMauSpiel spiel, Karte letzteKarte, List<Karte> hand) throws DaoUpdateException, DaoFindException, LeererStapelException, KarteNichtGezogenException {
 
         boolean tmp = false;
 
-        log.info("Der Spieler "+spielerdao.findBys_id(spielerdao.findAktuellerSpielerId()).getName()+" ist dran");
-        for(Karte karte : hand){
-            log.info("Bedingung 1: "+spielregeln.sonderregelEingehaltenSieben(karte, letzteKarte));
-            log.info("Bedingugn 2: "+!maumauspielDao.findSiebenAktivStatus());
-            log.info("Bedingung 3: "+spielregeln.sonderregelEingehaltenBube(letzteKarte, letzteKarte));
+        for (Karte karte : hand) {
             if (((spielregeln.sonderregelEingehaltenSieben(karte, letzteKarte)) ||
                     (!maumauspielDao.findSiebenAktivStatus())) && spielregeln.sonderregelEingehaltenBube(karte, letzteKarte)) {
-                log.info("wunschtyp ist: "+maumauspielDao.findAktuellerWunschtyp());
                 if (maumauspielDao.findAktuellerWunschtyp() != null) {
-                    log.info("wunschtyp ist nicht null");
-                    if(karteLegenWennWunschtypVorhanden(spiel, karte, hand)){
+                    if (karteLegenWennWunschtypVorhanden(spiel, karte, hand)) {
                         tmp = true;
                         break;
                     }
                 } else {
-                    if(karteLegenWennKeinWunschtypVorhanden(spiel, karte, letzteKarte, hand)){
+                    if (karteLegenWennKeinWunschtypVorhanden(spiel, karte, letzteKarte, hand)) {
                         tmp = true;
                         break;
                     }
@@ -94,24 +85,20 @@ public class VirtuellerSpielerverwaltungImpl implements IVirtuellerSpielerverwal
     public void wunschtypFestlegen() throws DaoFindException, DaoUpdateException {
         MauMauSpiel spiel = maumauspielDao.findSpiel();
         Random rand = new Random();
-        int i = rand.nextInt((3-0)+1);
+        int i = rand.nextInt((3 - 0) + 1);
         spiel.setAktuellerWunschtyp(Kartentyp.getName(i));
         maumauspielDao.update(spiel);
     }
 
-    private void checkSonderregelSieben(){
-
-    }
 
     private boolean karteLegenWennWunschtypVorhanden(MauMauSpiel spiel, Karte karte, List<Karte> hand) throws DaoUpdateException, DaoFindException, LeererStapelException, KarteNichtGezogenException {
         if (spielregeln.istLegbar(karte, spiel.getAktuellerWunschtyp())) {
-            if(hand.size()==2){
+            if (hand.size() == 2) {
                 spielerdao.updateHatMauGerufen(true, spielerdao.findAktuellerSpielerId());
             }
             spielverwaltung.karteVonHandAufStapelLegen(karte);
             spielverwaltung.regelwerkUmsetzen(karte, hand);
             spielerverwaltung.spielerWechseln();
-            //spiel.setAktuellerWunschtyp(null);
             maumauspielDao.updateAktuellerWunschtyp(null);
             return true;
         }
@@ -121,7 +108,7 @@ public class VirtuellerSpielerverwaltungImpl implements IVirtuellerSpielerverwal
     private boolean karteLegenWennKeinWunschtypVorhanden(MauMauSpiel spiel, Karte karte, Karte letzteKarte, List<Karte> hand) throws DaoUpdateException, DaoFindException, LeererStapelException, KarteNichtGezogenException {
         boolean tmp = false;
         if (spielregeln.istLegbar(letzteKarte, karte)) {
-            if(hand.size()==2){
+            if (hand.size() == 2) {
                 spielerdao.updateHatMauGerufen(true, spielerdao.findAktuellerSpielerId());
             }
             spielverwaltung.karteVonHandAufStapelLegen(karte);
@@ -129,8 +116,7 @@ public class VirtuellerSpielerverwaltungImpl implements IVirtuellerSpielerverwal
             spielverwaltung.regelwerkUmsetzen(karte, hand);
             if (!(karte.getWert().equals(Kartenwert.BUBE))) {
                 spielerverwaltung.spielerWechseln();
-            }
-            else{
+            } else {
                 wunschtypFestlegen();
                 spielerverwaltung.spielerWechseln();
             }

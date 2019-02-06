@@ -22,10 +22,10 @@ public class IdNichtVorhandenException extends Exception {
      * @param message - eigene Fehlermeldung
      * @return message - Default oder eigene Fehlermeldung
      */
-    public static String bestimmeMessage(String message){
-        if(message.isEmpty()){
+    public static String bestimmeMessage(String message) {
+        if (message.isEmpty()) {
             return DEFAULT_MESSAGE;
-        }else{
+        } else {
             return message;
         }
     }

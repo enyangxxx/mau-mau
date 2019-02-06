@@ -5,21 +5,16 @@ import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoCreateExceptio
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoRemoveException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
-
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +94,7 @@ public class SpielerDaoImpl implements SpielerDao {
     public int findAktuellerSpielerId() {
         Session session = (Session) entityManager.getDelegate();
         int aktuellerSpielerId = 0;
-        aktuellerSpielerId= (Integer) session.createSQLQuery("Select s_id from Spieler where dran = true").uniqueResult();
+        aktuellerSpielerId = (Integer) session.createSQLQuery("Select s_id from Spieler where dran = true").uniqueResult();
         return aktuellerSpielerId;
     }
 
@@ -121,20 +116,13 @@ public class SpielerDaoImpl implements SpielerDao {
         }
     }
 
-    public boolean isVirtuellerSpieler(int s_id) throws DaoUpdateException {
-        if(s_id>findMaxId()){
-            return true;
-        }
-        return false;
-    }
-
-    private int findMaxId() throws DaoUpdateException {
+    private int findMaxId() throws DaoFindException {
         Session session = (Session) entityManager.getDelegate();
         int maxId;
         try {
             maxId = (Integer) session.createSQLQuery("Select max(s_id) from Spieler").uniqueResult();
         } catch (PersistenceException e) {
-            throw new DaoUpdateException(e.toString());
+            throw new DaoFindException(e.toString());
         }
         return maxId;
     }
@@ -144,7 +132,7 @@ public class SpielerDaoImpl implements SpielerDao {
         boolean status;
 
         try {
-            status = (Boolean) session.createSQLQuery("Select istComputer from Spieler where s_id="+s_id).uniqueResult();
+            status = (Boolean) session.createSQLQuery("Select istComputer from Spieler where s_id=" + s_id).uniqueResult();
         } catch (PersistenceException e) {
             throw new DaoFindException(e.getMessage());
         }

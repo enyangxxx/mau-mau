@@ -1,9 +1,9 @@
 package de.htwberlin.maumau.spielregeln;
 
 import de.htw.berlin.maumau.configurator.ConfigServiceImpl;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielregeln.spielregelnInterface.ISpielregeln;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
@@ -13,7 +13,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Enyang Wang, Steve Engel, Theo Radig
@@ -22,8 +23,8 @@ public class SpielregelnTest {
 
     private ISpielregeln spielregeln;
 
-    private Spieler theo = new Spieler("Theo", 1,false);
-    private Spieler enyang = new Spieler("Enyang", 2,false);
+    private Spieler theo = new Spieler("Theo", 1, false);
+    private Spieler enyang = new Spieler("Enyang", 2, false);
 
     List<Spieler> spielerliste = new ArrayList<Spieler>() {{
         add(enyang);
@@ -93,7 +94,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist false.
      */
     @Test
-    public void testIstLegbarKreuzZehnBeiWunschtypKaro(){
+    public void testIstLegbarKreuzZehnBeiWunschtypKaro() {
 
         Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN);
         Kartentyp wunschtyp = Kartentyp.KARO;
@@ -107,7 +108,7 @@ public class SpielregelnTest {
      * Das erwartete Ergebnis ist true.
      */
     @Test
-    public void testIstLegbarKreuzZehnBeiWunschtypKreuz(){
+    public void testIstLegbarKreuzZehnBeiWunschtypKreuz() {
 
         Karte neueKarte = new Karte(Kartentyp.KREUZ, Kartenwert.ZEHN);
         Kartentyp wunschtyp = Kartentyp.KREUZ;

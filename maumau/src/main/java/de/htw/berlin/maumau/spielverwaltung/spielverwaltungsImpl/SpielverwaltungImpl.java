@@ -1,14 +1,13 @@
 package de.htw.berlin.maumau.spielverwaltung.spielverwaltungsImpl;
 
-import de.htw.berlin.maumau.errorHandling.technischeExceptions.*;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.IdNichtVorhandenException;
-import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
-import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.LeereInitialeSpielerlisteException;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.InkorrekterStapelException;
+import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.LeereInitialeSpielerlisteException;
+import de.htw.berlin.maumau.errorHandling.technischeExceptions.*;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.IKartenverwaltung;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerDao;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.ISpielerverwaltung;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
@@ -180,18 +179,10 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
 
         for (int i = 0; i < anzahl; i++) {
             if (kartenstapel.isEmpty()) {
-                log.info("Er ist reingegangen");
-                log.info("Ablagestapel size vor wiederverwenden: "+ablagestapel.size());
-                log.info("Kartenstapel size vor wiederverwenden: "+kartenstapel.size());
-
                 kartenverwaltung.ablagestapelWiederverwenden();
 
                 kartenstapel = maumauspielDao.findKartenstapel();
                 ablagestapel = maumauspielDao.findAblagestapel();
-
-                log.info("Ablagestapel size nach wiederverwenden: "+ablagestapel.size());
-                log.info("Kartenstapel size nach wiederverwenden: "+kartenstapel.size());
-
             }
 
             try {
@@ -259,14 +250,10 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
      * @throws DaoFindException           - beim fehlerhaften Lesen in der Dao-Klasse
      * @throws DaoUpdateException         - beim fehlerhaften Updaten in der Dao-Klasse
      */
-
     public void regelwerkUmsetzen(Karte gewaehlteKarte, List<Karte> hand) throws KarteNichtGezogenException, LeererStapelException, DaoFindException, DaoUpdateException {
         if (gewaehlteKarte.getWert().equals(Kartenwert.SIEBEN)) {
             maumauspielDao.updateSiebenAktiv(true);
-            log.info("MaumauspielDao Sieben aktiv status: "+maumauspielDao.findSiebenAktivStatus());
-            log.info("findAnzahlSonderregelKartenZiehen davor: "+maumauspielDao.findAnzahlSonderregelKartenZiehen());
             maumauspielDao.updateanzahlSonderregelKartenZiehen(maumauspielDao.findAnzahlSonderregelKartenZiehen() + 2);
-            log.info("findAnzahlSonderregelKartenZiehen danach: "+maumauspielDao.findAnzahlSonderregelKartenZiehen());
         }
         if (gewaehlteKarte.getWert().equals(Kartenwert.ASS)) {
             maumauspielDao.updateAssAktiv(true);
@@ -325,7 +312,6 @@ public class SpielverwaltungImpl implements ISpielverwaltung {
                     karteVonHandAufStapelLegen(gewaehlteKarte);
                     regelwerkUmsetzen(gewaehlteKarte, hand);
                     spielerverwaltung.spielerWechseln();
-                    //spiel.setAktuellerWunschtyp(null);
                     maumauspielDao.updateAktuellerWunschtyp(null);
                 }
             } else {

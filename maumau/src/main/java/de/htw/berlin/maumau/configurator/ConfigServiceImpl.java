@@ -4,14 +4,11 @@ import ch.aplu.util.Console;
 import de.htw.berlin.maumau.controller.Controller;
 import de.htw.berlin.maumau.errorHandling.inhaltlicheExceptions.KeinSpielerException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.*;
-import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsImpl.SpielerDao;
-import org.hibernate.Hibernate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.awt.*;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -34,12 +31,12 @@ public class ConfigServiceImpl {
      * Startet das Spiel mit run.
      *
      * @param args
-     * @throws IOException - fehlerhafte Kommunikation mit der Property-Datei
-     * @throws LeererStapelException - Wenn ein leerer Stapel nicht leer sein darf
-     * @throws DaoCreateException - beim fehlerhaften Erstellen in der Dao-Klasse
-     * @throws KeinSpielerException - wenn kein Spieler vorhanden ist
-     * @throws DaoUpdateException - beim fehlerhaften Updaten in der Dao-Klasse
-     * @throws DaoFindException - beim fehlerhaften Lesen in der Dao-Klasse
+     * @throws IOException                - fehlerhafte Kommunikation mit der Property-Datei
+     * @throws LeererStapelException      - Wenn ein leerer Stapel nicht leer sein darf
+     * @throws DaoCreateException         - beim fehlerhaften Erstellen in der Dao-Klasse
+     * @throws KeinSpielerException       - wenn kein Spieler vorhanden ist
+     * @throws DaoUpdateException         - beim fehlerhaften Updaten in der Dao-Klasse
+     * @throws DaoFindException           - beim fehlerhaften Lesen in der Dao-Klasse
      * @throws KarteNichtGezogenException - Wenn Karte auf fehlerhafter Weise nicht gezogen werden konnte
      */
 
@@ -52,7 +49,8 @@ public class ConfigServiceImpl {
 
         Console.init(new Font(null, Font.BOLD, Integer.valueOf(property.getProperty(PROPERTY_FONTSIZE))));
 
-        controller.updateViewSpielerlisteBefuellen();
+        controller.updateViewSpielerlisteBefuellenComputer();
+        controller.updateViewSpielerlisteBefuellenMenschlich();
 
         controller.run();
     }

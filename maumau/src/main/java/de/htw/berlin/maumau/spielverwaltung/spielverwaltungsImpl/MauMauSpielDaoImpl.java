@@ -4,17 +4,17 @@ import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoCreateExceptio
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoFindException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoRemoveException;
 import de.htw.berlin.maumau.errorHandling.technischeExceptions.DaoUpdateException;
+import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartentyp;
 import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Kartenwert;
-import de.htw.berlin.maumau.kartenverwaltung.kartenverwaltungsInterface.Karte;
 import de.htw.berlin.maumau.spielerverwaltung.spielerverwaltungsInterface.Spieler;
 import de.htw.berlin.maumau.spielverwaltung.spielverwaltungsInterface.MauMauSpiel;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,6 +154,7 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
         }
         return status;
     }
+
     public boolean findSiebenAktivStatus() throws DaoFindException {
         Session session = (Session) entityManager.getDelegate();
         boolean status;
@@ -165,6 +166,7 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
         }
         return status;
     }
+
     public void updateSiebenAktiv(boolean status) throws DaoUpdateException {
         Session session = (Session) entityManager.getDelegate();
         try {
@@ -173,6 +175,7 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
             throw new DaoUpdateException(e.getMessage());
         }
     }
+
     public void updateanzahlSonderregelKartenZiehen(int anzahl) throws DaoUpdateException {
         Session session = (Session) entityManager.getDelegate();
         try {
@@ -181,6 +184,7 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
             throw new DaoUpdateException(e.getMessage());
         }
     }
+
     public int findAnzahlSonderregelKartenZiehen() throws DaoFindException {
         Session session = (Session) entityManager.getDelegate();
         int anzahl;
@@ -201,7 +205,7 @@ public class MauMauSpielDaoImpl implements MauMauSpielDao {
             wunschtyp = (Integer) session.createSQLQuery("Select aktuellerWunschtyp from MauMauSpiel where spielid=0").uniqueResult();
         } catch (PersistenceException e) {
             throw new DaoFindException(e.getMessage());
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return null;
         }
         return Kartentyp.getName(wunschtyp);
